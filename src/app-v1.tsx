@@ -43,6 +43,14 @@ export interface InvoiceItem {
   cost: number;
 }
 
+export interface LedgerEntry {
+  id: string;
+  time: string;
+  patientName: string;
+  treatment: string;
+  status: 'Paid' | 'In Therapy' | 'Waiting';
+}
+
 // ==========================================
 // 2. MOCK DATA (data/hindi_physio.ts)
 // ==========================================
@@ -69,6 +77,11 @@ const PHYSIO_PROCEDURES: Procedure[] = [
   { id: 'PROC_08', name: 'Kinesio Taping', code: 'KT001', cost: 150 },
 ];
 
+const MOCK_LEDGER_ENTRIES: LedgerEntry[] = [
+  { id: 'LE01', time: '10:15 AM', patientName: 'Vikram Singh', treatment: 'Frozen Shoulder (IFT + US)', status: 'Paid' },
+  { id: 'LE02', time: '10:30 AM', patientName: 'Priya Kapoor', treatment: 'Ankle Sprain (Taping)', status: 'In Therapy' },
+];
+
 // ==========================================
 // 3. UI COMPONENTS
 // ==========================================
@@ -88,7 +101,20 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
     if (e.key === 'Enter' && input) {
       // Simulate finding a patient or creating a new string reference
       const found = MOCK_PATIENTS.find(p => p.name.toLowerCase().includes(input.toLowerCase()));
-      onPatientIdentified(found || input);
+      onPatientIdentified(found || "not found");
+    }
+  };
+
+  const getStatusBadgeStyle = (status: LedgerEntry['status']) => {
+    switch (status) {
+      case 'Paid':
+        return 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-500';
+      case 'In Therapy':
+        return 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400';
+      case 'Waiting':
+        return 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-500';
+      default:
+        return 'bg-zinc-100 text-zinc-500';
     }
   };
 
@@ -116,19 +142,19 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
 
       {/* Rows */}
       <div className="flex-1 overflow-y-auto">
-        {/* Mock Past Entries */}
-        <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-zinc-100 dark:border-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
-          <div className="col-span-2 text-zinc-500 font-mono text-xs">10:15 AM</div>
-          <div className="col-span-4 text-zinc-700 dark:text-zinc-300 font-medium">Vikram Singh</div>
-          <div className="col-span-4 text-zinc-600 dark:text-zinc-500 text-sm">Frozen Shoulder (IFT + US)</div>
-          <div className="col-span-2 text-right"><span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-500 px-2 py-1 rounded">Paid</span></div>
-        </div>
-        <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-zinc-100 dark:border-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
-          <div className="col-span-2 text-zinc-500 font-mono text-xs">10:30 AM</div>
-          <div className="col-span-4 text-zinc-700 dark:text-zinc-300 font-medium">Priya Kapoor</div>
-          <div className="col-span-4 text-zinc-600 dark:text-zinc-500 text-sm">Ankle Sprain (Taping)</div>
-          <div className="col-span-2 text-right"><span className="text-xs bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2 py-1 rounded">In Therapy</span></div>
-        </div>
+        {/* Dynamic Rows */}
+        {MOCK_LEDGER_ENTRIES.map((entry) => (
+          <div key={entry.id} className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-zinc-100 dark:border-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
+            <div className="col-span-2 text-zinc-500 font-mono text-xs">{entry.time}</div>
+            <div className="col-span-4 text-zinc-700 dark:text-zinc-300 font-medium">{entry.patientName}</div>
+            <div className="col-span-4 text-zinc-600 dark:text-zinc-500 text-sm">{entry.treatment}</div>
+            <div className="col-span-2 text-right">
+              <span className={`text-xs px-2 py-1 rounded ${getStatusBadgeStyle(entry.status)}`}>
+                {entry.status}
+              </span>
+            </div>
+          </div>
+        ))}
 
         {/* ACTIVE INPUT ROW */}
         <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-zinc-50 dark:bg-zinc-900/20 items-center border-l-4 border-zinc-900 dark:border-white animate-pulse hover:animate-none transition-all">
@@ -485,7 +511,7 @@ const PresentationSection = ({ title, children }: { title: string, children: Rea
   </div>
 );
 
-const MedCoreComponentCatalog = () => {
+const App = () => {
   // Theme state
   const [isDarkMode, setIsDarkMode] = useState(true);
 
@@ -558,4 +584,4 @@ const MedCoreComponentCatalog = () => {
   );
 };
 
-export default MedCoreComponentCatalog;
+export default App;
