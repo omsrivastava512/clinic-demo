@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, User, Phone, Calendar, Smartphone, MapPin, Check, ArrowRight } from 'lucide-react';
+import {  User , Smartphone,  ArrowRight,
+  // X,Phone, Calendar,MapPin, Check, 
+} from 'lucide-react';
 
 interface IntakeProps {
   initialName?: string; 
@@ -57,7 +59,7 @@ const App: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
             <input 
               type="text" 
               value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              onChange={(e) => setFormData({...formData, name: (e.target as HTMLInputElement).value})}
               placeholder="e.g. Ramesh Gupta"
               // Style: Matches the Sticky Search Bar from Ledger
               className="w-full bg-zinc-900/30 border border-zinc-800 text-white text-lg font-medium px-4 py-3 pl-10 rounded-lg focus:border-zinc-500 focus:bg-zinc-900/50 outline-none transition-all placeholder-zinc-700"
@@ -78,7 +80,7 @@ const App: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
                 ref={phoneRef}
                 type="tel" 
                 value={formData.phone}
-                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                onChange={(e) => setFormData({...formData, phone: (e.target as HTMLInputElement).value})}
                 placeholder="98765 00000"
                 className="w-full bg-zinc-900/30 border border-zinc-800 text-white font-mono text-lg px-4 py-3 pl-10 rounded-lg focus:border-zinc-500 outline-none transition-all placeholder-zinc-700"
               />
@@ -91,7 +93,7 @@ const App: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
             <input 
               type="number" 
               value={formData.age}
-              onChange={(e) => setFormData({...formData, age: e.target.value})}
+              onChange={(e) => setFormData({...formData, age: (e.target as HTMLInputElement).value})}
               placeholder="00"
               className="w-full bg-zinc-900/30 border border-zinc-800 text-white text-center text-lg font-mono px-2 py-3 rounded-lg focus:border-zinc-500 outline-none transition-all placeholder-zinc-700"
             />

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState} from 'react';
 import { Search, Plus, User, Smartphone, Clock, ArrowUpRight } from 'lucide-react';
 
 // ==========================================
@@ -40,7 +40,7 @@ const DailyLedger = () => {
   const [input, setInput] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  // const [selectedIndex, setSelectedIndex] = useState(-1);
 
   // Handle Input Changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
