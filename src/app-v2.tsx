@@ -121,7 +121,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
     // Handle Input Changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = (e.target as HTMLInputElement).value;
-        setInput(val);
+        setInput(val.replace(/\s+/g,' ').trimStart());
 
         // Trigger Logic: Only show if more than 2 characters (starts at 3 chars)
         if (val.length > 2) {
@@ -129,11 +129,13 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
                 p.name.toLowerCase().includes(val.toLowerCase()) ||
                 p.phone.includes(val)
             );
-            console.log('found');
-
+            
             setFilteredPatients(results);
             setShowSuggestions(true);
         } else {
+            console.log('less');
+            setFilteredPatients([])
+            setSelectedIndex(-1)
             setShowSuggestions(false);
         }
     };
@@ -157,8 +159,13 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         // filteredPatients is your list results
         // We add +1 to length to account for the "Add New" button at the bottom
         const totalItems = filteredPatients.length + 1;
-        // console.log(sele);
-
+        console.log(totalItems);
+        
+        if(totalItems < 1){
+            // if Register Patient exists, no resuts
+            setSelectedIndex(-1);
+            return
+        }
 
         if (e.key === 'ArrowUp') {
             e.preventDefault(); // Stop cursor from moving in text box
@@ -171,27 +178,24 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         }
         else if (e.key === 'Enter') {
             e.preventDefault();
-            if (selectedIndex === -1) return; // Or trigger search
-
-            if (selectedIndex < filteredPatients.length) {
-                // It's a patient from the list
-                const patient = filteredPatients[selectedIndex];
-                alert(`Selected Existing: ${patient.name}`);
-            } else {
-                // It's the "Add New" button (last item)
-                alert(`Triggering Add New Patient for: ${input}`);
-            }
+            handleSelect(selectedIndex)
         }
     };
 
-    const handleSelect = (p: Patient | string) => {
-        if (typeof p === 'string') {
-            console.log("Create New Patient:", p);
+    const handleSelect = (i:number) => {
+        if (i === -1) return; // Or trigger search
+
+        if (i < filteredPatients.length) {
+            // It's a patient from the list
+            const patient = filteredPatients[i];
+            alert(`Selected Existing: ${patient.name}`);
         } else {
-            console.log("Existing Patient Selected:", p.name);
+            // It's the "Add New" button (last item)
+            alert(`Triggering Add New Patient for: ${input}`);
         }
         setInput('');
         setShowSuggestions(false);
+        setSelectedIndex(-1);
     };
 
     return (
@@ -624,7 +628,7 @@ const App = () => {
                     <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-2 font-mono">
                         Theme: {isDarkMode ? 'Pearl Black' : 'Clinical White'} • Mode: Many-to-Many Context
                     </p>
-                    <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Wed Nov 26 2025 | 22:30 </p>
+                    <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Wed Nov 26 2025 | 22:40 </p>
                 </div>
 
                 <PresentationSection title="1. The Daily Ledger (Input)">
@@ -673,7 +677,7 @@ export default App;
 
 interface SearchSuggestionsProps {
     filteredPatients: Patient[];
-    handleSelect(p: Patient | string): void;
+    handleSelect(i:number): void;
     input: string;
     selectedIndex: number
 }
@@ -691,7 +695,7 @@ const SearchSuggestions = ({ filteredPatients, handleSelect, input, selectedInde
             {filteredPatients.map((p, i) => (
                 <button
                     key={p.id}
-                    onClick={() => handleSelect(p)}
+                    onClick={() => handleSelect(i)}
                     className={`w-full text-left px-4 py-3 border-b border-zinc-800 hover:bg-zinc-800 hover:text-white group flex justify-between items-center transition-colors ${i === selectedIndex ? 'bg-zinc-800 text-white' : ''}`}
                 >
                     <div className="flex items-center gap-3">
@@ -722,7 +726,7 @@ const SearchSuggestions = ({ filteredPatients, handleSelect, input, selectedInde
 
         {/* Footer of Dropdown: Always "Add New" */}
         <button
-            onClick={() => handleSelect(input)}
+            onClick={() => handleSelect(filteredPatients.length)}
             className={`w-full ${filteredPatients.length === selectedIndex ? 'bg-zinc-800 text-white' : ' bg-zinc-950'} text-left px-4 py-3 hover:bg-zinc-900 border-t border-zinc-700 text-white flex items-center gap-3 transition-colors `}
         >
             <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-black">
