@@ -118,10 +118,19 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         console.log('rn', selectedIndex);
     }, [selectedIndex])
 
+    useEffect(() => {
+        if (!showSuggestions) {
+            // setFilteredPatients([])
+            setSelectedIndex(-1)
+        }else if(filteredPatients.length === 0){
+            setSelectedIndex(0)
+        }
+    }, [showSuggestions,filteredPatients])
+
     // Handle Input Changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = (e.target as HTMLInputElement).value;
-        setInput(val.replace(/\s+/g,' ').trimStart());
+        const val = (e.target as HTMLInputElement).value.replace(/\s+/g, ' ').replace(/[^a-zA-Z0-9]/g, '').trimStart();
+        setInput(val);
 
         // Trigger Logic: Only show if more than 2 characters (starts at 3 chars)
         if (val.length > 2) {
@@ -129,13 +138,9 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
                 p.name.toLowerCase().includes(val.toLowerCase()) ||
                 p.phone.includes(val)
             );
-            
             setFilteredPatients(results);
             setShowSuggestions(true);
         } else {
-            console.log('less');
-            setFilteredPatients([])
-            setSelectedIndex(-1)
             setShowSuggestions(false);
         }
     };
@@ -159,13 +164,8 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         // filteredPatients is your list results
         // We add +1 to length to account for the "Add New" button at the bottom
         const totalItems = filteredPatients.length + 1;
-        console.log(totalItems);
-        
-        if(totalItems < 1){
-            // if Register Patient exists, no resuts
-            setSelectedIndex(-1);
-            return
-        }
+
+        if (!showSuggestions) return;
 
         if (e.key === 'ArrowUp') {
             e.preventDefault(); // Stop cursor from moving in text box
@@ -182,10 +182,10 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         }
     };
 
-    const handleSelect = (i:number) => {
-        if (i === -1) return; // Or trigger search
+    const handleSelect = (i: number) => {
+        if (filteredPatients.length > 0 && i === -1) return; // Or trigger search
 
-        if (i < filteredPatients.length) {
+        if (i < filteredPatients.length && i !== -1) {
             // It's a patient from the list
             const patient = filteredPatients[i];
             alert(`Selected Existing: ${patient.name}`);
@@ -195,7 +195,6 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         }
         setInput('');
         setShowSuggestions(false);
-        setSelectedIndex(-1);
     };
 
     return (
@@ -628,7 +627,7 @@ const App = () => {
                     <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-2 font-mono">
                         Theme: {isDarkMode ? 'Pearl Black' : 'Clinical White'} • Mode: Many-to-Many Context
                     </p>
-                    <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Wed Nov 26 2025 | 22:40 </p>
+                    <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Wed Nov 26 2025 | 23:40 </p>
                 </div>
 
                 <PresentationSection title="1. The Daily Ledger (Input)">
@@ -677,7 +676,7 @@ export default App;
 
 interface SearchSuggestionsProps {
     filteredPatients: Patient[];
-    handleSelect(i:number): void;
+    handleSelect(i: number): void;
     input: string;
     selectedIndex: number
 }
