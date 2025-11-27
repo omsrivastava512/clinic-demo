@@ -94,6 +94,26 @@ const PHYSIO_PROCEDURES: Procedure[] = [
 const MOCK_LEDGER_ENTRIES: LedgerEntry[] = [
     { id: 'LE01', time: '10:15 AM', patientName: 'Vikram Singh', treatment: 'Frozen Shoulder (IFT + US)', status: 'Paid' },
     { id: 'LE02', time: '10:30 AM', patientName: 'Priya Kapoor', treatment: 'Ankle Sprain (Taping)', status: 'In Therapy' },
+    { id: 'LE03', time: '10:45 AM', patientName: 'Rahul Sharma', treatment: 'Knee Pain (IFT)', status: 'Waiting' },
+    { id: 'LE04', time: '11:00 AM', patientName: 'Anjali Devi', treatment: 'Shoulder Impingement (US)', status: 'Paid' },
+    { id: 'LE05', time: '11:15 AM', patientName: 'Suresh Menon', treatment: 'Cervical Spondylosis (TENS)', status: 'In Therapy' },
+    { id: 'LE06', time: '11:30 AM', patientName: 'Meena Kumari', treatment: 'Back Strain (Manual Therapy)', status: 'Paid' },
+    { id: 'LE07', time: '11:45 AM', patientName: 'Arjun Reddy', treatment: 'Tennis Elbow (US)', status: 'Waiting' },
+    { id: 'LE08', time: '12:00 PM', patientName: 'Nisha Singh', treatment: 'Plantar Fasciitis (IFT)', status: 'In Therapy' },
+    { id: 'LE09', time: '12:15 PM', patientName: 'Vijay Kumar', treatment: 'Sciatica (SWD)', status: 'Paid' },
+    { id: 'LE10', time: '12:30 PM', patientName: 'Pooja Sharma', treatment: 'Frozen Shoulder (Cervical Traction)', status: 'Waiting' },
+    { id: 'LE11', time: '01:00 PM', patientName: 'Ravi Verma', treatment: 'Post-Op Knee Rehab (Kinesio Taping)', status: 'In Therapy' },
+    { id: 'LE12', time: '01:15 PM', patientName: 'Geeta Devi', treatment: 'Wrist Sprain (US)', status: 'Paid' },
+    { id: 'LE13', time: '01:30 PM', patientName: 'Mohan Lal', treatment: 'Neck Pain (TENS)', status: 'Waiting' },
+    { id: 'LE14', time: '01:45 PM', patientName: 'Kavita Rao', treatment: 'Hip Bursitis (IFT)', status: 'In Therapy' },
+    { id: 'LE15', time: '02:00 PM', patientName: 'Sanjay Dutt', treatment: 'Ankle Fracture Rehab (Manual Therapy)', status: 'Paid' },
+    { id: 'LE16', time: '02:15 PM', patientName: 'Deepa Mehta', treatment: 'Rotator Cuff Injury (US)', status: 'Waiting' },
+    { id: 'LE17', time: '02:30 PM', patientName: 'Ashok Kumar', treatment: 'Lumbar Spondylosis (SWD)', status: 'In Therapy' },
+    { id: 'LE18', time: '02:45 PM', patientName: 'Shalini Gupta', treatment: 'Migraine (Cervical Traction)', status: 'Paid' },
+    { id: 'LE19', time: '03:00 PM', patientName: 'Rajesh Khanna', treatment: 'Achilles Tendonitis (Kinesio Taping)', status: 'Waiting' },
+    { id: 'LE20', time: '03:15 PM', patientName: 'Smita Patil', treatment: 'Carpal Tunnel Syndrome (US)', status: 'In Therapy' },
+    { id: 'LE21', time: '03:30 PM', patientName: 'Gaurav Singh', treatment: 'Groin Strain (IFT)', status: 'Paid' },
+    { id: 'LE22', time: '03:45 PM', patientName: 'Priya Kapoor', treatment: 'Ankle Sprain (Taping)', status: 'In Therapy' },
 ];
 
 // ==========================================
@@ -114,22 +134,46 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
     const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(-1);
 
-    useEffect(() => {
-        console.log('rn', selectedIndex);
-    }, [selectedIndex])
-
+    
     useEffect(() => {
         if (!showSuggestions) {
             // setFilteredPatients([])
             setSelectedIndex(-1)
-        }else if(filteredPatients.length === 0){
+        } else if (filteredPatients.length === 0) {
             setSelectedIndex(0)
         }
-    }, [showSuggestions,filteredPatients])
+    }, [showSuggestions, filteredPatients])
+
+
+    const cleanSearchInput = (input: string): string => {
+        if (!input) return ""; // Handle Empty Strings
+
+        // Flatten whitespaces
+        const returnString = input.trimStart().replace(/\s+/g, ' ');
+
+        const firstChar = input[0];
+
+        // if the string starts with a Letter
+        if (/[a-zA-Z]/.test(firstChar)) {
+            // Regex: Replace anything that is NOT (^) a letter or space
+            return returnString.replace(/[^a-zA-Z ]/g, "");
+        }
+
+        // if the string starts with a Number
+        if (/[0-9]/.test(firstChar)) {
+            // Regex: Replace anything that is NOT (^) a number and slice it till 10 digits
+            return returnString.replace(/[^0-9]/g, "").slice(0,10);
+        }
+
+
+        return "";
+
+    }
 
     // Handle Input Changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = (e.target as HTMLInputElement).value.replace(/\s+/g, ' ').replace(/[^a-zA-Z0-9]/g, '').trimStart();
+        const val = cleanSearchInput((e.target as HTMLInputElement).value)
+
         setInput(val);
 
         // Trigger Logic: Only show if more than 2 characters (starts at 3 chars)
@@ -182,6 +226,11 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         }
     };
 
+    /**
+     * Suggestion: Add logic to detect if new patient added using Name or Phone Number
+     * @param i Index of the selected patient/option
+     * @returns 
+     **/
     const handleSelect = (i: number) => {
         if (filteredPatients.length > 0 && i === -1) return; // Or trigger search
 
@@ -198,7 +247,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
     };
 
     return (
-        <div id="daily_ledger" className="w-full relative bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden flex flex-col h-[400px] transition-colors duration-300">
+        <div id="daily_ledger" className="w-full relative bg-white overflow-hidden dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-lg flex flex-col h-[500px] transition-colors duration-300">
             {/* Header */}
             <div className="flex justify-between items-end p-6 border-b border-zinc-200 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-950">
                 <div>
@@ -220,7 +269,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
             </div>
 
             {/* Rows */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto flex flex-col">
                 {/* Dynamic Rows */}
                 {MOCK_LEDGER_ENTRIES.map((entry) => (
                     <div key={entry.id} className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-zinc-100 dark:border-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
@@ -234,12 +283,12 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
                         </div>
                     </div>
                 ))}
-                <div className="absolute bottom-0 left-0 right-0 bg-black p-0 w">
+                <div className="sticky bottom-0 left-0 right-0 dark:bg-black  p-1 w-full  mt-auto">
                     {/* A. The Floating Typeahead List (Drop-up) */}
                     {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} selectedIndex={selectedIndex} />}
 
                     {/* ACTIVE INPUT ROW */}
-                    <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-zinc-50 dark:bg-zinc-900/20 items-center border-l-4 border-zinc-900 dark:border-white animate-pulse hover:animate-none transition-all">
+                    <div className="mb-1 w-full grid grid-cols-12 gap-4 px-6 py-4 bg-zinc-50 dark:bg-zinc-900/20 items-center border-l-3 border-zinc-600 dark:border-zinc-500 animate-pulse  transition-all">
                         <div className="col-span-2 text-zinc-900 dark:text-white font-mono text-xs">Now</div>
                         <div className="col-span-10 relative">
                             <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
@@ -282,7 +331,7 @@ const ContextSelector: React.FC<ContextSelectorProps> = ({ patient, availableCon
     };
 
     return (
-        <div className="w-full max-w-2xl bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 shadow-2xl transition-colors duration-300">
+        <div className="w-full max-w-2xl bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800  rounded-xl p-8 shadow-2xl transition-colors duration-300">
             <div className="flex justify-between items-start mb-6">
                 <div>
                     <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{patient.name}</h2>
