@@ -55,7 +55,7 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
           
           {/* Input Area with Labels */}
           <div className="flex gap-2 mb-6 items-end">
-            <div className="w-1/3">
+            <div className="">
               <label className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 block">
                 Category
               </label>
@@ -63,7 +63,7 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
                 type="text" 
                 value={newKey}
                 onChange={(e) => setNewKey((e.target as HTMLInputElement).value)}
-                placeholder="e.g. Weight, Allergy"
+                placeholder="e.g. Diabetes, Weight, Thyroid, Allergy"
                 className="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-900 dark:text-white outline-none focus:border-zinc-400 dark:focus:border-zinc-600 focus:bg-white dark:focus:bg-zinc-900 transition-all placeholder-zinc-400 dark:placeholder-zinc-600"
               />
             </div>
@@ -76,7 +76,7 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
                 type="text" 
                 value={newValue}
                 onChange={(e) => setNewValue((e.target as HTMLInputElement).value)}
-                placeholder="e.g. Diabetes, Thyroid"
+                placeholder="e.g. High, 75, Low"
                 className="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-900 dark:text-white outline-none focus:border-zinc-400 dark:focus:border-zinc-600 focus:bg-white dark:focus:bg-zinc-900 transition-all placeholder-zinc-400 dark:placeholder-zinc-600"
                 onKeyDown={(e) => e.key === 'Enter' && handleAddNote()}
               />

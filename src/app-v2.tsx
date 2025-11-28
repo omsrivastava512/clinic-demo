@@ -730,7 +730,7 @@ const App = () => {
                 </div>
 
                 <div className="text-center mb-20">
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">MedCore Components</h1>
+                    <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalog</h1>
                     <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
                     <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-2 font-mono">
                         Theme: {isDarkMode ? 'Pearl Black' : 'Clinical White'} • Mode: Many-to-Many Context
@@ -742,7 +742,7 @@ const App = () => {
                     <DailyLedger onPatientIdentified={handleLog} />
                 </PresentationSection>
 
-                <PresentationSection title="1.5. Intake">
+                <PresentationSection title="2. Intake">
                     <div className="flex gap-5 flex-wrap">
                         {/* <Intake /> */}
                         {/* <Intake2 /> */}
@@ -753,7 +753,7 @@ const App = () => {
 
                 
 
-                <PresentationSection title="2. Context Switcher (Diagnosis)">
+                <PresentationSection title="3. Context Switcher (Diagnosis)">
                     <div className="flex justify-center">
                         <ContextSelector
                             patient={MOCK_PATIENTS[0]}
@@ -764,7 +764,7 @@ const App = () => {
                     </div>
                 </PresentationSection>
 
-                <PresentationSection title="3. Procedure Logger (Multi-Context Logic)">
+                <PresentationSection title="4. Procedure Logger (Multi-Context Logic)">
                     {/* We simulate passing TWO contexts to show the grouping logic */}
                     <ProcedureLogger
                         selectedContexts={[MOCK_CONTEXTS[0], MOCK_CONTEXTS[1]]}
@@ -772,7 +772,7 @@ const App = () => {
                     />
                 </PresentationSection>
 
-                <PresentationSection title="4. Invoice & Payment (Indian Locale)">
+                <PresentationSection title="5. Invoice & Payment (Indian Locale)">
                     <InvoiceBuilder
                         items={[
                             { procedureId: '1', contextId: 'C1', name: 'Ultrasonic Therapy', contextName: 'Right Knee ACL', cost: 250 },

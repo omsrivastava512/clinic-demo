@@ -7,16 +7,27 @@ interface IntakeProps {
     onClose: () => void;
 }
 
+type FormData = {
+    name: string;
+    phone: string;
+    sex: 'M' | 'F';
+    age: string;
+    referral: 'WALKIN' | 'GOOGLE' | 'DOCTOR'
+
+}
+
 const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         name: initialName,
         phone: '',
-        gender: 'M',
+        sex: 'M',
         age: '',
-        referral: 'WALKIN'
+        referral: 'WALKIN' 
     });
 
     const [showClinicalNotes, setShowClinicalNotes] = useState(false)
+
+    const referralRef = useRef<HTMLTextAreaElement>(null);
 
     const phoneRef = useRef<HTMLInputElement>(null);
 
@@ -26,9 +37,15 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
         }
     }, [initialName]);
 
+    useEffect(()=>{
+        if(formData.referral === 'DOCTOR'){
+            referralRef.current?.focus();
+        }
+    },[formData.referral])
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        alert(`Creating Profile for: ${formData.name}\nMobile: ${formData.phone}\nGender: ${formData.gender}`);
+        alert(`Creating Profile for: ${formData.name}\nMobile: ${formData.phone}\nGender: ${formData.sex}`);
         onClose();
     };
 
@@ -95,21 +112,21 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
                         />
                     </div>
 
-                    {/* Gender */}
+                    {/* sex */}
                     <div className="col-span-1 sm:col-span-3">
-                        <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 block">Gender</label>
+                        <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 block">sex</label>
                         <div className="flex bg-zinc-100 dark:bg-zinc-900 rounded-lg p-1 border border-zinc-200 dark:border-zinc-800">
-                            {['M', 'F'].map((g) => (
+                            {(['M', 'F'] as const).map((s) => (
                                 <button
-                                    key={g}
+                                    key={s}
                                     type="button"
-                                    onClick={() => setFormData({ ...formData, gender: g })}
-                                    className={`flex-1 py-2 rounded text-sm font-bold transition-all ${formData.gender === g
+                                    onClick={() => setFormData({ ...formData, sex: s })}
+                                    className={`flex-1 py-2 rounded text-sm font-bold transition-all ${formData.sex === s
                                         ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm border border-zinc-200 dark:border-transparent'
                                         : 'text-zinc-500 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300'
                                         }`}
                                 >
-                                    {g}
+                                    {s}
                                 </button>
                             ))}
                         </div>
@@ -120,11 +137,11 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
                 <div>
                     <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Referral Source</label>
                     <div className={`grid grid-cols-3 gap-3`}>
-                        {[
+                        {([
                             { id: 'WALKIN', icon: <Footprints className={'inline'} />, label: 'Walk-In' },
                             { id: 'GOOGLE', icon: <MapPin className={'inline'} />, label: 'Google Maps' },
                             { id: 'DOCTOR', icon: <Stethoscope className={'inline'} />, label: 'Dr. Referral' }
-                        ].map((ref) => (
+                        ] as const).map((ref) => (
                             <button
                                 key={ref.id}
                                 type="button"
@@ -143,7 +160,7 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
                         <div class='transition-all duration-700'>
                             <label for="referral_info" className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest my-3 block">Doctor's Info</label>
 
-                            <textarea name="referral info" id="referral_info"
+                            <textarea name="referral info" ref={referralRef} id="referral_info"
                                 placeholder="Enter referring doctor's information like name, number, address, etc., here..." className="w-full bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white font-mono text-lg px-4 py-3 pl-10 rounded-lg focus:border-zinc-400 dark:focus:border-zinc-500 focus:ring-2 focus:ring-zinc-100 dark:focus:ring-zinc-800 outline-none transition-all placeholder-zinc-400 dark:placeholder-zinc-600"
                             />
                         </div>}
