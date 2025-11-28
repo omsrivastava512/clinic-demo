@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
-import { X, User, Smartphone, Check, Footprints, MapPin, Stethoscope } from 'lucide-react';
+import { X, User, Smartphone, Check, Footprints, MapPin, Stethoscope, NotebookPen } from 'lucide-react';
 
 interface IntakeProps {
     initialName?: string;
@@ -136,10 +136,26 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
                             </button>
                         ))}
                     </div>
+                    {(formData.referral === 'DOCTOR') &&
+                        <div class='transition-all duration-700'>
+                            <label for="referral_info" className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest my-3 block">Doctor's Info</label>
+
+                            <textarea name="referral info" id="referral_info"
+                                placeholder="Enter referring doctor's information like name, number, address, etc., here..." className="w-full bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white font-mono text-lg px-4 py-3 pl-10 rounded-lg focus:border-zinc-400 dark:focus:border-zinc-500 focus:ring-2 focus:ring-zinc-100 dark:focus:ring-zinc-800 outline-none transition-all placeholder-zinc-400 dark:placeholder-zinc-600"
+                            />
+                        </div>}
+
                 </div>
 
                 {/* FOOTER ACTIONS */}
                 <div className="pt-6 mt-2 border-t border-zinc-100 dark:border-zinc-900 flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4">
+                    <button type="button"
+                        title="Add additional details"
+                        onClick={()=>alert()}
+                        className="pr-10 py-3"
+                    >
+                        <NotebookPen className="sm:w-auto font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors" />
+                    </button>
                     <button
                         type="button"
                         onClick={onClose}
