@@ -27,7 +27,7 @@ export interface Patient {
 export interface MedicalContext {
     id: string;
     title: string; // e.g., "Cervical Spondylosis"
-    doctor: string;
+    doctor?: string;
     isActive: boolean;
     type: 'EXISTING' | 'NEW';
 }
@@ -80,7 +80,6 @@ const MOCK_PATIENTS: Patient[] = [
 const MOCK_CONTEXTS: MedicalContext[] = [
     { id: 'CTX_01', title: 'Chronic Lower Back Pain (L4-L5)', doctor: 'Dr. R. Sharma', isActive: true, type: 'EXISTING' },
     { id: 'CTX_02', title: 'Post-Op ACL Rehab (Right Knee)', doctor: 'Dr. A. Gupta', isActive: true, type: 'EXISTING' },
-    { id: 'CTX_NEW', title: 'Report New Issue...', doctor: 'TBD', isActive: false, type: 'NEW' },
 ];
 
 const PHYSIO_PROCEDURES: Procedure[] = [
@@ -292,7 +291,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
 
                     {/* ACTIVE INPUT ROW */}
                     <div className="mb-1 w-full rounded border border-black/25 dark:border-white/25 grid grid-cols-12 gap-4 px-6 py-4 bg-zinc-50 dark:bg-zinc-900/50 items-center shadow-lg shadow-gray-500/70 dark:shadow-none">
-                    
+
                         <div className="hidden md:block md:col-span-2 text-zinc-900 dark:text-white font-mono text-xs">Now</div>
                         <div className="col-span-10 relative">
                             <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
@@ -330,9 +329,40 @@ interface ContextSelectorProps {
 const ContextSelector: React.FC<ContextSelectorProps> = ({ patient, availableContexts, onConfirm, onCancel }) => {
     const [selected, setSelected] = useState<string[]>([]);
 
+    // Local state to manage newly created contexts
+    const [customContexts, setCustomContexts] = useState<MedicalContext[]>([]);
+
+    // State for the inline input
+    const [newContextInput, setNewContextInput] = useState('');
+
     const toggleContext = (id: string) => {
         setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
     };
+
+    const handleAddNewContext = () => {
+        if (!newContextInput.trim()) return;
+
+        const newCtx: MedicalContext = {
+            id: `NEW_${Date.now()}`,
+            title: newContextInput,
+            isActive: true,
+            type: 'NEW'
+        };
+
+        setCustomContexts(prev => [...prev, newCtx]);
+        setSelected(prev => [...prev, newCtx.id]); // Auto-select the new one
+        setNewContextInput(''); // Reset input
+    };
+
+    const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleAddNewContext();
+        }
+    };
+
+    // Combine props contexts with locally created ones
+    const allContexts = [...availableContexts, ...customContexts];
 
     return (
         <div className="w-full max-w-2xl bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800  rounded-xl p-8 shadow-2xl transition-colors duration-300">
@@ -341,15 +371,16 @@ const ContextSelector: React.FC<ContextSelectorProps> = ({ patient, availableCon
                     <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{patient.name}</h2>
                     <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">MRN: {patient.mrn} • +91 {patient.phone}</p>
                 </div>
-                <div className="text-right text-xs font-mono text-zinc-500 dark:text-zinc-600">
+                <div className="text-right text-xs font-mono text-zinc-500 dark:text-zinc-400">
                     DETECTED PATIENT
                 </div>
             </div>
 
             <div className="mb-6">
-                <h3 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-4">Select Treatment Context (उपचार संदर्भ)</h3>
+                <h3 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-4">Select Treatment Complaint</h3>
                 <div className="space-y-3">
-                    {availableContexts.map(ctx => {
+                    {/* List Existing & Added Contexts */}
+                    {allContexts.map(ctx => {
                         const isSelected = selected.includes(ctx.id);
                         return (
                             <div
@@ -375,13 +406,37 @@ const ContextSelector: React.FC<ContextSelectorProps> = ({ patient, availableCon
                                     {ctx.type === 'EXISTING' && (
                                         <div className="text-xs text-zinc-500 dark:text-zinc-600">{ctx.doctor} • Active Plan</div>
                                     )}
+                                    {ctx.type === 'NEW' && (
+                                        <div className="text-xs text-emerald-600 dark:text-emerald-500 font-medium">New Issue Added</div>
+                                    )}
                                 </div>
-                                {ctx.type === 'NEW' && <Plus className="w-4 h-4 text-zinc-500 dark:text-zinc-600" />}
                             </div>
                         );
                     })}
+
+                    {/* The "Report New Issue" Input Row */}
+                    <div className="flex items-center p-4 rounded-lg border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/30">
+                        <Plus className="w-5 h-5 text-zinc-400 dark:text-zinc-500 mr-4" />
+                        <input
+                            type="text"
+                            value={newContextInput}
+                            onChange={(e) => setNewContextInput((e.target as HTMLInputElement).value)}
+                            onKeyDown={handleInputKeyDown}
+                            placeholder="Report new issue (e.g. Knee Pain)..."
+                            className="flex-1 bg-transparent border-none outline-none text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 font-medium"
+                        />
+                        <button type='button' title="Add New Patient"
+                            onClick={handleAddNewContext}
+                            disabled={!newContextInput.trim()}
+                            className="p-2 rounded bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                            <Plus className="w-4 h-4" />
+                        </button>
+                    </div>
+
                 </div>
             </div>
+            <input id="ctx_new" type="text" className="w-full bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white font-mono text-lg px-4 py-3 pl-10 rounded-lg focus:border-zinc-400 dark:focus:border-zinc-500 focus:ring-2 focus:ring-zinc-100 dark:focus:ring-zinc-800 outline-none transition-all placeholder-zinc-400 dark:placeholder-zinc-600" />
 
             <div className="flex justify-end gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-900">
                 <button onClick={onCancel} className="px-4 py-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Cancel</button>
@@ -691,9 +746,12 @@ const App = () => {
                     <div className="flex gap-5 flex-wrap">
                         {/* <Intake /> */}
                         {/* <Intake2 /> */}
-                        <NewPatientIntake onClose={()=>{}}/>
+                        <NewPatientIntake onClose={() => { }} />
                     </div>
                 </PresentationSection>
+
+
+                
 
                 <PresentationSection title="2. Context Switcher (Diagnosis)">
                     <div className="flex justify-center">
