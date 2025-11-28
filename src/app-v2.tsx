@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks'
-import Intake from './intake-v1';
-import Intake2 from './intake-v2';
+// import Intake from './intake-v1';
+// import Intake2 from './intake-v2';
 
 import {
     Search, Plus, Check,
@@ -10,6 +10,7 @@ import {
     CreditCard, Sun, Moon,
     Printer, Smartphone, Banknote,
 } from 'lucide-react';
+import NewPatientIntake from './intake-v3';
 
 // ==========================================
 // 1. TYPES & INTERFACES (types.ts)
@@ -245,7 +246,6 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         <div id="daily_ledger" className="w-full relative bg-white overflow-hidden dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-lg flex flex-col h-[500px] transition-colors duration-300">
             {/* Header */}
             <div className="flex justify-between items-end p-6 border-b border-zinc-200 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-950">
-
                 <div>
                     <div className="flex-col md:flex-row gap-2 items-center">
                         <p className="text-zinc-900 dark:text-white font-medium">Daily Register</p>
@@ -291,7 +291,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
                     {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} selectedIndex={selectedIndex} />}
 
                     {/* ACTIVE INPUT ROW */}
-                    <div className="mb-1 w-full grid grid-cols-12 gap-4 px-6 py-4 bg-zinc-50 dark:bg-zinc-900/50 items-center border-l-3 border-zinc-600 dark:border-zinc-500 animate-pulse  transition-all hover:animate-none focus-within:animate-none">
+                    <div className="mb-1 w-full rounded border border-black/25 dark:border-white/25 grid grid-cols-12 gap-4 px-6 py-4 bg-zinc-50 dark:bg-zinc-900/50 items-center shadow-lg shadow-gray-500/70 dark:shadow-none">
                     
                         <div className="hidden md:block md:col-span-2 text-zinc-900 dark:text-white font-mono text-xs">Now</div>
                         <div className="col-span-10 relative">
@@ -688,9 +688,10 @@ const App = () => {
                 </PresentationSection>
 
                 <PresentationSection title="1.5. Intake">
-                    <div className="flex gap-5">
-                        <Intake />
-                        <Intake2 />
+                    <div className="flex gap-5 flex-wrap">
+                        {/* <Intake /> */}
+                        {/* <Intake2 /> */}
+                        <NewPatientIntake onClose={()=>{}}/>
                     </div>
                 </PresentationSection>
 
