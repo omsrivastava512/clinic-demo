@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import { X, User, 
   // Phone, Calendar, MapPin,
   Smartphone,  Check } from 'lucide-react';
@@ -8,7 +8,7 @@ interface IntakeProps {
   onClose: () => void;
 }
 
-const App: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
+const Intake: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
   // State for form fields
   const [formData, setFormData] = useState({
     name: initialName,
@@ -22,9 +22,9 @@ const App: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
   const phoneRef = useRef<HTMLInputElement>(null);
 
   // Auto-focus logic: If name is provided, focus phone. If no name, focus name.
-  useEffect(() => {
-    if (initialName && phoneRef.current) {
-      phoneRef.current.focus();
+  useLayoutEffect(() => {
+    if (initialName) {
+      phoneRef.current?.focus();
     }
   }, [initialName]);
 
@@ -168,4 +168,4 @@ const App: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
   );
 };
 
-export default App;
+export default Intake;

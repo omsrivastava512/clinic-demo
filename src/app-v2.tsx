@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'preact/hooks'
+import Intake from './intake-v1';
+import Intake2 from './intake-v2';
 
 import {
     Search, Plus, Check,
@@ -134,7 +136,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
     const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(-1);
 
-    
+
     useEffect(() => {
         if (!showSuggestions) {
             // setFilteredPatients([])
@@ -147,27 +149,20 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
 
     const cleanSearchInput = (input: string): string => {
         if (!input) return ""; // Handle Empty Strings
-
         // Flatten whitespaces
         const returnString = input.trimStart().replace(/\s+/g, ' ');
-
         const firstChar = input[0];
-
         // if the string starts with a Letter
         if (/[a-zA-Z]/.test(firstChar)) {
             // Regex: Replace anything that is NOT (^) a letter or space
             return returnString.replace(/[^a-zA-Z ]/g, "");
         }
-
         // if the string starts with a Number
         if (/[0-9]/.test(firstChar)) {
             // Regex: Replace anything that is NOT (^) a number and slice it till 10 digits
-            return returnString.replace(/[^0-9]/g, "").slice(0,10);
+            return returnString.replace(/[^0-9]/g, "").slice(0, 10);
         }
-
-
         return "";
-
     }
 
     // Handle Input Changes
@@ -250,10 +245,15 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         <div id="daily_ledger" className="w-full relative bg-white overflow-hidden dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-lg flex flex-col h-[500px] transition-colors duration-300">
             {/* Header */}
             <div className="flex justify-between items-end p-6 border-b border-zinc-200 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-950">
+
                 <div>
-                    <h3 className="text-zinc-900 dark:text-white font-medium">Daily Register (दैनिक रजिस्टर)</h3>
-                    <p className="text-zinc-500 text-sm">Friday, 24 Nov • Dr. Sharma's Clinic</p>
+                    <div className="flex-col md:flex-row gap-2 items-center">
+                        <p className="text-zinc-900 dark:text-white font-medium">Daily Register</p>
+                        <p className="text-zinc-500 text-xs">Friday, 24 Nov</p>
+                    </div>
+                    <p className="text-zinc-500 text-sm">Dr. Sharma's Clinic</p>
                 </div>
+                {/* OPD Count */}
                 <div className="text-right">
                     <div className="text-2xl font-mono text-zinc-900 dark:text-white">42</div>
                     <div className="text-xs text-zinc-500 dark:text-zinc-600 uppercase tracking-widest">OPD Count</div>
@@ -263,21 +263,24 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
             {/* Table Header */}
             <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-500 uppercase tracking-wider">
                 <div className="col-span-2">Time</div>
-                <div className="col-span-4">Patient Name</div>
-                <div className="col-span-4">Treatment</div>
-                <div className="col-span-2 text-right">Status</div>
+                <div className="col-span-6 md:col-span-4">Patient Name</div>
+                <div className="hidden md:block md:col-span-4">Treatment</div>
+                <div className="col-span-4 md:col-span-2 text-right">Status</div>
             </div>
 
             {/* Rows */}
             <div className="flex-1 overflow-y-auto flex flex-col">
                 {/* Dynamic Rows */}
-                {MOCK_LEDGER_ENTRIES.map((entry) => (
+                {MOCK_LEDGER_ENTRIES.filter(e => e).map((entry) => (
                     <div key={entry.id} className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-zinc-100 dark:border-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
                         <div className="col-span-2 text-zinc-500 font-mono text-xs">{entry.time}</div>
-                        <div className="col-span-4 text-zinc-700 dark:text-zinc-300 font-medium">{entry.patientName}</div>
-                        <div className="col-span-4 text-zinc-600 dark:text-zinc-500 text-sm">{entry.treatment}</div>
-                        <div className="col-span-2 text-right">
-                            <span className={`text-xs px-2 py-1 rounded ${getStatusBadgeStyle(entry.status)}`}>
+                        <div className="col-span-6 md:col-span-4">
+                            <div className=" text-zinc-700 dark:text-zinc-300 font-medium">{entry.patientName}</div>
+                            <div className="md:hidden text-xs text-zinc-400 mt-0.5">{entry.treatment}</div>
+                        </div>
+                        <div className="hidden md:block md:col-span-4 text-zinc-600 dark:text-zinc-400 text-sm">{entry.treatment}</div>
+                        <div className="col-span-4 md:col-span-2 text-right">
+                            <span className={`text-xs px-1 sm:px-2 py-1 rounded ${getStatusBadgeStyle(entry.status)}`}>
                                 {entry.status}
                             </span>
                         </div>
@@ -288,8 +291,9 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
                     {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} selectedIndex={selectedIndex} />}
 
                     {/* ACTIVE INPUT ROW */}
-                    <div className="mb-1 w-full grid grid-cols-12 gap-4 px-6 py-4 bg-zinc-50 dark:bg-zinc-900/20 items-center border-l-3 border-zinc-600 dark:border-zinc-500 animate-pulse  transition-all">
-                        <div className="col-span-2 text-zinc-900 dark:text-white font-mono text-xs">Now</div>
+                    <div className="mb-1 w-full grid grid-cols-12 gap-4 px-6 py-4 bg-zinc-50 dark:bg-zinc-900/50 items-center border-l-3 border-zinc-600 dark:border-zinc-500 animate-pulse  transition-all hover:animate-none focus-within:animate-none">
+                    
+                        <div className="hidden md:block md:col-span-2 text-zinc-900 dark:text-white font-mono text-xs">Now</div>
                         <div className="col-span-10 relative">
                             <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
                             <input
@@ -297,11 +301,11 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
                                 value={input}
                                 onChange={handleInputChange}
                                 onKeyDown={handleKeyDown}
-                                className="w-full bg-transparent border-none outline-none text-xl font-medium text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 pl-8"
-                                placeholder="Type Name (e.g. 'Rajesh') or Mobile..."
+                                className="w-full bg-transparent border-none outline-none md:text-xl font-medium text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 pl-8"
+                                placeholder="Type Name or Mobile..."
                             />
                             <div className="absolute right-0 top-1/2 -translate-y-1/2 flex gap-2">
-                                <span className="hidden sm:inline-block text-[10px] bg-white dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-700">↵ ENTER</span>
+                                <span className="hidden sm:inline-block text-[10px] bg-white dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-700">{selectedIndex === -1 ? "Start typing" : "↵ ENTER"}</span>
                             </div>
                         </div>
                     </div>
@@ -676,11 +680,18 @@ const App = () => {
                     <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-2 font-mono">
                         Theme: {isDarkMode ? 'Pearl Black' : 'Clinical White'} • Mode: Many-to-Many Context
                     </p>
-                    <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Wed Nov 26 2025 | 23:40 </p>
+                    <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Wed Nov 28 2025 | 20:00 </p>
                 </div>
 
                 <PresentationSection title="1. The Daily Ledger (Input)">
                     <DailyLedger onPatientIdentified={handleLog} />
+                </PresentationSection>
+
+                <PresentationSection title="1.5. Intake">
+                    <div className="flex gap-5">
+                        <Intake />
+                        <Intake2 />
+                    </div>
                 </PresentationSection>
 
                 <PresentationSection title="2. Context Switcher (Diagnosis)">

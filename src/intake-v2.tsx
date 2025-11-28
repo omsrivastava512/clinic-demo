@@ -8,7 +8,7 @@ interface IntakeProps {
   onClose: () => void;
 }
 
-const App: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
+const Intake2: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
   const [formData, setFormData] = useState({
     name: initialName,
     phone: '',
@@ -170,4 +170,4 @@ const App: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
   );
 };
 
-export default App;
+export default Intake2;
