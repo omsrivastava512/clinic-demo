@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { X, User, Smartphone, Check, Footprints, MapPin, Stethoscope, NotebookPen } from 'lucide-react';
+import ClinicalNotesBuilder from './clinicalnotes';
 
 interface IntakeProps {
     initialName?: string;
@@ -14,6 +15,8 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
         age: '',
         referral: 'WALKIN'
     });
+
+    const [showClinicalNotes, setShowClinicalNotes] = useState(false)
 
     const phoneRef = useRef<HTMLInputElement>(null);
 
@@ -151,9 +154,10 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
                 <div className="pt-6 mt-2 border-t border-zinc-100 dark:border-zinc-900 flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4">
                     <button type="button"
                         title="Add additional details"
-                        onClick={()=>alert()}
+                        onClick={()=>setShowClinicalNotes(true)}
                         className="pr-10 py-3"
                     >
+
                         <NotebookPen className="sm:w-auto font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors" />
                     </button>
                     <button
@@ -173,7 +177,10 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
                 </div>
 
             </form>
+                   {showClinicalNotes && <ClinicalNotesBuilder onSave={()=>{setShowClinicalNotes(false)}} onClose={()=>setShowClinicalNotes(false)}/>}
+
         </div>
+        
     );
 };
 
