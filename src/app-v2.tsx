@@ -94,29 +94,53 @@ const PHYSIO_PROCEDURES: Procedure[] = [
 ];
 
 const MOCK_LEDGER_ENTRIES: LedgerEntry[] = [
-    { id: 'LE01', time: '10:15 AM', patientName: 'Vikram Singh', treatment: 'Frozen Shoulder (IFT + US)', status: 'Paid' },
     { id: 'LE02', time: '10:30 AM', patientName: 'Priya Kapoor', treatment: 'Ankle Sprain (Taping)', status: 'In Therapy' },
-    { id: 'LE03', time: '10:45 AM', patientName: 'Rahul Sharma', treatment: 'Knee Pain (IFT)', status: 'Waiting' },
+    { id: 'LE01', time: '10:15 AM', patientName: 'Vikram Singh', treatment: 'Frozen Shoulder (IFT + US)', status: 'Paid' },
     { id: 'LE04', time: '11:00 AM', patientName: 'Anjali Devi', treatment: 'Shoulder Impingement (US)', status: 'Paid' },
     { id: 'LE05', time: '11:15 AM', patientName: 'Suresh Menon', treatment: 'Cervical Spondylosis (TENS)', status: 'In Therapy' },
+    { id: 'LE09', time: '12:15 PM', patientName: 'Vijay Kumar', treatment: 'Sciatica (SWD)', status: 'Paid' },
+    { id: 'LE03', time: '10:45 AM', patientName: 'Rahul Sharma', treatment: 'Knee Pain (IFT)', status: 'Waiting' },
     { id: 'LE06', time: '11:30 AM', patientName: 'Meena Kumari', treatment: 'Back Strain (Manual Therapy)', status: 'Paid' },
     { id: 'LE07', time: '11:45 AM', patientName: 'Arjun Reddy', treatment: 'Tennis Elbow (US)', status: 'Waiting' },
     { id: 'LE08', time: '12:00 PM', patientName: 'Nisha Singh', treatment: 'Plantar Fasciitis (IFT)', status: 'In Therapy' },
-    { id: 'LE09', time: '12:15 PM', patientName: 'Vijay Kumar', treatment: 'Sciatica (SWD)', status: 'Paid' },
     { id: 'LE10', time: '12:30 PM', patientName: 'Pooja Sharma', treatment: 'Frozen Shoulder (Cervical Traction)', status: 'Waiting' },
     { id: 'LE11', time: '01:00 PM', patientName: 'Ravi Verma', treatment: 'Post-Op Knee Rehab (Kinesio Taping)', status: 'In Therapy' },
+    { id: 'LE16', time: '02:15 PM', patientName: 'Deepa Mehta', treatment: 'Rotator Cuff Injury (US)', status: 'Waiting' },
     { id: 'LE12', time: '01:15 PM', patientName: 'Geeta Devi', treatment: 'Wrist Sprain (US)', status: 'Paid' },
     { id: 'LE13', time: '01:30 PM', patientName: 'Mohan Lal', treatment: 'Neck Pain (TENS)', status: 'Waiting' },
     { id: 'LE14', time: '01:45 PM', patientName: 'Kavita Rao', treatment: 'Hip Bursitis (IFT)', status: 'In Therapy' },
-    { id: 'LE15', time: '02:00 PM', patientName: 'Sanjay Dutt', treatment: 'Ankle Fracture Rehab (Manual Therapy)', status: 'Paid' },
-    { id: 'LE16', time: '02:15 PM', patientName: 'Deepa Mehta', treatment: 'Rotator Cuff Injury (US)', status: 'Waiting' },
     { id: 'LE17', time: '02:30 PM', patientName: 'Ashok Kumar', treatment: 'Lumbar Spondylosis (SWD)', status: 'In Therapy' },
-    { id: 'LE18', time: '02:45 PM', patientName: 'Shalini Gupta', treatment: 'Migraine (Cervical Traction)', status: 'Paid' },
     { id: 'LE19', time: '03:00 PM', patientName: 'Rajesh Khanna', treatment: 'Achilles Tendonitis (Kinesio Taping)', status: 'Waiting' },
-    { id: 'LE20', time: '03:15 PM', patientName: 'Smita Patil', treatment: 'Carpal Tunnel Syndrome (US)', status: 'In Therapy' },
+    { id: 'LE18', time: '02:45 PM', patientName: 'Shalini Gupta', treatment: 'Migraine (Cervical Traction)', status: 'Paid' },
     { id: 'LE21', time: '03:30 PM', patientName: 'Gaurav Singh', treatment: 'Groin Strain (IFT)', status: 'Paid' },
+    { id: 'LE15', time: '02:00 PM', patientName: 'Sanjay Dutt', treatment: 'Ankle Fracture Rehab (Manual Therapy)', status: 'Paid' },
+    { id: 'LE20', time: '03:15 PM', patientName: 'Smita Patil', treatment: 'Carpal Tunnel Syndrome (US)', status: 'In Therapy' },
     { id: 'LE22', time: '03:45 PM', patientName: 'Priya Kapoor', treatment: 'Ankle Sprain (Taping)', status: 'In Therapy' },
 ];
+
+/**
+ * Utility function to convert 12H time into minutes
+ * @param t timeString1 in 12h format
+ * @returns minutes
+ */
+const calcMin = (t: string): number => {
+    const [time, meridiem] = t.split(' ');
+    let [h, m] = time.split(':').map(t=>+t);
+
+    if (meridiem === 'AM' && h === 12) {
+        h = 0;
+    }
+    else if(meridiem === 'PM' && h < 12){
+        h += 12;
+    }
+    return h*60 + m;
+}
+
+const compTime = (t1: string, t2: string): number => {// Consider AM/PM
+    return calcMin(t1) - calcMin(t2)
+}
+
+
 
 // ==========================================
 // 3. UI COMPONENTS
@@ -270,7 +294,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
             {/* Rows */}
             <div className="flex-1 overflow-y-auto flex flex-col">
                 {/* Dynamic Rows */}
-                {MOCK_LEDGER_ENTRIES.filter(e => e).map((entry) => (
+                {MOCK_LEDGER_ENTRIES.sort((a, b) => compTime(a.time, b.time)).map((entry) => (
                     <div key={entry.id} className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-zinc-100 dark:border-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
                         <div className="col-span-2 text-zinc-500 font-mono text-xs">{entry.time}</div>
                         <div className="col-span-6 md:col-span-4">
@@ -436,7 +460,6 @@ const ContextSelector: React.FC<ContextSelectorProps> = ({ patient, availableCon
 
                 </div>
             </div>
-            <input id="ctx_new" type="text" className="w-full bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white font-mono text-lg px-4 py-3 pl-10 rounded-lg focus:border-zinc-400 dark:focus:border-zinc-500 focus:ring-2 focus:ring-zinc-100 dark:focus:ring-zinc-800 outline-none transition-all placeholder-zinc-400 dark:placeholder-zinc-600" />
 
             <div className="flex justify-end gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-900">
                 <button onClick={onCancel} className="px-4 py-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Cancel</button>
@@ -692,10 +715,17 @@ const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, onC
 // 4. MAIN LAYOUT (CATALOG VIEW)
 // ==========================================
 
-const PresentationSection = ({ title, children }: { title: string, children: React.ReactNode }) => (
-    <div className="mb-32 max-w-5xl mx-auto w-full">
-        <div className="mb-6 px-4">
-            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight border-l-4 border-zinc-300 dark:border-zinc-700 pl-4">{title}</h2>
+const PresentationSection = ({ title, number, description, children }: { title: string, number: string, description: string, children: React.ReactNode }) => (
+    <div className="mb-32 max-w-5xl mx-auto w-full last:mb-0">
+        <div className="mb-6 px-4 md:mb-12 ml-2 max-w-3xl">
+            <div className="flex items-baseline gap-4 md:gap-6 mb-4">
+                <span className="text-4xl md:text-7xl font-serif text-zinc-400 dark:text-zinc-600 font-bold">{number}</span>
+
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight dark:text-white">{title}</h2>
+            </div>
+            <p className="dark:text-zinc-400 text-zinc-600 text-sm md:text-base leading-relaxed border-l-2 border-zinc-500 pl-4 md:pl-6 ml-2">
+                {description}
+            </p>
         </div>
         <div className="p-4 md:p-8 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl shadow-xl transition-colors duration-300">
             {children}
@@ -730,7 +760,7 @@ const App = () => {
                 </div>
 
                 <div className="text-center mb-20">
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalog</h1>
+                    <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
                     <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
                     <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-2 font-mono">
                         Theme: {isDarkMode ? 'Pearl Black' : 'Clinical White'} • Mode: Many-to-Many Context
@@ -738,11 +768,13 @@ const App = () => {
                     <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Wed Nov 29 2025 | 00:30 </p>
                 </div>
 
-                <PresentationSection title="1. The Daily Ledger (Input)">
+                <PresentationSection title="The Daily Ledger (Input)"
+                    number='01' description='Upcoming Features: ShimmerUI in search results floater, Add status wise filter '>
                     <DailyLedger onPatientIdentified={handleLog} />
                 </PresentationSection>
 
-                <PresentationSection title="2. Intake">
+                <PresentationSection title="2. Intake"
+                    number='02' description='Upcoming: Add address line for patient'>
                     <div className="flex gap-5 flex-wrap">
                         {/* <Intake /> */}
                         {/* <Intake2 /> */}
@@ -751,9 +783,10 @@ const App = () => {
                 </PresentationSection>
 
 
-                
 
-                <PresentationSection title="3. Context Switcher (Diagnosis)">
+
+                <PresentationSection title="Context Switcher (Diagnosis)"
+                    number='03' description='Upcoming: Add Last Visit as designed in workflow'>
                     <div className="flex justify-center">
                         <ContextSelector
                             patient={MOCK_PATIENTS[0]}
@@ -764,7 +797,8 @@ const App = () => {
                     </div>
                 </PresentationSection>
 
-                <PresentationSection title="4. Procedure Logger (Multi-Context Logic)">
+                <PresentationSection title="Procedure Logger (Multi-Context Logic)"
+                    number='04' description='Upcoming: Add Search Bar to find less common procedures and heading with selected complaints and validate all have been selected'>
                     {/* We simulate passing TWO contexts to show the grouping logic */}
                     <ProcedureLogger
                         selectedContexts={[MOCK_CONTEXTS[0], MOCK_CONTEXTS[1]]}
@@ -772,7 +806,8 @@ const App = () => {
                     />
                 </PresentationSection>
 
-                <PresentationSection title="5. Invoice & Payment (Indian Locale)">
+                <PresentationSection title="Invoice & Payment (Indian Locale)"
+                    number='05' description='Upcoming: options to add pay later'>
                     <InvoiceBuilder
                         items={[
                             { procedureId: '1', contextId: 'C1', name: 'Ultrasonic Therapy', contextName: 'Right Knee ACL', cost: 250 },
