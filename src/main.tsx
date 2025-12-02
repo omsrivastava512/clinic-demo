@@ -6,7 +6,7 @@ import './index.css'
 // import App  from './ledger.tsx' 
 
 
-import App from './app-v2.tsx'
+import App from './App.tsx'
 render(
     <App />
     , document.getElementById('app')!)

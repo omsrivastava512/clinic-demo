@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { X, User, Smartphone, Check, Footprints, MapPin, Stethoscope, NotebookPen } from 'lucide-react';
-import ClinicalNotesBuilder from './clinicalnotes';
+import ClinicalNotesBuilder from '../components/ClinicalNotes';
 
 interface IntakeProps {
     initialName?: string;

@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 demo
+versions
+.gitignore
 
 # Editor directories and files
 .vscode/*
