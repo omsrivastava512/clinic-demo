@@ -49,7 +49,7 @@ const PatientListItem = ({ patient, onSelect, isSelected }: PatientListItemProps
     >
         <div className="flex items-center gap-3">
             {/* ICON */}
-            <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-950 flex items-center justify-center border border-zinc-200 dark:border-zinc-800 text-zinc-500 group-hover:border-zinc-400 dark:group-hover:border-zinc-600">
+            <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-950 flex items-center justify-center border border-zinc-200 dark:border-zinc-800 text-zinc-500 group-data-[selected=true]:border-zinc-400 dark:group-data-[selected=true]:border-zinc-600 group-hover:border-zinc-400 dark:group-hover:border-zinc-600">
                 <User className="w-4 h-4" />
             </div>
 
@@ -67,7 +67,7 @@ const PatientListItem = ({ patient, onSelect, isSelected }: PatientListItemProps
             </div>
         </div>
 
-        <ArrowUpRight className="w-4 h-4 text-zinc-400 dark:text-zinc-600 group-hover:text-black dark:group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+        <ArrowUpRight className="w-4 h-4 text-black dark:text-white opacity-0  group-data-[selected=true]:opacity-100 transition-opacity" />
 
     </ListItemButton>
 )

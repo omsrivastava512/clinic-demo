@@ -24,8 +24,8 @@ type ListItemButtonProps = {
 };
 export const ListItemButton = ({ children, isSelected, onSelect, variant, }: ListItemButtonProps) => {
     const clss = {
-        base: 'w-full text-left px-4 py-3 hover:bg-zinc-300 dark:hover:bg-zinc-700 border-zinc-100 dark:border-zinc-800 flex items-center transition-colors',
-        selected: '!bg-zinc-200 dark:!bg-zinc-700 !text-black dark:!text-white',
+        base: 'w-full text-left px-4 py-3 hover:bg-zinc-300 dark:hover:bg-zinc-700 border-zinc-100 dark:border-zinc-800 flex items-center transition-colors cursor-pointer',
+        selected: '!bg-zinc-300 dark:!bg-zinc-700 !text-black dark:!text-white',
         normal: "border-b hover:text-black dark:hover:text-white justify-between",
         add: "border-t text-black dark:text-white gap-3 bg-gray-50 dark:bg-zinc-950"
     };
