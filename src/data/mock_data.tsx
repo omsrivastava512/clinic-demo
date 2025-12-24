@@ -1,21 +1,22 @@
 import type { LedgerEntry, MedicalContext, Patient, Procedure } from '@/types';
 
 export const MOCK_PATIENTS: Patient[] = [
-    { id: 'P01', name: 'Amitabh Bachchan', mrn: 'MED-992', phone: '9876543210', lastVisit: '2 days ago', },
-    { id: 'P02', name: 'Sania Mirza', mrn: 'MED-881', phone: '9988776655', lastVisit: '10 days ago', },
-    { id: 'P03', name: 'Virat Kohli', mrn: 'MED-774', phone: '9123456789', lastVisit: 'Yesterday', },
-    { id: 'P04', name: 'Priyanka Chopra', mrn: 'MED-663', phone: '9898989898', lastVisit: '1 month ago', },
-    { id: 'P05', name: 'Shah Rukh Khan', mrn: 'MED-552', phone: '9000011111', lastVisit: '3 weeks ago', },
-    { id: 'P06', name: 'Deepika Padukone', mrn: 'MED-441', phone: '9222233333', lastVisit: '5 days ago', },
-    { id: 'P07', name: 'Ranveer Singh', mrn: 'MED-330', phone: '9444455555', lastVisit: 'Today', },
-    { id: 'P08', name: 'Rohit Sharma', mrn: 'MED-229', phone: '9666677777', lastVisit: '2 months ago', },
-    { id: 'P09', name: 'Alia Bhatt', mrn: 'MED-118', phone: '9888899999', lastVisit: '1 week ago', },
-    { id: 'P10', name: 'Ranbir Kapoor', mrn: 'MED-007', phone: '9111122222', lastVisit: '4 days ago', },
-    { id: 'P11', name: 'Kareena Kapoor', mrn: 'MED-123', phone: '9333344444', lastVisit: 'Just now', },
-    { id: 'P12', name: 'Saif Ali Khan', mrn: 'MED-456', phone: '9555566666', lastVisit: 'Yesterday', },
-    { id: 'P13', name: 'Katrina Kaif', mrn: 'MED-789', phone: '9777788888', lastVisit: '2 days ago', },
-    { id: 'P14', name: 'Vicky Kaushal', mrn: 'MED-101', phone: '9999900000', lastVisit: '3 days ago', },
-    { id: 'P15', name: 'Hrithik Roshan', mrn: 'MED-202', phone: '9222211111', lastVisit: '1 month ago', },
+    { id: 'P01', name: 'Amitabh Bachchan', mrn: 'MED-992', phone: '9876543210', lastVisit: '2 days ago', address: 'Prateeksha, Juhu' },
+    { id: 'P02', name: 'Sania Mirza', mrn: 'MED-881', phone: '9988776655', lastVisit: '10 days ago', address: 'Banjara Hills, Hyderabad' },
+    { id: 'P03', name: 'Virat Kohli', mrn: 'MED-774', phone: '9123456789', lastVisit: 'Yesterday', address: 'DLF Phase 1, Gurgaon' },
+    { id: 'P04', name: 'Priyanka Chopra', mrn: 'MED-663', phone: '9898989898', lastVisit: '1 month ago', address: 'Versova, Andheri West' },
+    { id: 'P05', name: 'Shah Rukh Khan', mrn: 'MED-552', phone: '9000011111', lastVisit: '3 weeks ago', address: 'Bandstand, Bandra West' },
+    { id: 'P06', name: 'Deepika Padukone', mrn: 'MED-441', phone: '9222233333', lastVisit: '5 days ago', address: 'Pali Hill, Bandra' },
+    { id: 'P07', name: 'Ranveer Singh', mrn: 'MED-330', phone: '9444455555', lastVisit: 'Today', address: 'Carter Road, Bandra West' },
+    { id: 'P08', name: 'Rohit Sharma', mrn: 'MED-229', phone: '9666677777', lastVisit: '2 months ago', address: 'Worli Sea Face' },
+    { id: 'P09', name: 'Alia Bhatt', mrn: 'MED-118', phone: '9888899999', lastVisit: '1 week ago', address: 'Juhu Tara Road' },
+    { id: 'P10', name: 'Ranbir Kapoor', mrn: 'MED-007', phone: '9111122222', lastVisit: '4 days ago', address: 'Hill Road, Bandra' },
+    { id: 'P11', name: 'Kareena Kapoor', mrn: 'MED-123', phone: '9333344444', lastVisit: 'Just now', address: 'Fortune Heights, Bandra West' },
+    { id: 'P12', name: 'Saif Ali Khan', mrn: 'MED-456', phone: '9555566666', lastVisit: 'Yesterday', address: 'Pataudi House, Gurgaon, HR' },
+    { id: 'P13', name: 'Katrina Kaif', mrn: 'MED-789', phone: '9777788888', lastVisit: '2 days ago', address: 'Palm Beach Road, Navi Mumbai' },
+    { id: 'P14', name: 'Vicky Kaushal', mrn: 'MED-101', phone: '9999900000', lastVisit: '3 days ago', address: 'Lokhandwala Complex' },
+    { id: 'P15', name: 'Hrithik Roshan', mrn: 'MED-202', phone: '9222211111', lastVisit: '1 month ago', address: 'Juhu Scheme' },
+
 ];
 
 

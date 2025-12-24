@@ -8,6 +8,7 @@ export interface Patient {
     name: string; // e.g., "Rajesh Kumar"
     mrn: string;
     phone: string;
+    address:string;
     lastVisit?: string;
 }
 

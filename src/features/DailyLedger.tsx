@@ -30,23 +30,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
     }, [showSuggestions, filteredPatients])
 
 
-    const cleanSearchInput = (input: string): string => {
-        if (!input) return ""; // Handle Empty Strings
-        // Flatten whitespaces
-        const returnString = input.trimStart().replace(/\s+/g, ' ');
-        const firstChar = input[0];
-        // if the string starts with a Letter
-        if (/[a-zA-Z]/.test(firstChar)) {
-            // Regex: Replace anything that is NOT (^) a letter or space
-            return returnString.replace(/[^a-zA-Z ]/g, "");
-        }
-        // if the string starts with a Number
-        if (/[0-9]/.test(firstChar)) {
-            // Regex: Replace anything that is NOT (^) a number and slice it till 10 digits
-            return returnString.replace(/[^0-9]/g, "").slice(0, 10);
-        }
-        return "";
-    }
+
 
     // Handle Input Changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -201,3 +185,20 @@ export default DailyLedger;
 
 
 
+const cleanSearchInput = (input: string): string => {
+    if (!input) return ""; // Handle Empty Strings
+    // Flatten whitespaces
+    const returnString = input.trimStart().replace(/\s+/g, ' ');
+    const firstChar = input[0];
+    // if the string starts with a Letter
+    if (/[a-zA-Z]/.test(firstChar)) {
+        // Regex: Replace anything that is NOT (^) a letter or space
+        return returnString.replace(/[^a-zA-Z ]/g, "");
+    }
+    // if the string starts with a Number
+    if (/[0-9]/.test(firstChar)) {
+        // Regex: Replace anything that is NOT (^) a number and slice it till 10 digits
+        return returnString.replace(/[^0-9]/g, "").slice(0, 10);
+    }
+    return "";
+}

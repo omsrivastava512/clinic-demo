@@ -62,7 +62,7 @@ const PatientListItem = ({ patient, onSelect, isSelected }: PatientListItemProps
                     <span>{patient.mrn}</span>
                     <span>•</span>
                     <Smartphone className="w-3 h-3" /> {patient.phone}
-                    <MapPinHouse className="w-3 h-3" /> Om Nagar
+                    <MapPinHouse className="w-3 h-3" /> {patient.address}
                 </div>
             </div>
         </div>
