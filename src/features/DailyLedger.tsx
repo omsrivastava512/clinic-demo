@@ -3,7 +3,7 @@ import type { LedgerEntry, Patient } from "@/types";
 import { MOCK_LEDGER_ENTRIES, MOCK_PATIENTS } from "../data/mock_data";
 import { compTime } from "../utils/time12h";
 import { Search } from "lucide-react";
-import SearchSuggestions from "../components/SearchSuggestions";
+import SearchSuggestions from "../components/SearchSuggestion";
 
 /**
  * COMPONENT 1: THE LEDGER
@@ -174,7 +174,6 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
 
                     {/* ACTIVE INPUT ROW */}
                     <div className="mb-1 w-full rounded border border-black/25 dark:border-white/25 grid grid-cols-12 gap-4 px-6 py-4 bg-zinc-50 dark:bg-zinc-900/50 items-center shadow-lg shadow-gray-500/70 dark:shadow-none">
-
                         <div className="hidden md:block md:col-span-2 text-zinc-900 dark:text-white font-mono text-xs">Now</div>
                         <div className="col-span-10 relative">
                             <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
