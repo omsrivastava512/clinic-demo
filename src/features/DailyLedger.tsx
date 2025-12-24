@@ -5,6 +5,32 @@ import { compTime } from "../utils/time12h";
 import { Search } from "lucide-react";
 import SearchSuggestions from "../components/SearchSuggestion";
 
+
+const cleanSearchInput = (input: string): string => {
+
+    if (!input) return ""; // Handle Empty Strings
+
+    // 1. Normalize whitespace first
+    const normalized = input.replace(/\s+/g, ' ').trimStart();
+
+    // 2. Find first meaningful character
+    const firstChar = normalized[0];
+    if (!firstChar) return "";
+
+    // if the string starts with a Letter
+    if (/[a-zA-Z]/.test(firstChar)) {
+        // Regex: Replace anything that is NOT (^) a letter or space
+        return normalized.replace(/[^a-zA-Z ]/g, "");
+    }
+    // if the string starts with a Number
+    if (/[0-9]/.test(firstChar)) {
+        // Regex: Replace anything that is NOT (^) a number and slice it till 10 digits
+        return normalized.replace(/[^0-9]/g, "").slice(0, 10);
+    }
+
+    return "";
+}
+
 /**
  * COMPONENT 1: THE LEDGER
  * The "Excel-like" input row for rapid entry.
@@ -19,6 +45,9 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
     const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(-1);
 
+    console.log("REND");
+
+
 
     useEffect(() => {
         if (!showSuggestions) {
@@ -30,16 +59,16 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
     }, [showSuggestions, filteredPatients])
 
 
-
-
     // Handle Input Changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = cleanSearchInput((e.target as HTMLInputElement).value)
-
+        const raw = (e.target as HTMLInputElement).value
+        const val = cleanSearchInput(raw)
+        console.log(val);
+        
         setInput(val);
 
-        // Trigger Logic: Only show if more than 2 characters (starts at 3 chars)
-        if (val.length > 2) {
+        // Trigger Logic: Only show if at least 3 characters (starts at 3 chars)
+        if (val.length >= 3) {
             const results = MOCK_PATIENTS.filter(p =>
                 p.name.toLowerCase().includes(val.toLowerCase()) ||
                 p.phone.includes(val)
@@ -48,9 +77,10 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
             setShowSuggestions(true);
         } else {
             setShowSuggestions(false);
+            setFilteredPatients([]) // force a rerender so the input element doesn't lose track of sanitized state value (React skipped updates because state was getting the same sanitized value even when the input was littered)
         }
     };
-    onPatientIdentified(filteredPatients.length | 0);
+
 
 
     const getStatusBadgeStyle = (status: LedgerEntry['status']) => {
@@ -66,7 +96,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyNavigation = (e: React.KeyboardEvent<HTMLInputElement>) => {
         // filteredPatients is your list results
         // We add +1 to length to account for the "Add New" button at the bottom
         const totalItems = filteredPatients.length + 1;
@@ -106,6 +136,10 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
         }
         setInput('');
         setShowSuggestions(false);
+
+        // TODO: Find a suitable implementation of this (Created on 2025-12-24)
+        onPatientIdentified(i); // dummy call
+
     };
 
     return (
@@ -165,7 +199,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
                                 autoFocus
                                 value={input}
                                 onChange={handleInputChange}
-                                onKeyDown={handleKeyDown}
+                                onKeyDown={handleKeyNavigation}
                                 className="w-full bg-transparent border-none outline-none md:text-xl font-medium text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 pl-8"
                                 placeholder="Type Name or Mobile..."
                             />
@@ -183,22 +217,3 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
 
 export default DailyLedger;
 
-
-
-const cleanSearchInput = (input: string): string => {
-    if (!input) return ""; // Handle Empty Strings
-    // Flatten whitespaces
-    const returnString = input.trimStart().replace(/\s+/g, ' ');
-    const firstChar = input[0];
-    // if the string starts with a Letter
-    if (/[a-zA-Z]/.test(firstChar)) {
-        // Regex: Replace anything that is NOT (^) a letter or space
-        return returnString.replace(/[^a-zA-Z ]/g, "");
-    }
-    // if the string starts with a Number
-    if (/[0-9]/.test(firstChar)) {
-        // Regex: Replace anything that is NOT (^) a number and slice it till 10 digits
-        return returnString.replace(/[^0-9]/g, "").slice(0, 10);
-    }
-    return "";
-}

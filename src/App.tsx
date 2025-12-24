@@ -21,7 +21,7 @@ const App = () => {
     const [isDarkMode, setIsDarkMode] = useState(true);
 
     // Dummy Handlers for display purposes
-    const handleLog = (val: any) => console.log("Action Triggered:", val);
+    const handleLog = (val: any) =>{};
 
 
 
@@ -45,7 +45,7 @@ const App = () => {
                     <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-2 font-mono">
                         Theme: {isDarkMode ? 'Pearl Black' : 'Clinical White'} • Mode: Many-to-Many Context
                     </p>
-                    <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Wed Dec 24, 2025 | 21:40 </p>
+                    <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Dec 25, 2025 | 00:15 </p>
                 </div>
 
                 <PresentationSection title="The Daily Ledger (Input)"

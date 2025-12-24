@@ -22,7 +22,7 @@ const PatientList = ({ filteredPatients, handleSelect, selectedIndex, input }: P
 
             {/* No Results */}
             {filteredPatients.length === 0 && (
-                <div className="px-4 py-6 text-center text-zinc-500 text-sm italic">
+                <div className="px-4 py-6 text-center text-zinc-500 text-sm italic cursor-not-allowed ">
                     No existing patients found for "{input}"
                 </div>
             )}
