@@ -2,14 +2,14 @@ import type { ComponentChild as ReactNode } from "preact";
 
 /** Wrapper Components */
 export const DropdownContainer = ({ children }: { children: ReactNode; }) => (
-    <div className="absolute bottom-full left-0 right-0 mx-4 mb-2 bg-zinc-200 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-2xl overflow-hidden max-h-[300px] flex flex-col z-50">
+    <div className="absolute z-100 bottom-full left-0 right-0 mx-4 mb-2 bg-zinc-200 dark:bg-zinc-900 border outline-1 outline-zinc-200 dark:outline-zinc-700 rounded-lg shadow-2xl max-h-[300px] flex flex-col ">
         {children}
     </div>
 );
 
 
 export const DropdownHeader = ({ count }: { count: number }) => (
-    <div className="px-4 py-2 bg-gray-100 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+    <div className="px-4 py-2 w-full  bg-gray-100 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
         Search Results ({count})
     </div>
 );

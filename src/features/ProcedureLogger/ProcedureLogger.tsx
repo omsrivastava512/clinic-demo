@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 import type { InvoiceItem, MedicalContext, Procedure } from "@/types";
-import { PHYSIO_PROCEDURES } from "../data/mock_data";
+import { PHYSIO_PROCEDURES } from "@/data/mock_data";
 import { CheckIcon } from "lucide-react";
 
 /**

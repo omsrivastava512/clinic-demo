@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { XIcon, UserIcon, SmartphoneIcon, CheckIcon, FootprintsIcon, MapPinIcon, StethoscopeIcon, NotebookPenIcon } from 'lucide-react';
-import ClinicalNotesBuilder from '../components/ClinicalNotes';
+import ClinicalNotesBuilder from '@/features/NewPatientIntake/ClinicalNotes';
 
 interface IntakeProps {
     initialName?: string;

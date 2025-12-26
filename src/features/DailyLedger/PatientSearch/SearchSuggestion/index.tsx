@@ -1,8 +1,7 @@
 import type { Patient } from "@/types";
 import { DropdownContainer, DropdownHeader } from "./primitives";
-import PatientList from "./PatientList";
+import PatientList from "./PatientResult";
 import AddNewPatientButton from "./AddNewPatientButton";
-import { useEffect } from "preact/hooks";
 
 
 interface SearchSuggestionsProps {
@@ -14,9 +13,7 @@ interface SearchSuggestionsProps {
 
 const SearchSuggestions = ({ filteredPatients, handleSelect, input, focusedIndex }: SearchSuggestionsProps) =>{ 
     
-    
-
-    return(
+   return(
     <DropdownContainer>
         <DropdownHeader count={filteredPatients.length} />
         <PatientList

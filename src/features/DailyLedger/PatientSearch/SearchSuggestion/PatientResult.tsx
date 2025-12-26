@@ -11,7 +11,7 @@ type PatientListProps = {
     input: string
 }
 
-const PatientList = ({ filteredPatients, handleSelect, focusedIndex, input }: PatientListProps) => {
+const PatientResult = ({ filteredPatients, handleSelect, focusedIndex, input }: PatientListProps) => {
     return (
         <div className="overflow-y-auto max-h-[200px]">
             {filteredPatients.map((p, i) => (
@@ -32,7 +32,7 @@ const PatientList = ({ filteredPatients, handleSelect, focusedIndex, input }: Pa
     )
 }
 
-export default PatientList
+export default PatientResult
 
 
 type PatientListItemProps = {

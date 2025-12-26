@@ -1,12 +1,12 @@
 import { useState } from 'preact/hooks'
 
-import NewPatientIntake from './features/NewPatientIntake';
+import NewPatientIntake from './features/NewPatientIntake/NewPatientIntake';
 import { MOCK_CONTEXTS, MOCK_PATIENTS } from './data/mock_data';
-import { PresentationSection } from './components/PresentationSection';
-import ContextSelector from './features/ContextSelector';
-import ProcedureLogger from './features/ProcedureLogger';
-import InvoiceBuilder from './features/InvoiceBuilder';
-import DailyLedger from './features/DailyLedger';
+import { PresentationSection } from '@/PresentationSection';
+import ContextSelector from './features/ContexSelector/ContextSelector';
+import InvoiceBuilder from './features/InvoiceBuilder/InvoiceBuilder';
+import ProcedureLogger from './features/ProcedureLogger/ProcedureLogger';
+import DailyLedger from '@/features/DailyLedger';
 import { Moon, Sun } from 'lucide-react';
 
 
@@ -34,7 +34,7 @@ const App = () => {
 
                 <PresentationSection title="The Daily Ledger (Input)"
                     number='01' description='Upcoming Features: ShimmerUI in search results floater, Add status wise filter '>
-                    <DailyLedger onPatientIdentified={handleLog} />
+                    <DailyLedger  />
                 </PresentationSection>
 
                 <PresentationSection title="2. Intake"
@@ -105,6 +105,6 @@ const DemoHeader = () => (
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
         <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
 
-        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Dec 26, 2025 | 18:25 </p>
+        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Dec 27, 2025 | 01:00 </p>
     </header>
 )
