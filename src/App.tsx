@@ -1,7 +1,7 @@
-import {  useState } from 'preact/hooks'
+import { useState } from 'preact/hooks'
 
 import NewPatientIntake from './features/Intake';
-import { MOCK_CONTEXTS,  MOCK_PATIENTS } from './data/mock_data';
+import { MOCK_CONTEXTS, MOCK_PATIENTS } from './data/mock_data';
 import { PresentationSection } from './components/PresentationSection';
 import ContextSelector from './features/ContextSelector';
 import ProcedureLogger from './features/ProcedureLogger';
@@ -21,32 +21,16 @@ const App = () => {
     const [isDarkMode, setIsDarkMode] = useState(true);
 
     // Dummy Handlers for display purposes
-    const handleLog = (val: any) =>{};
-
+    const handleLog = () => { };
 
 
     return (
         <div className={isDarkMode ? 'dark' : ''}>
             <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
 
-                <div className="fixed top-6 right-6 z-50">
-                    <button
-                        onClick={() => setIsDarkMode(!isDarkMode)}
-                        className="p-3 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-lg text-zinc-900 dark:text-white hover:scale-105 transition-transform"
-                        title="Toggle Theme"
-                    >
-                        {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                    </button>
-                </div>
+                <ToggleDarkButton isDarkMode={isDarkMode} toggleDark={() => setIsDarkMode(!isDarkMode)} />
 
-                <div className="text-center mb-20">
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
-                    <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
-                    <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-2 font-mono">
-                        Theme: {isDarkMode ? 'Pearl Black' : 'Clinical White'} • Mode: Many-to-Many Context
-                    </p>
-                    <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Dec 25, 2025 | 00:15 </p>
-                </div>
+                <DemoHeader />
 
                 <PresentationSection title="The Daily Ledger (Input)"
                     number='01' description='Upcoming Features: ShimmerUI in search results floater, Add status wise filter '>
@@ -54,7 +38,7 @@ const App = () => {
                 </PresentationSection>
 
                 <PresentationSection title="2. Intake"
-                    number='02' description='Upcoming: Add address line for patient'>
+                    number='02' description='Upcoming: Add address line for patient, add preset suggestions in clinical notes'>
                     <div className="flex gap-5 flex-wrap">
                         <NewPatientIntake onClose={() => { }} />
                     </div>
@@ -104,4 +88,26 @@ const App = () => {
 export default App;
 
 
+type ToggleDarkButtonProps = {
+    isDarkMode: boolean,
+    toggleDark(): void
+}
 
+const ToggleDarkButton = ({ isDarkMode, toggleDark }: ToggleDarkButtonProps) => (
+    <button
+        onClick={toggleDark}
+        className="fixed top-6 right-6 z-50 p-3 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-lg text-zinc-900 dark:text-white hover:scale-105 transition-transform"
+        title="Toggle Theme"
+    >
+        {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+    </button>   
+)
+
+const DemoHeader = () => (
+    <header className="text-center mb-20">
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
+        <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
+
+        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Dec 26, 2025 | 18:25 </p>
+    </header>
+)

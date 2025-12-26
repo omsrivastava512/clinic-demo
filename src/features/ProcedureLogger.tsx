@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import type { InvoiceItem, MedicalContext, Procedure } from "@/types";
 import { PHYSIO_PROCEDURES } from "../data/mock_data";
-import { Check } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 
 /**
  * COMPONENT 3: PROCEDURE LOGGER (The Many-to-Many Solver)
@@ -79,7 +79,7 @@ const ProcedureLogger: React.FC<ProcedureLoggerProps> = ({ selectedContexts, onC
                                             <div className="font-medium text-sm">{proc.name}</div>
                                             <div className="text-[10px] font-mono mt-1 opacity-60">₹{proc.cost}</div>
                                         </div>
-                                        {isSelected && <Check className="w-4 h-4 text-zinc-900 dark:text-white" />}
+                                        {isSelected && <CheckIcon className="w-4 h-4 text-zinc-900 dark:text-white" />}
                                     </button>
                                 );
                             })}

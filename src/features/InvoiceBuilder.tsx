@@ -1,4 +1,4 @@
-import { Banknote, CreditCard, Printer, Smartphone } from "lucide-react";
+import { BanknoteIcon, CreditCardIcon, PrinterIcon, SmartphoneIcon } from "lucide-react";
 import type { InvoiceItem } from "@/types";
 import { useState } from "preact/hooks";
 
@@ -65,7 +65,7 @@ const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, onC
                                     ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-900 dark:border-white text-zinc-900 dark:text-white'
                                     : 'border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-900'}`}
                         >
-                            <Smartphone className="w-5 h-5 mb-2" />
+                            <SmartphoneIcon className="w-5 h-5 mb-2" />
                             <span className="text-xs font-medium">UPI / QR</span>
                         </button>
                         <button
@@ -75,7 +75,7 @@ const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, onC
                                     ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-900 dark:border-white text-zinc-900 dark:text-white'
                                     : 'border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-900'}`}
                         >
-                            <Banknote className="w-5 h-5 mb-2" />
+                            <BanknoteIcon className="w-5 h-5 mb-2" />
                             <span className="text-xs font-medium">Cash</span>
                         </button>
                         <button
@@ -85,7 +85,7 @@ const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, onC
                                     ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-900 dark:border-white text-zinc-900 dark:text-white'
                                     : 'border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-900'}`}
                         >
-                            <CreditCard className="w-5 h-5 mb-2" />
+                            <CreditCardIcon className="w-5 h-5 mb-2" />
                             <span className="text-xs font-medium">Card</span>
                         </button>
                     </div>
@@ -94,7 +94,7 @@ const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, onC
                 {/* Footer Actions */}
                 <div className="flex justify-between items-center pt-4 border-t border-zinc-200 dark:border-zinc-800">
                     <button className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white flex items-center gap-2 text-sm">
-                        <Printer className="w-4 h-4" /> Print Receipt
+                        <PrinterIcon className="w-4 h-4" /> Print Receipt
                     </button>
                     <button
                         onClick={onClose}

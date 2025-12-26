@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
-import { X, User, Smartphone, Check, Footprints, MapPin, Stethoscope, NotebookPen } from 'lucide-react';
+import { XIcon, UserIcon, SmartphoneIcon, CheckIcon, FootprintsIcon, MapPinIcon, StethoscopeIcon, NotebookPenIcon } from 'lucide-react';
 import ClinicalNotesBuilder from '../components/ClinicalNotes';
 
 interface IntakeProps {
@@ -56,13 +56,13 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-950 flex justify-between items-start transition-colors">
                 <div>
                     <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                        <User className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
+                        <UserIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
                         New Patient Registration
                     </h2>
                     <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">Create digital ID & generate MRN</p>
                 </div>
                 <button title={'Close'} type={'button'} onClick={onClose} className="text-zinc-400 hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-white transition-colors">
-                    <X className="w-6 h-6" />
+                    <XIcon className="w-6 h-6" />
                 </button>
             </div>
 
@@ -88,7 +88,7 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
                     <div className="col-span-1 sm:col-span-6">
                         <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 block">Mobile / WhatsApp</label>
                         <div className="relative">
-                            <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
+                            <SmartphoneIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
                             <input
                                 ref={phoneRef}
                                 type="tel"
@@ -138,9 +138,9 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
                     <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Referral Source</label>
                     <div className={`grid grid-cols-3 gap-3`}>
                         {([
-                            { id: 'WALKIN', icon: <Footprints className={'inline'} />, label: 'Walk-In' },
-                            { id: 'GOOGLE', icon: <MapPin className={'inline'} />, label: 'Google Maps' },
-                            { id: 'DOCTOR', icon: <Stethoscope className={'inline'} />, label: 'Dr. Referral' }
+                            { id: 'WALKIN', icon: <FootprintsIcon className={'inline'} />, label: 'Walk-In' },
+                            { id: 'GOOGLE', icon: <MapPinIcon className={'inline'} />, label: 'Google Maps' },
+                            { id: 'DOCTOR', icon: <StethoscopeIcon className={'inline'} />, label: 'Dr. Referral' }
                         ] as const).map((ref) => (
                             <button
                                 key={ref.id}
@@ -175,7 +175,7 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
                         className="pr-10 py-3"
                     >
 
-                        <NotebookPen className="sm:w-auto font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors" />
+                        <NotebookPenIcon className="sm:w-auto font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors" />
                     </button>
                     <button
                         type="button"
@@ -188,7 +188,7 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) 
                         type="submit"
                         className="w-full sm:w-auto px-8 py-3 bg-emerald-600 hover:bg-emerald-700 dark:hover:bg-emerald-500 text-white font-bold rounded-lg shadow-md transition-all flex items-center justify-center gap-2"
                     >
-                        <Check className="w-4 h-4" />
+                        <CheckIcon className="w-4 h-4" />
                         Create Profile & Proceed...
                     </button>
                 </div>

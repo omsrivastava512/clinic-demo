@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 import type { MedicalContext, Patient } from "@/types";
-import { Check, Plus } from "lucide-react";
+import { CheckIcon, PlusIcon } from "lucide-react";
 
 /**
  * COMPONENT 2: CONTEXT SELECTOR
@@ -84,7 +84,7 @@ const ContextSelector: React.FC<ContextSelectorProps> = ({ patient, availableCon
                   ${isSelected
                                         ? 'bg-zinc-900 text-white dark:bg-white dark:text-black'
                                         : 'border border-zinc-300 dark:border-zinc-600'}`}>
-                                    {isSelected && <Check className="w-3 h-3" />}
+                                    {isSelected && <CheckIcon className="w-3 h-3" />}
                                 </div>
                                 <div className="flex-1">
                                     <div className={`font-medium ${isSelected ? 'text-zinc-900 dark:text-white' : 'text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200'}`}>
@@ -103,7 +103,7 @@ const ContextSelector: React.FC<ContextSelectorProps> = ({ patient, availableCon
 
                     {/* The "Report New Issue" Input Row */}
                     <div className="flex items-center p-4 rounded-lg border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/30">
-                        <Plus className="w-5 h-5 text-zinc-400 dark:text-zinc-500 mr-4" />
+                        <PlusIcon className="w-5 h-5 text-zinc-400 dark:text-zinc-500 mr-4" />
                         <input
                             type="text"
                             value={newContextInput}
@@ -117,7 +117,7 @@ const ContextSelector: React.FC<ContextSelectorProps> = ({ patient, availableCon
                             disabled={!newContextInput.trim()}
                             className="p-2 rounded bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
-                            <Plus className="w-4 h-4" />
+                            <PlusIcon className="w-4 h-4" />
                         </button>
                     </div>
 

@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Plus, X, Trash2, Tag, Save, AlertTriangle } from 'lucide-react';
+import { PlusIcon, XIcon, Trash2Icon, TagIcon, SaveIcon, AlertTriangleIcon } from 'lucide-react';
 
 // Updated data structure to support the critical flag
 export interface NoteData {
@@ -43,13 +43,13 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
         {/* Header */}
         <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-950 flex justify-between items-center transition-colors">
           <h3 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-            <Tag className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
+            <TagIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
             Clinical Notes
           </h3>
           <button type="button" title="Close" onClick={onClose}
             className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
           >
-            <X className="w-5 h-5" />
+            <XIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -93,7 +93,7 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
                 : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-400 dark:text-zinc-500 hover:border-zinc-400 dark:hover:border-zinc-600'
                 }`}
             >
-              <AlertTriangle className="w-4 h-4" />
+              <AlertTriangleIcon className="w-4 h-4" />
             </button>
 
             <button
@@ -102,7 +102,7 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
               disabled={!newKey || !newValue}
               className="p-2 mb-px bg-zinc-900 dark:bg-white text-white dark:text-black rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              <Plus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4" />
             </button>
           </div>
 
@@ -123,7 +123,7 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
               >
                 <div className="flex items-center gap-2 text-sm">
                   {data.isCritical && (
-                    <AlertTriangle className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0" />
+                    <AlertTriangleIcon className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0" />
                   )}
                   <span className={`font-bold ${data.isCritical ? 'text-red-700 dark:text-red-300' : 'text-zinc-700 dark:text-zinc-300'}`}>
                     {key}:
@@ -135,7 +135,7 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
                 <button onClick={() => removeNote(key)} title="delete" type="button"
                   className="text-zinc-400 hover:text-red-600 dark:hover:text-red-400 transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2Icon className="w-4 h-4" />
                 </button>
               </div>
             ))}
@@ -147,7 +147,7 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
             onClick={() => onSave(notes)}
             className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 dark:hover:bg-emerald-500 text-white font-bold rounded-lg flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98]"
           >
-            <Save className="w-4 h-4" />
+            <SaveIcon className="w-4 h-4" />
             Save Details
           </button>
         </div>

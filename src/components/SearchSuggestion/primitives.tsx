@@ -33,7 +33,7 @@ export const ListItemButton = ({ children, isSelected, onSelect, variant, }: Lis
     return (
         <button
             onClick={onSelect}
-            data-selected={isSelected} // use group-data-[selected=true]:_class_here_ to generate styles in children
+            // use group-data-[selected=true]:_class_here_ to generate styles in children
             className={`${clss.base} ${clss[variant]} ${isSelected && clss.selected} group`}
         >
             {children}

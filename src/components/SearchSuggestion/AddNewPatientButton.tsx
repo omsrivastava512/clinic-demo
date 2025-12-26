@@ -1,4 +1,4 @@
-import { Plus, } from "lucide-react";
+import { PlusIcon, } from "lucide-react";
 import { ListItemButton } from "./primitives";
 
 type AddPatientButtonProps = {
@@ -14,7 +14,7 @@ const AddNewPatientButton = ({ onSelect, isSelected, input }: AddPatientButtonPr
         isSelected={isSelected}
     >
         <div className="w-8 h-8 rounded-full bg-black dark:bg-white flex items-center justify-center text-white dark:text-black">
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" />
         </div>
         <div>
             <div className="font-bold text-sm">Register New Patient: "{input}"</div>

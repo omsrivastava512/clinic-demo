@@ -4,7 +4,7 @@ import type { ComponentChild } from 'preact';
 // 4. MAIN LAYOUT (CATALOG VIEW)
 // ==========================================
 export const PresentationSection = ({ title, number, description, children }: { title: string; number: string; description: string; children: ComponentChild; }) => (
-    <div className="mb-32 max-w-5xl mx-auto w-full last:mb-0">
+    <section className="mb-32 max-w-5xl mx-auto w-full last:mb-0">
         <div className="mb-6 px-4 md:mb-12 ml-2 max-w-3xl">
             <div className="flex items-baseline gap-4 md:gap-6 mb-4">
                 <span className="text-4xl md:text-7xl font-serif text-zinc-400 dark:text-zinc-600 font-bold">{number}</span>
@@ -18,5 +18,5 @@ export const PresentationSection = ({ title, number, description, children }: { 
         <div className="p-4 md:p-8 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl shadow-xl transition-colors duration-300">
             {children}
         </div>
-    </div>
+    </section>
 );

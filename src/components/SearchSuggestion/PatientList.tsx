@@ -1,6 +1,8 @@
 import type { Patient } from "@/types";
-import { ArrowUpRight, MapPinHouse, Smartphone, User } from "lucide-react";
+import { ArrowUpRightIcon, MapPinHouseIcon, SmartphoneIcon, UserIcon } from "lucide-react";
 import { ListItemButton } from "./primitives";
+import cn from "classnames"
+
 
 type PatientListProps = {
     filteredPatients: Patient[],
@@ -49,25 +51,36 @@ const PatientListItem = ({ patient, onSelect, isSelected }: PatientListItemProps
     >
         <div className="flex items-center gap-3">
             {/* ICON */}
-            <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-950 flex items-center justify-center border border-zinc-200 dark:border-zinc-800 text-zinc-500 group-data-[selected=true]:border-zinc-400 dark:group-data-[selected=true]:border-zinc-600 group-hover:border-zinc-400 dark:group-hover:border-zinc-600">
-                <User className="w-4 h-4" />
+            <div className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center",
+                "bg-gray-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-500",
+                "group-hover:border-zinc-400 dark:group-hover:border-zinc-600",
+                "group-data-[selected=true]:border-zinc-400 dark:group-data-[selected=true]:border-zinc-600"
+            )}>
+                <UserIcon className="w-4 h-4" />
             </div>
 
             {/* PATIENT DETAILS */}
             <div>
-                <div className="font-medium  text-zinc-700 dark:text-zinc-300 group-hover:text-black! dark:group-hover:text-white! group-data-[selected=true]:text-black group-data-[selected=true]:dark:text-white text-sm">
+                <div className={cn(
+                    "font-medium text-zinc-700 dark:text-zinc-300",
+                    "group-hover:text-black dark:group-hover:text-white",
+                    "group-data-[selected=true]:text-black group-data-[selected=true]:dark:text-white text-sm"
+                )}>
                     {patient.name}
                 </div>
-                <div className="text-[10px] text-zinc-500 font-mono flex items-center gap-2 group-hover:text-zinc-700! dark:group-hover:text-zinc-300! group-data-[selected=true]:text-zinc-700! group-data-[selected=true]:dark:text-zinc-300!">
+                <div className={cn(
+                    "text-[10px] text-zinc-500 font-mono flex items-center gap-2", "group-hover:text-zinc-700 dark:group-hover:text-zinc-300", "group-data-[selected=true]:text-zinc-700 group-data-[selected=true]:dark:text-zinc-300"
+                )}>
                     <span>{patient.mrn}</span>
                     <span>•</span>
-                    <Smartphone className="w-3 h-3" /> {patient.phone}
-                    <MapPinHouse className="w-3 h-3" /> {patient.address}
+                    <SmartphoneIcon className="w-3 h-3" /> {patient.phone}
+                    <MapPinHouseIcon className="w-3 h-3" /> {patient.address}
                 </div>
             </div>
         </div>
 
-        <ArrowUpRight className="w-4 h-4 text-black dark:text-white opacity-0  group-data-[selected=true]:opacity-100 transition-opacity" />
+        <ArrowUpRightIcon className="w-4 h-4 text-black dark:text-white opacity-0  group-data-[selected=true]:opacity-100 transition-opacity" />
 
     </ListItemButton>
 )
