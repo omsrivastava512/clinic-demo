@@ -1,9 +1,10 @@
 
-/* Utility function to convert 12H time into minutes
+/** Utility function to convert 12H time into minutes
  * @param t timeString1 in 12h format
  * @returns minutes
+ * 
  */
-export const calcMin12H = (t: string): number => {
+ export const calcMin12H = (t: string): number => {
     const [time, meridiem] = t.split(' ');
     let [h, m] = time.split(':').map(t => +t);
 

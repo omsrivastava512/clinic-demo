@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks'
 
-import NewPatientIntake from './features/Intake';
+import NewPatientIntake from './features/NewPatientIntake';
 import { MOCK_CONTEXTS, MOCK_PATIENTS } from './data/mock_data';
 import { PresentationSection } from './components/PresentationSection';
 import ContextSelector from './features/ContextSelector';
@@ -43,9 +43,6 @@ const App = () => {
                         <NewPatientIntake onClose={() => { }} />
                     </div>
                 </PresentationSection>
-
-
-
 
                 <PresentationSection title="Context Switcher (Diagnosis)"
                     number='03' description='Upcoming: Add Last Visit as designed in workflow'>

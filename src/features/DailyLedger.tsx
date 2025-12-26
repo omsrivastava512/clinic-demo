@@ -1,35 +1,11 @@
 import { useEffect, useState } from "preact/hooks";
 import type { LedgerEntry, Patient } from "@/types";
 import { MOCK_LEDGER_ENTRIES, MOCK_PATIENTS } from "../data/mock_data";
-import { compTime } from "../utils/time12h";
+import { compTime, cleanSearchInput } from "../utils";
 import { SearchIcon } from "lucide-react";
+
 import SearchSuggestions from "../components/SearchSuggestion";
 
-
-const cleanSearchInput = (input: string): string => {
-
-    if (!input) return ""; // Handle Empty Strings
-
-    // 1. Normalize whitespace first
-    const normalized = input.replace(/\s+/g, ' ').trimStart();
-
-    // 2. Find first meaningful character
-    const firstChar = normalized[0];
-    if (!firstChar) return "";
-
-    // if the string starts with a Letter
-    if (/[a-zA-Z]/.test(firstChar)) {
-        // Regex: Replace anything that is NOT (^) a letter or space
-        return normalized.replace(/[^a-zA-Z ]/g, "");
-    }
-    // if the string starts with a Number
-    if (/[0-9]/.test(firstChar)) {
-        // Regex: Replace anything that is NOT (^) a number and slice it till 10 digits
-        return normalized.replace(/[^0-9]/g, "").slice(0, 10);
-    }
-
-    return "";
-}
 
 /**
  * COMPONENT 1: THE LEDGER
@@ -43,27 +19,21 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
     const [input, setInput] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
-    const [selectedIndex, setSelectedIndex] = useState(-1);
+    const [focusedIndex, setFocusedIndex] = useState(-1);
 
-    // console.log("REND");
-
-
-
+    // Ensure default AddNewPatientButton being selected when no patient found
     useEffect(() => {
-        if (!showSuggestions) {
-            // setFilteredPatients([])
-            setSelectedIndex(-1)
-        } else if (filteredPatients.length === 0) {
-            setSelectedIndex(0)
+        if (showSuggestions && filteredPatients.length === 0) {
+            setFocusedIndex(0)
         }
-    }, [showSuggestions, filteredPatients])
-
+    }, [filteredPatients.length, showSuggestions])
+ 
 
     // Handle Input Changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const raw = (e.target as HTMLInputElement).value
         const val = cleanSearchInput(raw)
-        
+
         setInput(val);
 
         // Trigger Logic: Only show if at least 3 characters (starts at 3 chars)
@@ -76,6 +46,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
             setShowSuggestions(true);
         } else {
             setShowSuggestions(false);
+            setFocusedIndex(-1)
             setFilteredPatients([]) // force a rerender so the input element doesn't lose track of sanitized state value (React skipped updates because state was getting the same sanitized value even when the input was littered)
         }
     };
@@ -104,16 +75,16 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
 
         if (e.key === 'ArrowUp') {
             e.preventDefault(); // Stop cursor from moving in text box
-            setSelectedIndex(prev => (prev < 0 ? 0 : prev == 0 ? prev : prev - 1));
+            setFocusedIndex(prev => (prev < 0 ? 0 : prev == 0 ? prev : prev - 1));
             // Logic: If at top (0), stay at 0, or loop to bottom
         }
         else if (e.key === 'ArrowDown') {
             e.preventDefault();
-            setSelectedIndex(prev => (prev < totalItems - 1 ? prev + 1 : prev));
+            setFocusedIndex(prev => (prev < totalItems - 1 ? prev + 1 : prev));
         }
         else if (e.key === 'Enter') {
             e.preventDefault();
-            handleSelect(selectedIndex)
+            handleSelect(focusedIndex)
         }
     };
 
@@ -138,7 +109,6 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
 
         // TODO: Find a suitable implementation of this (Created on 2025-12-24)
         onPatientIdentified(i); // dummy call
-
     };
 
     return (
@@ -187,7 +157,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
                 ))}
                 <div className="sticky bottom-0 left-0 right-0 dark:bg-black  p-1 w-full  mt-auto">
                     {/* A. The Floating Typeahead List (Drop-up) */}
-                    {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} selectedIndex={selectedIndex} />}
+                    {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} focusedIndex={focusedIndex} />}
 
                     {/* ACTIVE INPUT ROW */}
                     <div className="mb-1 w-full rounded border border-black/25 dark:border-white/25 grid grid-cols-12 gap-4 px-6 py-4 bg-zinc-50 dark:bg-zinc-900/50 items-center shadow-lg shadow-gray-500/70 dark:shadow-none">
@@ -203,7 +173,7 @@ const DailyLedger: React.FC<LedgerProps> = ({ onPatientIdentified }) => {
                                 placeholder="Type Name or Mobile..."
                             />
                             <div className="absolute right-0 top-1/2 -translate-y-1/2 flex gap-2">
-                                <span className="hidden sm:inline-block text-[10px] bg-white dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-700">{selectedIndex === -1 ? "Start typing" : "↵ ENTER"}</span>
+                                <span className="hidden sm:inline-block text-[10px] bg-white dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-700">{focusedIndex === -1 ? "Start typing" : "↵ ENTER"}</span>
                             </div>
                         </div>
                     </div>

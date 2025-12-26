@@ -7,17 +7,17 @@ import cn from "classnames"
 type PatientListProps = {
     filteredPatients: Patient[],
     handleSelect(i: number): void;
-    selectedIndex: number,
+    focusedIndex: number,
     input: string
 }
 
-const PatientList = ({ filteredPatients, handleSelect, selectedIndex, input }: PatientListProps) => {
+const PatientList = ({ filteredPatients, handleSelect, focusedIndex, input }: PatientListProps) => {
     return (
         <div className="overflow-y-auto max-h-[200px]">
             {filteredPatients.map((p, i) => (
                 <PatientListItem
                     onSelect={() => handleSelect(i)}
-                    isSelected={i === selectedIndex}
+                    isSelected={i === focusedIndex}
                     patient={p}
                 />
             ))}
