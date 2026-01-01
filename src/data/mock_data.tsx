@@ -23,6 +23,7 @@ export const MOCK_PATIENTS: Patient[] = [
 export const MOCK_CONTEXTS: MedicalContext[] = [
     { id: 'CTX_01', title: 'Chronic Lower Back Pain (L4-L5)', doctor: 'Dr. R. Sharma', isActive: true, type: 'EXISTING' },
     { id: 'CTX_02', title: 'Post-Op ACL Rehab (Right Knee)', doctor: 'Dr. A. Gupta', isActive: true, type: 'EXISTING' },
+    { id: 'CTX_03', title: 'Femur Fracture (Right Leg)', doctor: 'Dr. A. Gupta', isActive: true, type: 'EXISTING' },
 ];
 
 export const PHYSIO_PROCEDURES: Procedure[] = [

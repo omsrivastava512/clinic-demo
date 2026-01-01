@@ -1,15 +1,27 @@
+import cn from "classnames";
 import type { ComponentChild as ReactNode } from "preact";
 
 /** Wrapper Components */
 export const DropdownContainer = ({ children }: { children: ReactNode; }) => (
-    <div className="absolute z-100 bottom-full left-0 right-0 mx-4 mb-2 bg-zinc-200 dark:bg-zinc-900 border outline-1 outline-zinc-200 dark:outline-zinc-700 rounded-lg shadow-2xl max-h-[300px] flex flex-col ">
+    <div className={cn(
+        "absolute bottom-full left-0 right-0 mx-4 mb-2",  // position
+        "bg-zinc-200 dark:bg-zinc-900",  // bg
+        "outline outline-zinc-600 dark:outline-zinc-400 rounded-lg",  // outline
+        "max-h-[300px] flex flex-col", // flex
+        "shadow-lg shadow-gray-700/50 dark:shadow-gray-400/50"  // shadow
+    )}>
         {children}
     </div>
 );
 
 
 export const DropdownHeader = ({ count }: { count: number }) => (
-    <div className="px-4 py-2 w-full  bg-gray-100 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+    <div className={cn(
+        "px-4 py-2 w-full",  // box
+        "bg-gray-100 dark:bg-zinc-950",  // bg
+        "border-b border-zinc-200 dark:border-zinc-800",  // border
+        "text-[10px] font-bold text-zinc-500 uppercase tracking-widest"  // text
+    )}>
         Search Results ({count})
     </div>
 );

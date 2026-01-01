@@ -23,7 +23,6 @@ const App = () => {
     // Dummy Handlers for display purposes
     const handleLog = () => { };
 
-
     return (
         <div className={isDarkMode ? 'dark' : ''}>
             <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
@@ -60,7 +59,7 @@ const App = () => {
                     number='04' description='Upcoming: Add Search Bar to find less common procedures and heading with selected complaints and validate all have been selected'>
                     {/* We simulate passing TWO contexts to show the grouping logic */}
                     <ProcedureLogger
-                        selectedContexts={[MOCK_CONTEXTS[0], MOCK_CONTEXTS[1]]}
+                        selectedContexts={[...MOCK_CONTEXTS]}
                         onComplete={handleLog}
                     />
                 </PresentationSection>
@@ -105,6 +104,6 @@ const DemoHeader = () => (
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
         <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
 
-        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Dec 27, 2025 | 01:00 </p>
+        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Jan 1, 2026 | 23:40 </p>
     </header>
 )

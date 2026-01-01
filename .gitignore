@@ -25,3 +25,4 @@ versions
 *.njsproj
 *.sln
 *.sw?
+useless/

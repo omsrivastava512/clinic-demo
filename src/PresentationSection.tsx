@@ -15,7 +15,7 @@ export const PresentationSection = ({ title, number, description, children }: { 
                 {description}
             </p>
         </div>
-        <div className="p-4 md:p-8 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl shadow-xl transition-colors duration-300">
+        <div className="p-2 md:p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl shadow-xl transition-colors duration-300">
             {children}
         </div>
     </section>
