@@ -1,4 +1,4 @@
-import cn from "classnames"
+import {cn} from "@/utils"
 import { SearchIcon } from "lucide-react"
 
 type SearchInputProps = {

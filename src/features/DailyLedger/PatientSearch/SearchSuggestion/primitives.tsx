@@ -1,4 +1,4 @@
-import cn from "classnames";
+import {cn} from "@/utils";
 import type { ComponentChild as ReactNode } from "preact";
 
 /** Wrapper Components */

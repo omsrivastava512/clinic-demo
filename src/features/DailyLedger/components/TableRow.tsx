@@ -1,5 +1,5 @@
 import type { LedgerEntry } from "@/types";
-import cn from "classnames";
+import {cn} from "@/utils";
 import { rowGridLayout } from "./TableHeader";
 
 const TableRow = ({ entry }: { entry: LedgerEntry }) => (

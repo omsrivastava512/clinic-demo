@@ -1,4 +1,4 @@
-import cn from "classnames";
+import {cn} from "@/utils";
 import LedgerHeader from "./components/LedgerHeader";
 import TableBody from "./components/TableBody";
 import TableHeader from "./components/TableHeader";

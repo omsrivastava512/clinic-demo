@@ -1,7 +1,7 @@
 import type { Patient } from "@/types";
 import { ArrowUpRightIcon, MapPinHouseIcon, SmartphoneIcon, UserIcon } from "lucide-react";
 import { ListItemButton } from "./primitives";
-import cn from "classnames"
+import {cn} from "@/utils"
 
 
 type PatientListProps = {

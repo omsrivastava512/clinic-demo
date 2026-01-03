@@ -1,5 +1,5 @@
 import { MOCK_LEDGER_ENTRIES } from "@/data/mock_data"
-import cn from "classnames"
+import {cn} from "@/utils"
 
 const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' });
 
