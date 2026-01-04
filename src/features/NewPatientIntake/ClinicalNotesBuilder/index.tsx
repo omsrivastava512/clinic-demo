@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import cn from 'classnames';
+import { cn } from '@/utils';
 import { CNBHeader } from './CNBHeader';
 import { CNBList } from './CNBList';
 import { CNBInput } from './CNBInput';
@@ -24,7 +24,7 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
 
   const insertNote = (key: string, data: NoteData) => {
     if (Object.keys(notes).includes(key)) {
-      const conf = confirm("Category already exists! Do you wish to replace it?")
+      const conf = confirm("⚠️WARNING: Category already exists! Do you wish to REPLACE it?")
       if (!conf) return;
     }
 
@@ -74,8 +74,8 @@ const blurWallStyle = cn(
   "bg-black/50 backdrop-blur-sm",   // blur
 )
 
-const cnbStyle =   cn(
-        "w-full max-w-md overflow-hidden",  // box
-        "bg-white dark:bg-black border shadow-2xl ",  // bg
-        "border-zinc-200 dark:border-zinc-800 rounded-xl",  // border
-      )
+const cnbStyle = cn(
+  "w-full max-w-md overflow-hidden",  // box
+  "bg-white dark:bg-black border shadow-2xl ",  // bg
+  "border-zinc-200 dark:border-zinc-800 rounded-xl",  // border
+)

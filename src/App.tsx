@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks'
 
-import NewPatientIntake from './features/NewPatientIntake/NewPatientIntake';
+import NewPatientIntake from './features/NewPatientIntake';
 import { MOCK_CONTEXTS, MOCK_PATIENTS } from './data/mock_data';
 import { PresentationSection } from '@/PresentationSection';
 import ContextSelector from './features/ContexSelector/ContextSelector';
@@ -8,6 +8,8 @@ import InvoiceBuilder from './features/InvoiceBuilder/InvoiceBuilder';
 import ProcedureLogger from './features/ProcedureLogger/ProcedureLogger';
 import DailyLedger from '@/features/DailyLedger';
 import { Moon, Sun } from 'lucide-react';
+// import  {PatientRecord}  from './data/useless/PatientProfile';
+// import { PatientRecord } from './data/useless/patientlight';
 
 
 
@@ -23,6 +25,7 @@ const App = () => {
     // Dummy Handlers for display purposes
     const handleLog = () => { };
 
+
     return (
         <div className={isDarkMode ? 'dark' : ''}>
             <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
@@ -30,21 +33,25 @@ const App = () => {
                 <ToggleDarkButton isDarkMode={isDarkMode} toggleDark={() => setIsDarkMode(!isDarkMode)} />
 
                 <DemoHeader />
+{/* 
+                <PresentationSection description='' title='' number=''>
+                    <PatientRecord /> 
+                </PresentationSection> */}
 
                 <PresentationSection title="The Daily Ledger (Input)"
                     number='01' description='Upcoming Features: ShimmerUI in search results floater, Add status wise filter '>
-                    <DailyLedger  />
+                    <DailyLedger />
                 </PresentationSection>
 
-                <PresentationSection title="2. Intake"
-                    number='02' description='Upcoming: Add address line for patient, add preset suggestions in clinical notes'>
+                <PresentationSection title="Intake"
+                    number='02' description='Upcoming: add preset suggestions in clinical notes'>
                     <div className="flex gap-5 flex-wrap">
-                        <NewPatientIntake onClose={() => { }} />
+                        <NewPatientIntake onClose={() => { }} initialName="Arjun"/>
                     </div>
                 </PresentationSection>
 
-                <PresentationSection title="Context Switcher (Diagnosis)"
-                    number='03' description='Upcoming: Add Last Visit as designed in workflow'>
+                <PresentationSection title="Context Selector (Diagnosis)"
+                    number='03' description='Upcoming: Add a suggestive complaint drop down as the user starts typing in the add a new complaint box (searchable by category), Add Last Visit as designed in workflow'>
                     <div className="flex justify-center">
                         <ContextSelector
                             patient={MOCK_PATIENTS[0]}
@@ -96,7 +103,7 @@ const ToggleDarkButton = ({ isDarkMode, toggleDark }: ToggleDarkButtonProps) => 
         title="Toggle Theme"
     >
         {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-    </button>   
+    </button>
 )
 
 const DemoHeader = () => (
@@ -104,6 +111,6 @@ const DemoHeader = () => (
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
         <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
 
-        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Jan 1, 2026 | 23:40 </p>
+        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Jan 5, 2026 | 04:05 </p>
     </header>
 )

@@ -21,7 +21,7 @@ const PatientSearch = ({ }) => {
 
     // Handle Input Changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const raw = (e.target as HTMLInputElement).value
+        const raw = e.currentTarget.value
         const val = cleanSearchInput(raw)
 
         setInput(val);

@@ -1,4 +1,4 @@
-import cn from "classnames";
+import {cn} from "@/utils";
 import { SaveIcon } from "lucide-react";
 
 export const CNBFooter = ({ handleSave }: { handleSave(): void }) => (

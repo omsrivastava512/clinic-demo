@@ -107,7 +107,7 @@ const ContextSelector: React.FC<ContextSelectorProps> = ({ patient, availableCon
                         <input
                             type="text"
                             value={newContextInput}
-                            onChange={(e) => setNewContextInput((e.target as HTMLInputElement).value)}
+                            onChange={(e) => setNewContextInput(e.currentTarget.value)}
                             onKeyDown={handleInputKeyDown}
                             placeholder="Report new issue (e.g. Knee Pain)..."
                             className="flex-1 bg-transparent border-none outline-none text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 font-medium"

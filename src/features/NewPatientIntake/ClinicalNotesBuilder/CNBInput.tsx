@@ -1,7 +1,8 @@
 import { AlertTriangleIcon, PlusIcon } from "lucide-react";
 import { useState } from "preact/hooks";
 import type { NoteData } from ".";
-import cn from "classnames";
+import { cn, filterAlphabetsAndNormalizeSpaces, filterAlphaNumeric } from "@/utils";
+import type { TargetedEvent } from "preact";
 
 
 const inputStyles = cn(
@@ -26,19 +27,33 @@ const notCriticalStyles = cn(
     "hover:border-zinc-400 dark:hover:border-zinc-600"  // hover
 )
 
+const initialNote = {
+    key: '',
+    value: '',
+    isCritical: false,
+}
+
 export const CNBInput = ({ insertNote }: { insertNote(k: string, d: NoteData): void }) => {
-    const [newKey, setNewKey] = useState('');
-    const [newValue, setNewValue] = useState('');
-    const [isNewCritical, setIsNewCritical] = useState(false);
+    const [newNote, setNewNote] = useState(initialNote);
+
+    const handleNewKey = (e: TargetedEvent<HTMLInputElement, Event>) => {
+        const raw = e.currentTarget.value;
+        setNewNote(n => ({ ...n, key: filterAlphabetsAndNormalizeSpaces(raw) }))
+    }
+    const handleNewValue = (e: TargetedEvent<HTMLInputElement, Event>) => {
+        const raw = e.currentTarget.value;
+        setNewNote(n => ({ ...n, value: filterAlphaNumeric(raw) }))
+    }
+
 
     const handleAddNote = () => {
-        if (!newKey.trim() || !newValue.trim()) return;
+        if (!newNote.key.trim() || !newNote.value.trim()) return;
 
-        insertNote(newKey, { value: newValue, isCritical: isNewCritical })
+        const { key, ...rest } = newNote
 
-        setNewKey('');
-        setNewValue('');
-        setIsNewCritical(false);
+        insertNote(key, rest)
+
+        setNewNote(initialNote)
     };
 
     return (
@@ -49,8 +64,8 @@ export const CNBInput = ({ insertNote }: { insertNote(k: string, d: NoteData): v
                 </label>
                 <input
                     type="text"
-                    value={newKey}
-                    onChange={(e) => setNewKey((e.target as HTMLInputElement).value)}
+                    value={newNote.key}
+                    onChange={handleNewKey}
                     placeholder="e.g. Diabetes, Weight, Thyroid, Allergy"
                     className={inputStyles}
                 />
@@ -62,8 +77,8 @@ export const CNBInput = ({ insertNote }: { insertNote(k: string, d: NoteData): v
                 </label>
                 <input
                     type="text"
-                    value={newValue}
-                    onChange={(e) => setNewValue((e.target as HTMLInputElement).value)}
+                    value={newNote.value}
+                    onChange={handleNewValue}
                     placeholder="e.g. High, 75, Low"
                     className={inputStyles}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddNote()}
@@ -72,10 +87,10 @@ export const CNBInput = ({ insertNote }: { insertNote(k: string, d: NoteData): v
 
             {/* Critical Toggle Button */}
             <button
-                onClick={() => setIsNewCritical(!isNewCritical)}
+                onClick={() => setNewNote(n => ({ ...n, isCritical: !n.isCritical }))}
                 title="Mark as Critical Issue"
                 className={cn("p-2 rounded-lg border mb-px",
-                    isNewCritical
+                    newNote.isCritical
                         ? 'bg-red-500 border-red-600 text-white shadow-sm'
                         : notCriticalStyles
                 )}
@@ -86,7 +101,7 @@ export const CNBInput = ({ insertNote }: { insertNote(k: string, d: NoteData): v
             <button
                 type="button" title="Add"
                 onClick={handleAddNote}
-                disabled={!newKey || !newValue}
+                disabled={!newNote.key || !newNote.value}
                 className={cn(
                     "p-2 mb-px bg-zinc-900 dark:bg-white",
                     "text-white dark:text-black rounded-lg",
