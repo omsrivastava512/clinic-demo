@@ -1,17 +1,32 @@
 import { useState, useReducer } from 'preact/hooks';
 import ClinicalNotesBuilder from './ClinicalNotesBuilder';
-import {filterAge, filterAlphabetsAndNormalizeSpaces, filterPhoneNumber, normalizeAddress, } from '@/utils';
+import { capitalizeEachWord, deepTrimStrings, filterAge, filterAlphabetsAndSpaces, filterPhoneNumber, normalizeAddress, validateAddress, } from '@/utils';
 import { Input, IntakeLayout, TextArea, } from './primitives';
 import FormHeader from './FormHeader';
 import ReferralSection from './ReferralSection';
 import DemographicsSection from './DemographicsSection';
 import FormFooter from './FormFooter';
 
+const validateAndCapitalizeName = (val: string) => capitalizeEachWord(filterAlphabetsAndSpaces(val))
 
+const validateFormData = (data: FormData): string[] => {
+    const errors = []
+    if (data.name.length < 5) errors.push('Name is too short');
+    if (data.phone.length < 10) errors.push('Phone is required');
+    if (+data.age == Number.NaN || +data.age < 0 || +data.age > 99) errors.push('Enter valid age');
+    if (!validateAddress(data.address)) errors.push('Address is invalid or too short');
+    if (data.address.length > 50) errors.push('Address is too long');
+    if (data.referral === 'DOCTOR' && !validateAddress(data.doctorInfo)) {
+        errors.push('Doctor information is required for doctor referrals');
+    }
+    return errors; // Valid if empty
+}
 
 interface IntakeProps {
     initialName?: string;
     onClose: () => void;
+    onSubmit: (v: FormData) => void;
+
 }
 
 // TODO: add an 'ok' fn for each property to display a green ring in the input when the validation meets (Created on 2026-01-04)
@@ -46,7 +61,7 @@ const formReducer = (state: FormData, action: Action): FormData => {
     switch (action.type) {
         case 'CHANGE_NAME': {
             return {
-                ...state, name: filterAlphabetsAndNormalizeSpaces(action.value)
+                ...state, name: validateAndCapitalizeName(action.value)
             };
         }
         case 'CHANGE_AGE': {
@@ -92,6 +107,7 @@ const formReducer = (state: FormData, action: Action): FormData => {
             }
             return state;
         }
+        case 'RESET': return initialFormData;
         default: return state;
     }
 }
@@ -105,19 +121,23 @@ const initialFormData: FormData = {
     address: "",
 }
 
-const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose }) => {
+const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose, onSubmit }) => {
 
-    const initializeName = (f: FormData) => ({ ...f, name: filterAlphabetsAndNormalizeSpaces(initialName) })
+    const initializeName = (f: FormData) => ({ ...f, name: validateAndCapitalizeName(initialName) })
 
     const [formData, dispatch] = useReducer(formReducer, initialFormData, initializeName);
 
     const [showClinicalNotes, setShowClinicalNotes] = useState(false)
-    console.log(formData);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        alert(`Creating Profile for: ${formData.name}\nMobile: ${formData.phone}\nGender: ${formData.sex}`);
-        onClose();
+        const errors = validateFormData(formData);
+        if (errors.length > 0) return alert(errors.join('\n'))
+
+        const trimmedForm = deepTrimStrings(formData) as FormData
+        alert(`Creating Profile for: ${trimmedForm.name}\nMobile: ${trimmedForm.phone}\nGender: ${trimmedForm.sex}\nAddress: ${trimmedForm.address}`);
+        dispatch({ type: 'RESET' })
+        onSubmit(trimmedForm);
     };
 
     return (
