@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { cn } from '@/utils';
 import { CNBHeader } from './CNBHeader';
 import { CNBList } from './CNBList';
@@ -6,39 +6,36 @@ import { CNBInput } from './CNBInput';
 import { CNBFooter } from './CNBFooter';
 
 // Updated data structure to support the critical flag
-export interface NoteData {
-  value: string;
+export interface ClinicalNote {
+  category: string;
+  observation: string;
   isCritical: boolean;
 }
 
-export type ClinicalNotes = Record<string, NoteData>
+const sortNotes = (n: ClinicalNote[]): ClinicalNote[] => n.sort((n1, n2) => +n2.isCritical - +n1.isCritical)
 
 interface ClinicalNotesBuilderProps {
-  onSave: (notes: ClinicalNotes) => void;
+  onSave: (notes: ClinicalNote[]) => void;
   onClose: () => void;
-  initialNotes?: Record<string, NoteData>;
+  initialNotes?: ClinicalNote[];
 }
 
-export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSave, onClose, initialNotes = {} }) => {
-  const [notes, setNotes] = useState<ClinicalNotes>(initialNotes);
+export const ClinicalNotesBuilder = ({ onSave, onClose, initialNotes = [] }: ClinicalNotesBuilderProps) => {
+  const [notes, setNotes] = useState<ClinicalNote[]>(initialNotes);
 
-  const insertNote = (key: string, data: NoteData) => {
-    if (Object.keys(notes).includes(key)) {
+  const insertNote = (n: ClinicalNote) => {
+    if (notes.map(n => n.category).includes(n.category)) {
       const conf = confirm("⚠️WARNING: Category already exists! Do you wish to REPLACE it?")
       if (!conf) return;
     }
-    setNotes(prev => (
-      {
-        ...prev,
-        [key]: data
-      }
-    ));
+    setNotes(prev => ([
+      ...prev,
+      n
+    ]));
   };
 
   const removeNote = (key: string) => {
-    const next = { ...notes };
-    delete next[key];
-    setNotes(next);
+    setNotes(n => n.filter(n => n.category !== key));
   };
 
   return (
@@ -52,7 +49,7 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
           <CNBInput insertNote={insertNote} />
 
           {/* List Area */}
-          <CNBList notes={notes} removeNote={removeNote} />
+          <CNBList notes={sortNotes(notes)} removeNote={removeNote} />
 
           {/* Footer */}
           <CNBFooter handleSave={() => onSave(notes)} />

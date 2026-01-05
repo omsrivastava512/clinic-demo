@@ -1,4 +1,4 @@
-import { MarsIcon, SmartphoneIcon, TransgenderIcon, VenusIcon } from "lucide-react"
+import { SmartphoneIcon } from "lucide-react"
 import { Input, ToggleButton } from "./primitives"
 import { cn, formatPhone } from "@/utils"
 import type { FormData } from "."
@@ -74,10 +74,7 @@ const DemographicsSection = ({ phone, age, sex, changePhone, changeAge, changeSe
                             onClick={() => changeSex(s)}
                             isActive={sex === s}
                         >
-                            {/* {s} */}
-                            {s === 'M' && <MarsIcon className={"inline hover:text-blue-600"} />}
-                            {s === 'F' && <VenusIcon className={"inline hover:text-pink-600"} />}
-                            {s === 'X' && <TransgenderIcon className={"inline hover:text-purple-600"} />}
+                            {s}   
                         </ToggleButton>
                     ))}
                 </div>

@@ -1,5 +1,5 @@
 import { useState, useReducer } from 'preact/hooks';
-import ClinicalNotesBuilder, { type ClinicalNotes } from './ClinicalNotesBuilder';
+import ClinicalNotesBuilder, { type ClinicalNote } from './ClinicalNotesBuilder';
 import { capitalizeEachWord, deepTrimStrings, filterAge, filterAlphabetsAndSpaces, filterPhoneNumber, normalizeAddress, validateAddress, } from '@/utils';
 import { Input, IntakeLayout, TextArea, } from './primitives';
 import FormHeader from './FormHeader';
@@ -42,7 +42,7 @@ export type FormData = {
     sex: 'M' | 'F' | 'X';
     age: string;
     address: string;
-    clinicalNotes?: ClinicalNotes
+    clinicalNotes?: ClinicalNote[]
 } & (
         | { referral: 'WALKIN' | 'GOOGLE'; doctorInfo?: never }
         | { referral: 'DOCTOR'; doctorInfo: string }
@@ -56,7 +56,7 @@ type Action =
     | { type: 'CHANGE_ADDRESS'; value: FormData['address'] }
     | { type: 'CHANGE_REFERRAL'; value: FormData['referral'] }
     | { type: 'CHANGE_DOCTOR_INFO'; value: string }
-    | { type: 'ADD_CLINICAL_NOTES'; value: ClinicalNotes }
+    | { type: 'ADD_CLINICAL_NOTES'; value: ClinicalNote[] }
     | { type: 'RESET' };
 
 const formReducer = (state: FormData, action: Action): FormData => {
@@ -129,7 +129,7 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose, on
 
     const [showClinicalNotes, setShowClinicalNotes] = useState(false)
 
-    console.log(formData);
+    // console.log(formData);
 
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -183,6 +183,8 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose, on
                 <FormFooter onClose={onClose} openClinicNotes={() => setShowClinicalNotes(true)} />
 
             </form>
+
+            {/** HACK: Do not change the `formData.clinicalNotes` while ClinicalNotesBuilder is mounted. */}
             {showClinicalNotes && <ClinicalNotesBuilder
                 initialNotes={formData.clinicalNotes}
                 onSave={(value) => {
@@ -195,6 +197,7 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose, on
         </IntakeLayout>
 
     );
+
 };
 
 

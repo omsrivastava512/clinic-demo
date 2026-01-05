@@ -1,6 +1,6 @@
 import { AlertTriangleIcon, PlusIcon } from "lucide-react";
 import { useState } from "preact/hooks";
-import type { NoteData } from ".";
+import type { ClinicalNote } from ".";
 import { cn, filterAlphabetsAndNormalizeSpaces, filterAlphaNumeric } from "@/utils";
 import type { TargetedEvent } from "preact";
 
@@ -27,31 +27,29 @@ const notCriticalStyles = cn(
     "hover:border-zinc-400 dark:hover:border-zinc-600"  // hover
 )
 
-const initialNote = {
-    key: '',
-    value: '',
+const initialNote:ClinicalNote = {
+    category: '',
+    observation: '',
     isCritical: false,
 }
 
-export const CNBInput = ({ insertNote }: { insertNote(k: string, d: NoteData): void }) => {
+export const CNBInput = ({ insertNote }: { insertNote(n: ClinicalNote): void }) => {
     const [newNote, setNewNote] = useState(initialNote);
 
     const handleNewKey = (e: TargetedEvent<HTMLInputElement, Event>) => {
         const raw = e.currentTarget.value;
-        setNewNote(n => ({ ...n, key: filterAlphabetsAndNormalizeSpaces(raw) }))
+        setNewNote(n => ({ ...n, category: filterAlphabetsAndNormalizeSpaces(raw) }))
     }
     const handleNewValue = (e: TargetedEvent<HTMLInputElement, Event>) => {
         const raw = e.currentTarget.value;
-        setNewNote(n => ({ ...n, value: filterAlphaNumeric(raw) }))
+        setNewNote(n => ({ ...n, observation: filterAlphaNumeric(raw) }))
     }
 
 
     const handleAddNote = () => {
-        if (!newNote.key.trim() || !newNote.value.trim()) return;
+        if (!newNote.category.trim() || !newNote.observation.trim()) return;
 
-        const { key, ...rest } = newNote
-
-        insertNote(key, rest)
+        insertNote(newNote)
 
         setNewNote(initialNote)
     };
@@ -64,7 +62,7 @@ export const CNBInput = ({ insertNote }: { insertNote(k: string, d: NoteData): v
                 </label>
                 <input
                     type="text"
-                    value={newNote.key}
+                    value={newNote.category}
                     onChange={handleNewKey}
                     placeholder="e.g. Diabetes, Weight, Thyroid, Allergy"
                     className={inputStyles}
@@ -77,7 +75,7 @@ export const CNBInput = ({ insertNote }: { insertNote(k: string, d: NoteData): v
                 </label>
                 <input
                     type="text"
-                    value={newNote.value}
+                    value={newNote.observation}
                     onChange={handleNewValue}
                     placeholder="e.g. High, 75, Low"
                     className={inputStyles}
@@ -101,7 +99,7 @@ export const CNBInput = ({ insertNote }: { insertNote(k: string, d: NoteData): v
             <button
                 type="button" title="Add"
                 onClick={handleAddNote}
-                disabled={!newNote.key || !newNote.value}
+                disabled={!newNote.category || !newNote.observation}
                 className={cn(
                     "p-2 mb-px bg-zinc-900 dark:bg-white",
                     "text-white dark:text-black rounded-lg",
