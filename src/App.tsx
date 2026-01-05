@@ -111,6 +111,6 @@ const DemoHeader = () => (
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
         <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
 
-        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Jan 5, 2026 | 08:10 </p>
+        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Jan 5, 2026 | 10:15 </p>
     </header>
 )

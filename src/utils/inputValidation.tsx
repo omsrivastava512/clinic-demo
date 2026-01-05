@@ -55,12 +55,7 @@ export const normalizeAddress = (addr: string) => normalizeWhitespaces(addr)
 
 export const validateAddress = (addr: string) => /^(?=.*[A-Za-z]).{5,}$/.test(addr)
 
-type TrimInput =
-    | string
-    | undefined
-    | TrimInput[]
-    | { [key: string]: TrimInput }
-export const deepTrimStrings = (value: TrimInput): TrimInput => {
+export const deepTrimStrings = (value: unknown): unknown => {
     if (typeof value === 'string') return value.trim() 
 
     if (Array.isArray(value)) {

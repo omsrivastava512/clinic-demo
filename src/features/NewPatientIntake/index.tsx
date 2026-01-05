@@ -1,5 +1,5 @@
 import { useState, useReducer } from 'preact/hooks';
-import ClinicalNotesBuilder from './ClinicalNotesBuilder';
+import ClinicalNotesBuilder, { type ClinicalNotes } from './ClinicalNotesBuilder';
 import { capitalizeEachWord, deepTrimStrings, filterAge, filterAlphabetsAndSpaces, filterPhoneNumber, normalizeAddress, validateAddress, } from '@/utils';
 import { Input, IntakeLayout, TextArea, } from './primitives';
 import FormHeader from './FormHeader';
@@ -39,9 +39,10 @@ interface IntakeProps {
 export type FormData = {
     name: string;
     phone: string;
-    sex: 'M' | 'F';
+    sex: 'M' | 'F' | 'X';
     age: string;
     address: string;
+    clinicalNotes?: ClinicalNotes
 } & (
         | { referral: 'WALKIN' | 'GOOGLE'; doctorInfo?: never }
         | { referral: 'DOCTOR'; doctorInfo: string }
@@ -55,35 +56,31 @@ type Action =
     | { type: 'CHANGE_ADDRESS'; value: FormData['address'] }
     | { type: 'CHANGE_REFERRAL'; value: FormData['referral'] }
     | { type: 'CHANGE_DOCTOR_INFO'; value: string }
+    | { type: 'ADD_CLINICAL_NOTES'; value: ClinicalNotes }
     | { type: 'RESET' };
 
 const formReducer = (state: FormData, action: Action): FormData => {
     switch (action.type) {
-        case 'CHANGE_NAME': {
+        case 'CHANGE_NAME':
             return {
                 ...state, name: validateAndCapitalizeName(action.value)
             };
-        }
-        case 'CHANGE_AGE': {
+        case 'CHANGE_AGE':
             return {
                 ...state, age: filterAge(action.value)
             }
-        }
-        case 'CHANGE_PHONE': {
+        case 'CHANGE_PHONE':
             return {
                 ...state, phone: filterPhoneNumber(action.value)
             }
-        }
-        case 'CHANGE_SEX': {
+        case 'CHANGE_SEX':
             return {
                 ...state, sex: action.value
             }
-        }
-        case 'CHANGE_ADDRESS': {
+        case 'CHANGE_ADDRESS':
             return {
                 ...state, address: normalizeAddress(action.value)
             }
-        }
         case 'CHANGE_REFERRAL': {
             if (action.value === 'DOCTOR') {
                 return {
@@ -107,6 +104,9 @@ const formReducer = (state: FormData, action: Action): FormData => {
             }
             return state;
         }
+        case 'ADD_CLINICAL_NOTES': return {
+            ...state, clinicalNotes: action.value
+        }
         case 'RESET': return initialFormData;
         default: return state;
     }
@@ -128,6 +128,9 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose, on
     const [formData, dispatch] = useReducer(formReducer, initialFormData, initializeName);
 
     const [showClinicalNotes, setShowClinicalNotes] = useState(false)
+
+    console.log(formData);
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -181,7 +184,11 @@ const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose, on
 
             </form>
             {showClinicalNotes && <ClinicalNotesBuilder
-                onSave={() => setShowClinicalNotes(false)}
+                initialNotes={formData.clinicalNotes}
+                onSave={(value) => {
+                    dispatch({ type: 'ADD_CLINICAL_NOTES', value })
+                    setShowClinicalNotes(false)
+                }}
                 onClose={() => setShowClinicalNotes(false)}
             />}
 

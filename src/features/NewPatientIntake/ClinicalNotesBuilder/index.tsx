@@ -14,7 +14,7 @@ export interface NoteData {
 export type ClinicalNotes = Record<string, NoteData>
 
 interface ClinicalNotesBuilderProps {
-  onSave: (notes: Record<string, NoteData>) => void;
+  onSave: (notes: ClinicalNotes) => void;
   onClose: () => void;
   initialNotes?: Record<string, NoteData>;
 }
@@ -27,7 +27,6 @@ export const ClinicalNotesBuilder: React.FC<ClinicalNotesBuilderProps> = ({ onSa
       const conf = confirm("⚠️WARNING: Category already exists! Do you wish to REPLACE it?")
       if (!conf) return;
     }
-
     setNotes(prev => (
       {
         ...prev,

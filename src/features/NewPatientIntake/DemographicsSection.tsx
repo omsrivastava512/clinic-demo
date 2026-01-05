@@ -1,7 +1,9 @@
-import { SmartphoneIcon } from "lucide-react"
+import { MarsIcon, SmartphoneIcon, TransgenderIcon, VenusIcon } from "lucide-react"
 import { Input, ToggleButton } from "./primitives"
 import { cn, formatPhone } from "@/utils"
 import type { FormData } from "."
+
+const sexes = ['M', 'F', 'X'] as const
 
 const labelStyle = "text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 block"
 
@@ -58,21 +60,24 @@ const DemographicsSection = ({ phone, age, sex, changePhone, changeAge, changeSe
                 <label className={labelStyle}>sex</label>
                 <div
                     className={cn(
-                        "flex ", // layout
+                        "flex justify-center items-center", // layout
                         "bg-zinc-100 dark:bg-zinc-900", // background
                         "rounded-lg", // shape
                         "p-1", // spacing
-                        "border border-zinc-200 dark:border-zinc-800" // border
+                        "border border-zinc-200 dark:border-zinc-800 text-center" // border
                     )}
                 >
-                    {(['M', 'F'] as const).map((s) => (
+                    {(sexes).map((s) => (
                         <ToggleButton
                             key={s}
                             type="button"
                             onClick={() => changeSex(s)}
                             isActive={sex === s}
                         >
-                            {s}
+                            {/* {s} */}
+                            {s === 'M' && <MarsIcon className={"inline hover:text-blue-600"} />}
+                            {s === 'F' && <VenusIcon className={"inline hover:text-pink-600"} />}
+                            {s === 'X' && <TransgenderIcon className={"inline hover:text-purple-600"} />}
                         </ToggleButton>
                     ))}
                 </div>

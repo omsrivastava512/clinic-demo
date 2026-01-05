@@ -51,7 +51,7 @@ export const InputWithRef = forwardRef<HTMLInputElement, InputWithRefProps>(({ c
 ))
 
 const getToggleButtonClass = (isActive: boolean) => cn(
-    "flex-1 py-2 rounded text-sm font-bold",
+    "flex-1 py-2 rounded text-sm font-bold ",
     isActive
         ? cn("bg-white dark:bg-zinc-700",
             "text-zinc-900 dark:text-white",
