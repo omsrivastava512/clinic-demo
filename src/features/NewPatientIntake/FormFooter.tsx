@@ -19,14 +19,15 @@ const FormFooter = ({ onClose, openClinicNotes }: FormFooterProps) => {
             <button type="button"
                 title="Add additional details"
                 onClick={openClinicNotes}
-                className="pr-10 py-3"
+                className="pr-10 py-3 outline-none"
+                tabIndex={-1}
             >
                 <NotebookPenIcon
                     className={cn(
                         "sm:w-auto", // layout & sizing
                         "font-medium", // typography
                         "text-zinc-500", // color (base)
-                        "hover:text-zinc-900 dark:hover:text-white", // color (states)
+                        "hover:text-zinc-900 dark:hover:text-white", // color 
                         "transition-colors" // interaction & motion
                     )}
                 />

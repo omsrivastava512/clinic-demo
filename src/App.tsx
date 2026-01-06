@@ -11,6 +11,22 @@ import { Moon, Sun } from 'lucide-react';
 // import  {PatientRecord}  from './data/useless/PatientProfile';
 // import { PatientRecord } from './data/useless/patientlight';
 
+const lastUpdated = new Date(import.meta.env.VITE_LAST_UPDATED);
+
+const datePart = lastUpdated.toLocaleDateString('en-US', {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit'
+});
+const timePart = lastUpdated.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+});
+
+const formattedDate = `${datePart} | ${timePart}`;
+console.log(formattedDate); // Output: Tue Jan 06, 2026 | 23:50
 
 
 // ==========================================
@@ -33,7 +49,7 @@ const App = () => {
                 <ToggleDarkButton isDarkMode={isDarkMode} toggleDark={() => setIsDarkMode(!isDarkMode)} />
 
                 <DemoHeader />
-{/* 
+                {/* 
                 <PresentationSection description='' title='' number=''>
                     <PatientRecord /> 
                 </PresentationSection> */}
@@ -46,7 +62,7 @@ const App = () => {
                 <PresentationSection title="Intake"
                     number='02' description='Upcoming: add preset suggestions in clinical notes'>
                     <div className="flex gap-5 flex-wrap">
-                        <NewPatientIntake onClose={() => { }} initialName="Arjun" onSubmit={()=>{}}/>
+                        <NewPatientIntake onClose={() => { }} initialName="Arjun" onSubmit={() => { }} />
                     </div>
                 </PresentationSection>
 
@@ -111,6 +127,7 @@ const DemoHeader = () => (
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
         <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
 
-        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: Thurs Jan 5, 2026 | 10:15 </p>
+        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: {formattedDate} </p>
+        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 underline"><a href="https://github.com/omsrivastava512/clinic-demo/commits/" target="_blank" rel="noopener" >Track Progress↗ </a></p>
     </header>
 )

@@ -23,6 +23,13 @@ interface ClinicalNotesBuilderProps {
 export const ClinicalNotesBuilder = ({ onSave, onClose, initialNotes = [] }: ClinicalNotesBuilderProps) => {
   const [notes, setNotes] = useState<ClinicalNote[]>(initialNotes);
 
+  // Close modal when press Escape
+  useEffect(() => {
+    document.addEventListener('keydown', (e) => {
+      if (e.key == 'Escape') onClose();
+    })
+  }, [onClose])
+
   const insertNote = (n: ClinicalNote) => {
     if (notes.map(n => n.category).includes(n.category)) {
       const conf = confirm("⚠️WARNING: Category already exists! Do you wish to REPLACE it?")
