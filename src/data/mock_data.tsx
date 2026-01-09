@@ -1,23 +1,202 @@
 import type { LedgerEntry, MedicalComplaint, Patient, Procedure } from '@/types';
 
 export const MOCK_PATIENTS: Patient[] = [
-    { id: 'P01', name: 'Amitabh Bachchan', mrn: 'MED-992', phone: '9876543210', lastVisit: '2 days ago', address: 'Prateeksha, Juhu' },
-    { id: 'P02', name: 'Sania Mirza', mrn: 'MED-881', phone: '9988776655', lastVisit: '10 days ago', address: 'Banjara Hills, Hyderabad' },
-    { id: 'P03', name: 'Virat Kohli', mrn: 'MED-774', phone: '9123456789', lastVisit: 'Yesterday', address: 'DLF Phase 1, Gurgaon' },
-    { id: 'P04', name: 'Priyanka Chopra', mrn: 'MED-663', phone: '9898989898', lastVisit: '1 month ago', address: 'Versova, Andheri West' },
-    { id: 'P05', name: 'Shah Rukh Khan', mrn: 'MED-552', phone: '9000011111', lastVisit: '3 weeks ago', address: 'Bandstand, Bandra West' },
-    { id: 'P06', name: 'Deepika Padukone', mrn: 'MED-441', phone: '9222233333', lastVisit: '5 days ago', address: 'Pali Hill, Bandra' },
-    { id: 'P07', name: 'Ranveer Singh', mrn: 'MED-330', phone: '9444455555', lastVisit: 'Today', address: 'Carter Road, Bandra West' },
-    { id: 'P08', name: 'Rohit Sharma', mrn: 'MED-229', phone: '9666677777', lastVisit: '2 months ago', address: 'Worli Sea Face' },
-    { id: 'P09', name: 'Alia Bhatt', mrn: 'MED-118', phone: '9888899999', lastVisit: '1 week ago', address: 'Juhu Tara Road' },
-    { id: 'P10', name: 'Ranbir Kapoor', mrn: 'MED-007', phone: '9111122222', lastVisit: '4 days ago', address: 'Hill Road, Bandra' },
-    { id: 'P11', name: 'Kareena Kapoor', mrn: 'MED-123', phone: '9333344444', lastVisit: 'Just now', address: 'Fortune Heights, Bandra West' },
-    { id: 'P12', name: 'Saif Ali Khan', mrn: 'MED-456', phone: '9555566666', lastVisit: 'Yesterday', address: 'Pataudi House, Gurgaon, HR' },
-    { id: 'P13', name: 'Katrina Kaif', mrn: 'MED-789', phone: '9777788888', lastVisit: '2 days ago', address: 'Palm Beach Road, Navi Mumbai' },
-    { id: 'P14', name: 'Vicky Kaushal', mrn: 'MED-101', phone: '9999900000', lastVisit: '3 days ago', address: 'Lokhandwala Complex' },
-    { id: 'P15', name: 'Hrithik Roshan', mrn: 'MED-202', phone: '9222211111', lastVisit: '1 month ago', address: 'Juhu Scheme' },
-
-];
+    {
+        "id": "uuid-p01",
+        "mrn": "MED-992",
+        "fullName": "Amitabh Bachchan",
+        "dateOfBirth": "1942-10-11",
+        "lastVisitAt": "2026-01-28T10:00:00Z",
+        "phone": "9876543210",
+        "address": "Prateeksha, Juhu",
+        "gender": "male",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p02",
+        "mrn": "MED-881",
+        "fullName": "Sania Mirza",
+        "dateOfBirth": "1986-11-15",
+        "lastVisitAt": "2024-05-22T10:00:00Z",
+        "phone": "9988776655",
+        "address": "Banjara Hills, Hyderabad",
+        "gender": "female",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p03",
+        "mrn": "MED-774",
+        "fullName": "Virat Kohli",
+        "dateOfBirth": "1988-11-05",
+        "lastVisitAt": "2024-05-31T10:00:00Z",
+        "phone": "9123456789",
+        "address": "DLF Phase 1, Gurgaon",
+        "gender": "male",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p04",
+        "mrn": "MED-663",
+        "fullName": "Priyanka Chopra",
+        "dateOfBirth": "1982-07-18",
+        "lastVisitAt": "2024-05-01T10:00:00Z",
+        "phone": "9898989898",
+        "address": "Versova, Andheri West",
+        "gender": "female",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p05",
+        "mrn": "MED-552",
+        "fullName": "Shah Rukh Khan",
+        "dateOfBirth": "1965-11-02",
+        "lastVisitAt": "2024-05-11T10:00:00Z",
+        "phone": "9000011111",
+        "address": "Bandstand, Bandra West",
+        "gender": "male",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p06",
+        "mrn": "MED-441",
+        "fullName": "Deepika Padukone",
+        "dateOfBirth": "1986-01-05",
+        "lastVisitAt": "2024-05-27T10:00:00Z",
+        "phone": "9222233333",
+        "address": "Pali Hill, Bandra",
+        "gender": "female",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p07",
+        "mrn": "MED-330",
+        "fullName": "Ranveer Singh",
+        "dateOfBirth": "1985-07-06",
+        "lastVisitAt": "2024-06-01T10:00:00Z",
+        "phone": "9444455555",
+        "address": "Carter Road, Bandra West",
+        "gender": "male",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p08",
+        "mrn": "MED-229",
+        "fullName": "Rohit Sharma",
+        "dateOfBirth": "1987-04-30",
+        "lastVisitAt": "2024-04-01T10:00:00Z",
+        "phone": "9666677777",
+        "address": "Worli Sea Face",
+        "gender": "male",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p09",
+        "mrn": "MED-118",
+        "fullName": "Alia Bhatt",
+        "dateOfBirth": "1993-03-15",
+        "lastVisitAt": "2024-05-25T10:00:00Z",
+        "phone": "9888899999",
+        "address": "Juhu Tara Road",
+        "gender": "female",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p10",
+        "mrn": "MED-007",
+        "fullName": "Ranbir Kapoor",
+        "dateOfBirth": "1982-09-28",
+        "lastVisitAt": "2024-05-28T10:00:00Z",
+        "phone": "9111122222",
+        "address": "Hill Road, Bandra",
+        "gender": "male",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p11",
+        "mrn": "MED-123",
+        "fullName": "Kareena Kapoor",
+        "dateOfBirth": "1980-09-21",
+        "lastVisitAt": "2024-06-01T09:59:00Z",
+        "phone": "9333344444",
+        "address": "Fortune Heights, Bandra West",
+        "gender": "female",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p12",
+        "mrn": "MED-456",
+        "fullName": "Saif Ali Khan",
+        "dateOfBirth": "1970-08-16",
+        "lastVisitAt": "2024-05-31T10:00:00Z",
+        "phone": "9555566666",
+        "address": "Pataudi House, Gurgaon, HR",
+        "gender": "male",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p13",
+        "mrn": "MED-789",
+        "fullName": "Katrina Kaif",
+        "dateOfBirth": "1983-07-16",
+        "lastVisitAt": "2024-05-30T10:00:00Z",
+        "phone": "9777788888",
+        "address": "Palm Beach Road, Navi Mumbai",
+        "gender": "female",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p14",
+        "mrn": "MED-101",
+        "fullName": "Vicky Kaushal",
+        "dateOfBirth": "1988-05-16",
+        "lastVisitAt": "2024-05-29T10:00:00Z",
+        "phone": "9999900000",
+        "address": "Lokhandwala Complex",
+        "gender": "male",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+        "id": "uuid-p15",
+        "mrn": "MED-202",
+        "fullName": "Hrithik Roshan",
+        "dateOfBirth": "1974-01-10",
+        "lastVisitAt": "2024-05-01T10:00:00Z",
+        "phone": "9222211111",
+        "address": "Juhu Scheme",
+        "gender": "male",
+        "isActive": true,
+        "createdAt": "2024-06-01T10:00:00Z",
+        "updatedAt": "2024-06-01T10:00:00Z"
+    }
+]
 
 
 export const MOCK_CONTEXTS: MedicalComplaint[] = [
@@ -61,3 +240,54 @@ export const MOCK_LEDGER_ENTRIES: LedgerEntry[] = [
     { id: 'LE20', time: '03:15 PM', patientName: 'Smita Patil', treatment: 'Carpal Tunnel Syndrome (US)', status: 'In Therapy' },
     { id: 'LE22', time: '03:45 PM', patientName: 'Priya Kapoor', treatment: 'Ankle Sprain (Taping)', status: 'In Therapy' },
 ];
+
+
+
+
+/**
+ * 
+ * 
+  create table patients (
+  id uuid primary key default gen_random_uuid(),
+  mrn text not null unique,
+  full_name text not null,
+  phone text,
+  address text,
+  date_of_birth date,
+  gender text,
+  last_visit_at timestamptz,
+  notes text,
+  is_active boolean default true,
+
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- Keep updated_at fresh
+create trigger update_timestamp
+before update on patients
+for each row
+execute procedure trigger_set_timestamp();
+
+ */
+
+/**
+ * 
+ * function toCamel(row: any): Patient {
+  return {
+    id: row.id,
+    mrn: row.mrn,
+    fullName: row.full_name,
+    dateOfBirth: row.date_of_birth,
+    lastVisitAt: row.last_visit_at,
+    phone: row.phone,
+    address: row.address,
+    gender: row.gender,
+    notes: row.notes,
+    isActive: row.is_active,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+ */
