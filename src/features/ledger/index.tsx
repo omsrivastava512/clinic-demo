@@ -19,7 +19,7 @@ export const DailyLedger = () => {
 
     return (
         <div id="daily_ledger" className={cn(
-            "w-full relative h-125",  // box
+            "w-full relative h-lvh py-2",  // box
             "bg-white dark:bg-black",  // bg
             "border border-zinc-200 dark:border-zinc-800 rounded-lg",  // border           
             "flex flex-col  transition-colors duration-300"  // others
