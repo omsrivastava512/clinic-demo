@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { MedicalComplaint, Patient } from "@/types";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { cn } from "@/lib";
+import { getAge, getLastVisit } from "./lib";
 
 /**
  * COMPONENT 2: CONTEXT SELECTOR
@@ -10,6 +11,7 @@ import { cn } from "@/lib";
 interface ComplaintSelectorProps {
     patient: Patient;
     availableComplaints: MedicalComplaint[];
+    // lastVisit:number;
     onConfirm: (selectedIds: string[]) => void;
     onCancel: () => void;
 }
@@ -17,15 +19,18 @@ interface ComplaintSelectorProps {
 export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({ patient, availableComplaints, onConfirm, onCancel }) => {
     const [selected, setSelected] = useState<string[]>([]);
 
-    const handleCancel = () =>{
-        setSelected([])
-        onCancel()
-    }
     // Local state to manage newly created contexts
     const [customComplaints, setCustomComplaints] = useState<MedicalComplaint[]>([]);
 
     // State for the inline input
     const [newComplaintInput, setNewComplaintInput] = useState('');
+
+     const handleCancel = () =>{
+        setSelected([])
+        setCustomComplaints([])
+        setNewComplaintInput("")
+        onCancel()
+    }
 
     const toggleComplaint = (id: string) => {
         setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
@@ -61,12 +66,12 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({ patient, a
 
             <div className="flex justify-between items-start mb-6">
                 <div>
-                    <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{patient.name}</h2>
-                    <p className="text-zinc-600 dark:text-zinc-400 text-sm font-medium mt-1">Returning Patient • Last visit: 14 days ago</p>
+                    <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{patient.fullName}</h2>
+                    <p className="text-zinc-600 dark:text-zinc-400 text-sm font-medium mt-1">Returning Patient • Last visit: {getLastVisit(patient.lastVisitAt)} </p>
                 </div>
                 <div className="text-right text-xs font-mono text-zinc-500 dark:text-zinc-400">
                     <span className="text-xs font-mono text-zinc-500 block">MRN-9921</span>
-                    <span className="text-xs font-mono text-zinc-500 block">DOB: 12/04/1985</span>
+                    <span className="text-xs font-mono text-zinc-500 block"> {getAge(patient.dateOfBirth)}</span>
                 </div>
             </div>
 
