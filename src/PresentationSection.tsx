@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 // ==========================================
 // 4. MAIN LAYOUT (CATALOG VIEW)
 // ==========================================
-export const PresentationSection = ({ title, number, description, children }: { title: string; number: string; description: string; children: ReactNode; }) => (
-    <section className="mb-32 max-w-5xl mx-auto w-full last:mb-0">
+export const PresentationSection = ({hidden=false, title, number, description, children }: {hidden?:boolean, title: string; number: string; description: string; children: ReactNode; }) => (
+    <section className="mb-32 max-w-5xl mx-auto w-full last:mb-0" hidden={hidden}>
         <div className="mb-6 px-4 md:mb-12 ml-2 max-w-3xl">
             <div className="flex items-baseline gap-4 md:gap-6 mb-4">
                 <span className="text-4xl md:text-7xl font-serif text-zinc-400 dark:text-zinc-600 font-bold">{number}</span>
