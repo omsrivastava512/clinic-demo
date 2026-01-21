@@ -3,14 +3,25 @@
 // 1. TYPES & INTERFACES (types.ts)
 // ==========================================
 
+import type { ClinicalNote } from "@/features/patient/components/ClinicalNotesBuilder";
+
+
+
 export interface Patient {
-    id: string;
-    name: string; // e.g., "Rajesh Kumar"
-    mrn: string;
-    phone: string;
-    address:string;
-    lastVisit?: string;
+  id: string;
+  mrn: string;
+  fullName: string;
+  dateOfBirth: string;     // date
+  lastVisitAt: string;     // timestamp
+  phone: string;
+  address: string;
+  gender: string;
+  notes?: ClinicalNote;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
+
 
 export interface MedicalComplaint {
     id: string;
