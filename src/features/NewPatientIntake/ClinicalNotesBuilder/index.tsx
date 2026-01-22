@@ -30,14 +30,19 @@ export const ClinicalNotesBuilder = ({ onSave, onClose, initialNotes = [] }: Cli
     })
   }, [onClose])
 
-  const insertNote = (n: ClinicalNote) => {
-    if (notes.map(n => n.category).includes(n.category)) {
+  const insertNote = (note: ClinicalNote) => {
+    // Update Existing Note
+    if (notes.map(n => n.category).includes(note.category)) {
       const conf = confirm("⚠️WARNING: Category already exists! Do you wish to REPLACE it?")
-      if (!conf) return;
+      if (conf) setNotes(prev => prev.map(
+        n => n.category === note.category ? note : n
+      ))
+      return;
     }
-    setNotes(prev => ([
+    // Insert New Note
+    else setNotes(prev => ([
       ...prev,
-      n
+      note
     ]));
   };
 

@@ -1,6 +1,7 @@
 import {cn} from "@/utils";
 import { TagIcon, XIcon } from "lucide-react";
 
+// TODO: Add help icon and tooltip for example notes (Created on 2026-01-23)
 
 export const CNBHeader = ({ onClose }: { onClose(): void }) => (
   <div className={

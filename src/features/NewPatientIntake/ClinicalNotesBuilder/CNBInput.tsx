@@ -5,28 +5,6 @@ import { cn, filterAlphabetsAndNormalizeSpaces, filterAlphaNumeric } from "@/uti
 import type { TargetedEvent } from "preact";
 
 
-const inputStyles = cn(
-    "w-full bg-zinc-50 dark:bg-zinc-900/50",    // bg
-    "border border-zinc-200 dark:border-zinc-800 rounded-lg",   // border
-    "px-3 py-2 text-sm text-zinc-900 dark:text-white",    // pad, text
-    "focus:border-zinc-400 dark:focus:border-zinc-600",   // focus:border
-    "focus:bg-white dark:focus:bg-zinc-900",    // focus:bg
-    "placeholder-zinc-400 dark:placeholder-zinc-600"  // placeholder
-)
-
-const labelStyles = cn(
-    "text-xs font-bold",
-    "text-zinc-500 dark:text-zinc-400",
-    "uppercase tracking-widest mb-1.5 block"
-)
-
-const notCriticalStyles = cn(
-    "bg-zinc-50 dark:bg-zinc-900",    // bg
-    "border-zinc-200 dark:border-zinc-800",   // border
-    "text-zinc-400 dark:text-zinc-500",   // text
-    "hover:border-zinc-400 dark:hover:border-zinc-600"  // hover
-)
-
 const initialNote:ClinicalNote = {
     category: '',
     observation: '',
@@ -65,6 +43,7 @@ export const CNBInput = ({ insertNote }: { insertNote(n: ClinicalNote): void }) 
                     value={newNote.category}
                     onChange={handleNewKey}
                     placeholder="e.g. Diabetes, Weight, Thyroid, Allergy"
+                    title="e.g. Diabetes, Weight, Thyroid, Allergy"
                     className={inputStyles}
                 />
             </div>
@@ -78,6 +57,7 @@ export const CNBInput = ({ insertNote }: { insertNote(n: ClinicalNote): void }) 
                     value={newNote.observation}
                     onChange={handleNewValue}
                     placeholder="e.g. High, 75, Low"
+                    title="e.g. High, 75, Low"
                     className={inputStyles}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddNote()}
                 />
@@ -99,11 +79,12 @@ export const CNBInput = ({ insertNote }: { insertNote(n: ClinicalNote): void }) 
             <button
                 type="button" title="Add"
                 onClick={handleAddNote}
-                disabled={!newNote.category || !newNote.observation}
+                // disabled={!newNote.category || !newNote.observation}
                 className={cn(
                     "p-2 mb-px bg-zinc-900 dark:bg-white",
                     "text-white dark:text-black rounded-lg",
-                    "hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                    "hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed",
+                    "active:bg-zinc-700 dark:active:bg-zinc-300"
                 )}
             >
                 <PlusIcon className="w-4 h-4" />
@@ -111,3 +92,29 @@ export const CNBInput = ({ insertNote }: { insertNote(n: ClinicalNote): void }) 
         </div>
     )
 }
+
+
+
+const inputStyles = cn(
+    "w-full bg-zinc-50 dark:bg-zinc-900/50",    // bg
+    "border border-zinc-200 dark:border-zinc-800 rounded-lg",   // border
+    "px-3 py-2 text-sm text-zinc-900 dark:text-white",    // pad, text
+    "focus:border-zinc-400 dark:focus:border-zinc-600",   // focus:border
+    "focus:bg-white dark:focus:bg-zinc-900",    // focus:bg
+    "placeholder-zinc-400 dark:placeholder-zinc-600"  // placeholder
+)
+
+const labelStyles = cn(
+    "text-xs font-bold",
+    "text-zinc-500 dark:text-zinc-400",
+    "uppercase tracking-widest mb-1.5 block"
+)
+
+const notCriticalStyles = cn(
+    "bg-zinc-50 dark:bg-zinc-900",    // bg
+    "border-zinc-200 dark:border-zinc-800",   // border
+    "text-zinc-400 dark:text-zinc-500",   // text
+    "hover:border-zinc-400 dark:hover:border-zinc-600"  // hover
+)
+
+

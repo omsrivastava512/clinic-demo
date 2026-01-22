@@ -58,8 +58,9 @@ export const CNBList = ({ notes, removeNote }: CNBListProps) => {
                         className={cn(
                             "text-zinc-400", // base color
                             "hover:text-red-600 dark:hover:text-red-400", // hover intent
+                            "active:text-red-600 dark:active:text-red-400", // hover intent
                             "transition-colors", // color animation
-                            "opacity-100 sm:opacity-0 sm:group-hover:opacity-100" // responsive visibility
+                            "opacity-100 lg:opacity-0 lg:group-hover:opacity-100" // responsive visibility
                         )}
                     >
                         <Trash2Icon className="w-4 h-4" />
