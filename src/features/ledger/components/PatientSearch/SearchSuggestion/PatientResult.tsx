@@ -67,7 +67,7 @@ const PatientListItem = ({ patient, onSelect, isSelected }: PatientListItemProps
                     "group-hover:text-black dark:group-hover:text-white",
                     "group-data-[selected=true]:text-black group-data-[selected=true]:dark:text-white text-sm"
                 )}>
-                    {patient.name}
+                    {patient.fullName}
                 </div>
                 <div className={cn(
                     "text-[10px] text-zinc-500 font-mono flex items-center gap-2", "group-hover:text-zinc-700 dark:group-hover:text-zinc-300", "group-data-[selected=true]:text-zinc-700 group-data-[selected=true]:dark:text-zinc-300"

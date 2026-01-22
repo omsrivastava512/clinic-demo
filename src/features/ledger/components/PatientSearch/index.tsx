@@ -22,7 +22,7 @@ const PatientSearch = () => {
         // Trigger Logic: Only show if at least 3 characters (starts at 3 chars)
         if (val.length >= 3) {
             const results = MOCK_PATIENTS.filter(p =>
-                p.name.toLowerCase().includes(val.toLowerCase()) ||
+                p.fullName.toLowerCase().includes(val.toLowerCase()) ||
                 p.phone.includes(val)
             );
             setFilteredPatients(results);
@@ -72,7 +72,7 @@ const PatientSearch = () => {
         if (i < filteredPatients.length && i !== -1) {
             // It's a patient from the list
             const patient = filteredPatients[i];
-            alert(`Selected Existing: ${patient.name}`);
+            alert(`Selected Existing: ${patient.fullName}`);
         } else {
             // It's the "Add New" button (last item)
             alert(`Triggering Add New Patient for: ${input}`);
