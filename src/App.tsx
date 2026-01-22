@@ -55,12 +55,12 @@ const App = () => {
                     <PatientRecord /> 
                 </PresentationSection> */}
 
-                <PresentationSection title="The Daily Ledger (Input)"
+                <PresentationSection hidden title="The Daily Ledger (Input)"
                     number='01' description='Upcoming Features: ShimmerUI in search results floater, Add status wise filter '>
                     <DailyLedger />
                 </PresentationSection>
 
-                <PresentationSection title="Intake"
+                <PresentationSection hidden title="Intake"
                     number='02' description='Upcoming: add preset suggestions in clinical notes'>
                     <div className="flex gap-5 flex-wrap">
                         <NewPatientIntake onClose={() => { }} initialName="Arjun" onSubmit={() => { }} />
@@ -68,13 +68,13 @@ const App = () => {
                 </PresentationSection>
 
                 <PresentationSection title="Complaint Selector (Diagnosis)"
-                    number='03' description='Upcoming: Add a suggestive complaint drop down as the user starts typing in the add a new complaint box (searchable by category), Add Last Visit as designed in workflow'>
+                    number='03' description='Upcoming: Add a suggestive complaint drop down as the user starts typing in the add a new complaint box (searchable by category)'>
                     <div className="flex justify-center">
                         <ComplaintSelector
                             patient={MOCK_PATIENTS[0]}
                             availableComplaints={MOCK_CONTEXTS}
                             onConfirm={handleLog}
-                            onCancel={() => alert('Cancelled')}
+                            onCancel={() => {}}
                         />
                     </div>
                 </PresentationSection>
