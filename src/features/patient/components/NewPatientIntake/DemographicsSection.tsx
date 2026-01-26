@@ -1,7 +1,7 @@
 import { SmartphoneIcon } from "lucide-react"
 import { Input, ToggleButton } from "./primitives"
 import { cn, formatPhone } from "@/lib"
-import type { FormData } from "."
+import type { FormData } from '../../types'
 import type { ChangeEvent } from "react"
 
 const sexes = ['M', 'F', 'X'] as const
@@ -14,7 +14,6 @@ type DemographicsSectionProps = Pick<FormData, 'age' | 'phone' | 'sex'> & {
     changeSex(v: FormData['sex']): void;
 }
 const DemographicsSection = ({ phone, age, sex, changePhone, changeAge, changeSex }: DemographicsSectionProps) => {
-
     return (
         <section className="grid grid-cols-1 sm:grid-cols-12 gap-4">
 

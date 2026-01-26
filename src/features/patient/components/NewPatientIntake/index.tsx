@@ -1,11 +1,13 @@
 import { useState, useReducer } from 'react';
-import ClinicalNotesBuilder, { type ClinicalNote } from '../ClinicalNotesBuilder';
+import ClinicalNotesBuilder from '../ClinicalNotesBuilder';
+import { type ClinicalNote } from '../../types';
 import { capitalizeEachWord, deepTrimStrings, filterAge, filterAlphabetsAndSpaces, filterPhoneNumber, normalizeAddress, validateAddress, } from '@/lib';
 import { Input, IntakeLayout, TextArea, } from './primitives';
 import FormHeader from './FormHeader';
 import ReferralSection from './ReferralSection';
 import DemographicsSection from './DemographicsSection';
 import FormFooter from './FormFooter';
+import type { FormData } from '../../types';
 
 const validateAndCapitalizeName = (val: string) => capitalizeEachWord(filterAlphabetsAndSpaces(val))
 
@@ -28,25 +30,6 @@ interface IntakeProps {
     onSubmit: (v: FormData) => void;
 
 }
-
-// TODO: add an 'ok' fn for each property to display a green ring in the input when the validation meets (Created on 2026-01-04)
-
-// TODO: if the patient is minor don't allow intake unless guardian present (Created on 2026-01-04)
-// ❗ Guardian Required
-// Patient is under 18 and no parent/guardian is recorded as present.
-// Do not continue intake until guardian identity and consent are verified.
-
-export type FormData = {
-    name: string;
-    phone: string;
-    sex: 'M' | 'F' | 'X';
-    age: string;
-    address: string;
-    clinicalNotes?: ClinicalNote[]
-} & (
-        | { referral: 'WALKIN' | 'GOOGLE'; doctorInfo?: never }
-        | { referral: 'DOCTOR'; doctorInfo: string }
-    )
 
 type Action =
     | { type: 'CHANGE_NAME'; value: string }
@@ -94,7 +77,6 @@ const formReducer = (state: FormData, action: Action): FormData => {
                 return {
                     ...rest,
                     referral: action.value
-                    
                 }
             }
         }

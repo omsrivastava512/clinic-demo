@@ -1,8 +1,9 @@
 import { FootprintsIcon, MapPinIcon, StethoscopeIcon } from "lucide-react";
 import { ReferralButton, TextAreaWithRef } from "./primitives";
 import { useEffect, useRef } from "react";
-import type { FormData } from ".";
+import type { FormData } from '../../types';
 
+// ASSUME: REFERRAL_OPTIONS is have only these options
 const REFERRAL_OPTIONS = [
     { id: 'WALKIN' as const, icon: FootprintsIcon, label: 'Walk-In' },
     { id: 'GOOGLE' as const, icon: MapPinIcon, label: 'Google Maps' },

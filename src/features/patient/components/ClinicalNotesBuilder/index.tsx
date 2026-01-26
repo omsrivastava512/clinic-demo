@@ -8,7 +8,6 @@ import useConfirm from '@/components/useConfirm';
 import isEqual from 'lodash.isequal';
 
 
-// Updated data structure to support the critical flag
 export interface ClinicalNote {
   category: string;
   observation: string;
