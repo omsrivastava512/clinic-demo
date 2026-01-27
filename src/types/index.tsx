@@ -3,7 +3,7 @@
 // 1. TYPES & INTERFACES (types.ts)
 // ==========================================
 
-import type { ClinicalNote } from "@/features/patient/components/ClinicalNotesBuilder";
+import type { ClinicalNote, FormData } from '@/features/patient/types';
 
 
 
@@ -17,6 +17,8 @@ export interface Patient {
   address: string;
   gender: string;
   notes?: ClinicalNote;
+  referralMode: FormData['referral'];
+  referralDoctorInfo?: string | never;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
