@@ -1,202 +1,365 @@
 import type { LedgerEntry, MedicalComplaint, Patient, Procedure } from '@/types';
 
 export const MOCK_PATIENTS: Patient[] = [
-    {
-        "id": "uuid-p01",
-        "mrn": "MED-992",
-        "fullName": "Amitabh Bachchan",
-        "dateOfBirth": "1942-10-11",
-        "lastVisitAt": "2026-01-28T10:00:00Z",
-        "phone": "9876543210",
-        "address": "Prateeksha, Juhu",
-        "gender": "male",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p02",
-        "mrn": "MED-881",
-        "fullName": "Sania Mirza",
-        "dateOfBirth": "1986-11-15",
-        "lastVisitAt": "2024-05-22T10:00:00Z",
-        "phone": "9988776655",
-        "address": "Banjara Hills, Hyderabad",
-        "gender": "female",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p03",
-        "mrn": "MED-774",
-        "fullName": "Virat Kohli",
-        "dateOfBirth": "1988-11-05",
-        "lastVisitAt": "2024-05-31T10:00:00Z",
-        "phone": "9123456789",
-        "address": "DLF Phase 1, Gurgaon",
-        "gender": "male",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p04",
-        "mrn": "MED-663",
-        "fullName": "Priyanka Chopra",
-        "dateOfBirth": "1982-07-18",
-        "lastVisitAt": "2024-05-01T10:00:00Z",
-        "phone": "9898989898",
-        "address": "Versova, Andheri West",
-        "gender": "female",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p05",
-        "mrn": "MED-552",
-        "fullName": "Shah Rukh Khan",
-        "dateOfBirth": "1965-11-02",
-        "lastVisitAt": "2024-05-11T10:00:00Z",
-        "phone": "9000011111",
-        "address": "Bandstand, Bandra West",
-        "gender": "male",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p06",
-        "mrn": "MED-441",
-        "fullName": "Deepika Padukone",
-        "dateOfBirth": "1986-01-05",
-        "lastVisitAt": "2024-05-27T10:00:00Z",
-        "phone": "9222233333",
-        "address": "Pali Hill, Bandra",
-        "gender": "female",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p07",
-        "mrn": "MED-330",
-        "fullName": "Ranveer Singh",
-        "dateOfBirth": "1985-07-06",
-        "lastVisitAt": "2024-06-01T10:00:00Z",
-        "phone": "9444455555",
-        "address": "Carter Road, Bandra West",
-        "gender": "male",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p08",
-        "mrn": "MED-229",
-        "fullName": "Rohit Sharma",
-        "dateOfBirth": "1987-04-30",
-        "lastVisitAt": "2024-04-01T10:00:00Z",
-        "phone": "9666677777",
-        "address": "Worli Sea Face",
-        "gender": "male",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p09",
-        "mrn": "MED-118",
-        "fullName": "Alia Bhatt",
-        "dateOfBirth": "1993-03-15",
-        "lastVisitAt": "2024-05-25T10:00:00Z",
-        "phone": "9888899999",
-        "address": "Juhu Tara Road",
-        "gender": "female",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p10",
-        "mrn": "MED-007",
-        "fullName": "Ranbir Kapoor",
-        "dateOfBirth": "1982-09-28",
-        "lastVisitAt": "2024-05-28T10:00:00Z",
-        "phone": "9111122222",
-        "address": "Hill Road, Bandra",
-        "gender": "male",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p11",
-        "mrn": "MED-123",
-        "fullName": "Kareena Kapoor",
-        "dateOfBirth": "1980-09-21",
-        "lastVisitAt": "2024-06-01T09:59:00Z",
-        "phone": "9333344444",
-        "address": "Fortune Heights, Bandra West",
-        "gender": "female",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p12",
-        "mrn": "MED-456",
-        "fullName": "Saif Ali Khan",
-        "dateOfBirth": "1970-08-16",
-        "lastVisitAt": "2024-05-31T10:00:00Z",
-        "phone": "9555566666",
-        "address": "Pataudi House, Gurgaon, HR",
-        "gender": "male",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p13",
-        "mrn": "MED-789",
-        "fullName": "Katrina Kaif",
-        "dateOfBirth": "1983-07-16",
-        "lastVisitAt": "2024-05-30T10:00:00Z",
-        "phone": "9777788888",
-        "address": "Palm Beach Road, Navi Mumbai",
-        "gender": "female",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p14",
-        "mrn": "MED-101",
-        "fullName": "Vicky Kaushal",
-        "dateOfBirth": "1988-05-16",
-        "lastVisitAt": "2024-05-29T10:00:00Z",
-        "phone": "9999900000",
-        "address": "Lokhandwala Complex",
-        "gender": "male",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    },
-    {
-        "id": "uuid-p15",
-        "mrn": "MED-202",
-        "fullName": "Hrithik Roshan",
-        "dateOfBirth": "1974-01-10",
-        "lastVisitAt": "2024-05-01T10:00:00Z",
-        "phone": "9222211111",
-        "address": "Juhu Scheme",
-        "gender": "male",
-        "isActive": true,
-        "createdAt": "2024-06-01T10:00:00Z",
-        "updatedAt": "2024-06-01T10:00:00Z"
-    }
-]
+  // 1
+  {
+    id: "uuid-p01",
+    mrn: "MED-001",
+    fullName: "Priya Kapoor",
+    dateOfBirth: "1988-03-12",
+    lastVisitAt: "2024-02-11T09:45:00Z",
+    phone: "9000000001",
+    address: "Flat 12A, Lokhandwala, Mumbai",
+    gender: "female",
+    referralMode: "WALKIN",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 2
+  {
+    id: "uuid-p02",
+    mrn: "MED-002",
+    fullName: "Vikram Singh",
+    dateOfBirth: "1985-01-22",
+    lastVisitAt: "2024-03-18T10:30:00Z",
+    phone: "9000000002",
+    address: "House 44, Rajouri Garden, Delhi",
+    gender: "male",
+    referralMode: "GOOGLE",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 3
+  {
+    id: "uuid-p03",
+    mrn: "MED-003",
+    fullName: "Anjali Devi",
+    dateOfBirth: "1990-11-04",
+    lastVisitAt: "2024-01-29T08:55:00Z",
+    phone: "9000000003",
+    address: "Plot 9, Besant Nagar, Chennai",
+    gender: "female",
+    referralMode: "DOCTOR",
+    referralDoctorInfo: "Dr. Rao – Orthopedics",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 4
+  {
+    id: "uuid-p04",
+    mrn: "MED-004",
+    fullName: "Suresh Menon",
+    dateOfBirth: "1978-07-18",
+    lastVisitAt: "2024-02-02T09:10:00Z",
+    phone: "9000000004",
+    address: "Villa 21, HSR Layout, Bangalore",
+    gender: "male",
+    referralMode: "WALKIN",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 5
+  {
+    id: "uuid-p05",
+    mrn: "MED-005",
+    fullName: "Vijay Kumar",
+    dateOfBirth: "1980-10-10",
+    lastVisitAt: "2024-03-07T10:40:00Z",
+    phone: "9000000005",
+    address: "Flat 204, Jubilee Hills, Hyderabad",
+    gender: "male",
+    referralMode: "GOOGLE",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 6
+  {
+    id: "uuid-p06",
+    mrn: "MED-006",
+    fullName: "Rahul Sharma",
+    dateOfBirth: "1986-01-05",
+    lastVisitAt: "2024-01-20T07:55:00Z",
+    phone: "9000000006",
+    address: "Block C2, Koregaon Park, Pune",
+    gender: "male",
+    referralMode: "DOCTOR",
+    referralDoctorInfo: "Dr. Mehta – Sports Physio",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 7
+  {
+    id: "uuid-p07",
+    mrn: "MED-007",
+    fullName: "Meena Kumari",
+    dateOfBirth: "1985-05-11",
+    lastVisitAt: "2024-02-28T09:20:00Z",
+    phone: "9000000007",
+    address: "Lane 5, Old Palasia, Indore",
+    gender: "female",
+    referralMode: "WALKIN",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 8
+  {
+    id: "uuid-p08",
+    mrn: "MED-008",
+    fullName: "Arjun Reddy",
+    dateOfBirth: "1987-04-30",
+    lastVisitAt: "2024-03-11T10:10:00Z",
+    phone: "9000000008",
+    address: "Sector 7, MVP Colony, Vizag",
+    gender: "male",
+    referralMode: "GOOGLE",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 9
+  {
+    id: "uuid-p09",
+    mrn: "MED-009",
+    fullName: "Nisha Singh",
+    dateOfBirth: "1993-03-15",
+    lastVisitAt: "2024-02-06T09:35:00Z",
+    phone: "9000000009",
+    address: "House 78, Malviya Nagar, Jaipur",
+    gender: "female",
+    referralMode: "WALKIN",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 10
+  {
+    id: "uuid-p10",
+    mrn: "MED-010",
+    fullName: "Pooja Sharma",
+    dateOfBirth: "1982-09-28",
+    lastVisitAt: "2024-01-26T08:50:00Z",
+    phone: "9000000010",
+    address: "Ghod Dod Road, Surat",
+    gender: "female",
+    referralMode: "GOOGLE",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 11
+  {
+    id: "uuid-p11",
+    mrn: "MED-011",
+    fullName: "Ravi Verma",
+    dateOfBirth: "1980-09-21",
+    lastVisitAt: "2024-03-05T09:05:00Z",
+    phone: "9000000011",
+    address: "Sector 10, Panchkula",
+    gender: "male",
+    referralMode: "WALKIN",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 12
+  {
+    id: "uuid-p12",
+    mrn: "MED-012",
+    fullName: "Deepa Mehta",
+    dateOfBirth: "1970-08-16",
+    lastVisitAt: "2024-02-24T09:15:00Z",
+    phone: "9000000012",
+    address: "Sector 62, Noida",
+    gender: "female",
+    referralMode: "DOCTOR",
+    referralDoctorInfo: "Dr. Kapoor – Spine Specialist",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 13
+  {
+    id: "uuid-p13",
+    mrn: "MED-013",
+    fullName: "Geeta Devi",
+    dateOfBirth: "1983-07-16",
+    lastVisitAt: "2024-02-17T10:20:00Z",
+    phone: "9000000013",
+    address: "Sector 14, Lucknow",
+    gender: "female",
+    referralMode: "GOOGLE",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 14
+  {
+    id: "uuid-p14",
+    mrn: "MED-014",
+    fullName: "Mohan Lal",
+    dateOfBirth: "1988-05-16",
+    lastVisitAt: "2024-01-31T08:40:00Z",
+    phone: "9000000014",
+    address: "Trimurti Chowk, Nagpur",
+    gender: "male",
+    referralMode: "WALKIN",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 15
+  {
+    id: "uuid-p15",
+    mrn: "MED-015",
+    fullName: "Kavita Rao",
+    dateOfBirth: "1974-01-10",
+    lastVisitAt: "2024-03-01T09:00:00Z",
+    phone: "9000000015",
+    address: "Zone 1, MP Nagar, Bhopal",
+    gender: "female",
+    referralMode: "GOOGLE",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 16
+  {
+    id: "uuid-p16",
+    mrn: "MED-016",
+    fullName: "Ashok Kumar",
+    dateOfBirth: "1976-02-11",
+    lastVisitAt: "2024-02-22T09:25:00Z",
+    phone: "9000000016",
+    address: "Ghodbunder Road, Thane",
+    gender: "male",
+    referralMode: "WALKIN",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 17
+  {
+    id: "uuid-p17",
+    mrn: "MED-017",
+    fullName: "Rajesh Khanna",
+    dateOfBirth: "1968-04-19",
+    lastVisitAt: "2024-02-14T10:15:00Z",
+    phone: "9000000017",
+    address: "Salt Lake Sector 1, Kolkata",
+    gender: "male",
+    referralMode: "GOOGLE",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 18
+  {
+    id: "uuid-p18",
+    mrn: "MED-018",
+    fullName: "Shalini Gupta",
+    dateOfBirth: "1991-12-02",
+    lastVisitAt: "2024-03-09T09:30:00Z",
+    phone: "9000000018",
+    address: "Rajendra Nagar, Patna",
+    gender: "female",
+    referralMode: "DOCTOR",
+    referralDoctorInfo: "Dr. Singh – Rehabilitation",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 19
+  {
+    id: "uuid-p19",
+    mrn: "MED-019",
+    fullName: "Gaurav Singh",
+    dateOfBirth: "1984-09-17",
+    lastVisitAt: "2024-02-08T08:35:00Z",
+    phone: "9000000019",
+    address: "Sector 8, Panchkula",
+    gender: "male",
+    referralMode: "WALKIN",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 20
+  {
+    id: "uuid-p20",
+    mrn: "MED-020",
+    fullName: "Sanjay Dutt",
+    dateOfBirth: "1972-08-01",
+    lastVisitAt: "2024-03-03T10:05:00Z",
+    phone: "9000000020",
+    address: "Aundh, Pune",
+    gender: "male",
+    referralMode: "GOOGLE",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 21
+  {
+    id: "uuid-p21",
+    mrn: "MED-021",
+    fullName: "Smita Patil",
+    dateOfBirth: "1980-12-09",
+    lastVisitAt: "2024-02-19T09:50:00Z",
+    phone: "9000000021",
+    address: "College Road, Nashik",
+    gender: "female",
+    referralMode: "DOCTOR",
+    referralDoctorInfo: "Dr. Nair – Neuro Physio",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  },
+
+  // 22 (duplicate name preserved)
+  {
+    id: "uuid-p22",
+    mrn: "MED-022",
+    fullName: "Priya Kapoor",
+    dateOfBirth: "1992-02-28",
+    lastVisitAt: "2024-03-12T10:25:00Z",
+    phone: "9000000022",
+    address: "Satellite Road, Ahmedabad",
+    gender: "female",
+    referralMode: "WALKIN",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
+  }
+];
+
+
 
 
 export const MOCK_CONTEXTS: MedicalComplaint[] = [
@@ -254,10 +417,12 @@ export const MOCK_LEDGER_ENTRIES: LedgerEntry[] = [
   phone text,
   address text,
   date_of_birth date,
-  gender text,
+  gender enum,
   last_visit_at timestamptz,
   notes text,
   is_active boolean default true,
+  referral_mode enum,
+  referral_doctor_info text
 
   created_at timestamptz default now(),
   updated_at timestamptz default now()
