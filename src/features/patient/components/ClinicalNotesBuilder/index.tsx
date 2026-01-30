@@ -54,11 +54,11 @@ export const ClinicalNotesBuilder = ({ onSave, onClose, initialNotes = [] }: Cli
     const capitalizedNote = deepCapitalizeWords(note) as ClinicalNote
 
     // Update Existing Note
-    if (notes.map(n => n.category).includes(capitalizedNote.category)) {
+    if (notes.map(n => n.category.toLowerCase()).includes(capitalizedNote.category.toLowerCase())) {
 
       const conf = await confirmReplace()
       if (conf) setNotes(prev => prev.map(
-        n => n.category.toLocaleLowerCase === capitalizedNote.category.toLocaleLowerCase ? capitalizedNote : n
+        n => n.category.toLowerCase() === capitalizedNote.category.toLowerCase() ? capitalizedNote : n
       ))
       return conf;
     }
