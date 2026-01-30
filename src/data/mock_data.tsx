@@ -1,4 +1,4 @@
-import type { LedgerEntry, MedicalContext, Patient, Procedure } from '@/types';
+import type { LedgerEntry, MedicalComplaint, Patient, Procedure } from '@/types';
 
 export const MOCK_PATIENTS: Patient[] = [
     { id: 'P01', name: 'Amitabh Bachchan', mrn: 'MED-992', phone: '9876543210', lastVisit: '2 days ago', address: 'Prateeksha, Juhu' },
@@ -20,7 +20,7 @@ export const MOCK_PATIENTS: Patient[] = [
 ];
 
 
-export const MOCK_CONTEXTS: MedicalContext[] = [
+export const MOCK_CONTEXTS: MedicalComplaint[] = [
     { id: 'CTX_01', title: 'Chronic Lower Back Pain (L4-L5)', doctor: 'Dr. R. Sharma', isActive: true, type: 'EXISTING' },
     { id: 'CTX_02', title: 'Post-Op ACL Rehab (Right Knee)', doctor: 'Dr. A. Gupta', isActive: true, type: 'EXISTING' },
     { id: 'CTX_03', title: 'Femur Fracture (Right Leg)', doctor: 'Dr. A. Gupta', isActive: true, type: 'EXISTING' },

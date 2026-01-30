@@ -1,19 +1,14 @@
-import { defineConfig } from 'vite'
-import preact from '@preact/preset-vite'
-import tailwindcss from '@tailwindcss/vite'
-import path from 'path'
-
+import path from "path"
+import tailwindcss from "@tailwindcss/vite"
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    tailwindcss(),
-    preact(),
-  ],
-  resolve:{
-    alias:{
-      '@': path.resolve(__dirname,'./src')
-    }
-  }
-  
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
 })

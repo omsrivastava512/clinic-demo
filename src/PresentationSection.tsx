@@ -1,9 +1,9 @@
-import type { ComponentChild } from 'preact';
+import type { ReactNode } from "react";
 
 // ==========================================
 // 4. MAIN LAYOUT (CATALOG VIEW)
 // ==========================================
-export const PresentationSection = ({ title, number, description, children }: { title: string; number: string; description: string; children: ComponentChild; }) => (
+export const PresentationSection = ({ title, number, description, children }: { title: string; number: string; description: string; children: ReactNode; }) => (
     <section className="mb-32 max-w-5xl mx-auto w-full last:mb-0">
         <div className="mb-6 px-4 md:mb-12 ml-2 max-w-3xl">
             <div className="flex items-baseline gap-4 md:gap-6 mb-4">

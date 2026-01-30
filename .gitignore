@@ -11,9 +11,6 @@ node_modules
 dist
 dist-ssr
 *.local
-demo
-versions
-.gitignore
 
 # Editor directories and files
 .vscode/*
@@ -25,4 +22,3 @@ versions
 *.njsproj
 *.sln
 *.sw?
-useless/

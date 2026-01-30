@@ -1,15 +1,11 @@
-import { useState } from 'preact/hooks'
+import { useEffect, useState } from 'react'
 
-import NewPatientIntake from './features/NewPatientIntake';
+import {NewPatientIntake} from './features/patient';
 import { MOCK_CONTEXTS, MOCK_PATIENTS } from './data/mock_data';
 import { PresentationSection } from '@/PresentationSection';
-import ContextSelector from './features/ContexSelector/ContextSelector';
-import InvoiceBuilder from './features/InvoiceBuilder/InvoiceBuilder';
-import ProcedureLogger from './features/ProcedureLogger/ProcedureLogger';
-import DailyLedger from '@/features/DailyLedger';
+import {ComplaintSelector, InvoiceBuilder, ProcedureLogger} from './features/visit';
+import DailyLedger from '@/features/ledger';
 import { Moon, Sun } from 'lucide-react';
-// import  {PatientRecord}  from './data/useless/PatientProfile';
-// import { PatientRecord } from './data/useless/patientlight';
 
 const lastUpdated = new Date(import.meta.env.VITE_LAST_UPDATED);
 
@@ -41,9 +37,14 @@ const App = () => {
     // Dummy Handlers for display purposes
     const handleLog = () => { };
 
+    useEffect(() => {
+        if (isDarkMode) document.documentElement.classList.add("dark")
+        else document.documentElement.classList.remove("dark")
+    }, [isDarkMode])
+
 
     return (
-        <div className={isDarkMode ? 'dark' : ''}>
+        <div >
             <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
 
                 <ToggleDarkButton isDarkMode={isDarkMode} toggleDark={() => setIsDarkMode(!isDarkMode)} />
@@ -66,12 +67,12 @@ const App = () => {
                     </div>
                 </PresentationSection>
 
-                <PresentationSection title="Context Selector (Diagnosis)"
+                <PresentationSection title="Complaint Selector (Diagnosis)"
                     number='03' description='Upcoming: Add a suggestive complaint drop down as the user starts typing in the add a new complaint box (searchable by category), Add Last Visit as designed in workflow'>
                     <div className="flex justify-center">
-                        <ContextSelector
+                        <ComplaintSelector
                             patient={MOCK_PATIENTS[0]}
-                            availableContexts={MOCK_CONTEXTS}
+                            availableComplaints={MOCK_CONTEXTS}
                             onConfirm={handleLog}
                             onCancel={() => alert('Cancelled')}
                         />

@@ -12,7 +12,7 @@ export interface Patient {
     lastVisit?: string;
 }
 
-export interface MedicalContext {
+export interface MedicalComplaint {
     id: string;
     title: string; // e.g., "Cervical Spondylosis"
     doctor?: string;

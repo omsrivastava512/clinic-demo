@@ -25,7 +25,7 @@ interface ClinicalNotesBuilderProps {
 
 export const ClinicalNotesBuilder = ({ onSave, onClose, initialNotes = [] }: ClinicalNotesBuilderProps) => {
   const [notes, setNotes] = useState<ClinicalNote[]>(initialNotes);
-  const [ConfirmReplaceDialog, confirmReplace] = useConfirm("destructive","Warning!","Category Already Exists! Do you wish to replace it?","Replace")
+  const [ConfirmReplaceDialog, confirmReplace] = useConfirm("destructive", "Warning!", "Category Already Exists! Do you wish to replace it?", "Replace")
 
   const handleClose = useCallback(() => {
     if (!isEqual(initialNotes, notes)) {
