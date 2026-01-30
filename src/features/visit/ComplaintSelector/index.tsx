@@ -17,6 +17,10 @@ interface ComplaintSelectorProps {
 export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({ patient, availableComplaints, onConfirm, onCancel }) => {
     const [selected, setSelected] = useState<string[]>([]);
 
+    const handleCancel = () =>{
+        setSelected([])
+        onCancel()
+    }
     // Local state to manage newly created contexts
     const [customComplaints, setCustomComplaints] = useState<MedicalComplaint[]>([]);
 
@@ -179,7 +183,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({ patient, a
             </div>
 
             <div className="flex justify-end gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-900">
-                <button onClick={onCancel}
+                <button onClick={handleCancel}
                     className={cn(
                         "px-4 py-2", // spacing
                         "text-zinc-500 dark:text-zinc-400", // base text color

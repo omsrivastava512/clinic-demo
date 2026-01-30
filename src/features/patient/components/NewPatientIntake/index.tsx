@@ -131,7 +131,10 @@ export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onCl
 
     const [showClinicalNotes, setShowClinicalNotes] = useState(false)
 
-    // console.log(formData);
+    const handleCancel = ()=>{
+        dispatch({ type: 'RESET' })
+        onClose()
+    }
     
 
 
@@ -183,7 +186,7 @@ export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onCl
                 />
 
                 {/* FOOTER ACTIONS */}
-                <FormFooter onClose={onClose} openClinicNotes={() => setShowClinicalNotes(true)} />
+                <FormFooter onClose={handleCancel} openClinicNotes={() => setShowClinicalNotes(true)} />
 
             </form>
 
