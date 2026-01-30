@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { InvoiceItem, MedicalContext, Procedure } from "@/types";
+import type { InvoiceItem, MedicalComplaint, Procedure } from "@/types";
 import { PHYSIO_PROCEDURES } from "@/data/mock_data";
 import { CheckIcon } from "lucide-react";
 
@@ -8,7 +8,7 @@ import { CheckIcon } from "lucide-react";
  * Renders a procedure grid for EACH selected context.
  */
 interface ProcedureLoggerProps {
-    selectedContexts: MedicalContext[]; // Only the ones selected in Step 2
+    selectedContexts: MedicalComplaint[]; // Only the ones selected in Step 2
     onComplete: (items: InvoiceItem[]) => void;
 }
 
@@ -17,7 +17,7 @@ const ProcedureLogger: React.FC<ProcedureLoggerProps> = ({ selectedContexts, onC
     // State structure: { 'CTX_01-PROC_01': { ...item } } for easy toggle
     const [items, setItems] = useState<Record<string, InvoiceItem>>({});
 
-    const toggleProcedure = (ctx: MedicalContext, proc: Procedure) => {
+    const toggleProcedure = (ctx: MedicalComplaint, proc: Procedure) => {
         const key = `${ctx.id}-${proc.id}`;
 
         setItems(prev => {
