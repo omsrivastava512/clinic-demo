@@ -46,7 +46,7 @@ const App = () => {
     return (
         <div >
             <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
-
+            
                 <ToggleDarkButton isDarkMode={isDarkMode} toggleDark={() => setIsDarkMode(!isDarkMode)} />
 
                 <DemoHeader />
@@ -55,21 +55,21 @@ const App = () => {
                     <PatientRecord /> 
                 </PresentationSection> */}
 
-                <PresentationSection hidden title="The Daily Ledger (Input)"
+                <PresentationSection hidden title="The Daily Ledger & Search"
                     number='01' description='Upcoming Features: ShimmerUI in search results floater, Add status wise filter '>
                     <DailyLedger />
                 </PresentationSection>
 
-                <PresentationSection hidden title="Intake"
-                    number='02' description='Upcoming: add preset suggestions in clinical notes'>
-                    <div className="flex gap-5 flex-wrap">
+                <PresentationSection hidden title="New Patient Registration"
+                    number='02' description='Upcoming: add preset suggestions in clinical notes, convert age to dob'>
+                    <div className="flex gap-5 flex-wrap" id='register'>
                         <NewPatientIntake onClose={() => { }} initialName="Arjun" onSubmit={() => { }} />
                     </div>
                 </PresentationSection>
 
                 <PresentationSection title="Complaint Selector (Diagnosis)"
                     number='03' description='Upcoming: Add a suggestive complaint drop down as the user starts typing in the add a new complaint box (searchable by category)'>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center" id='complaints'>
                         <ComplaintSelector
                             patient={MOCK_PATIENTS[0]}
                             availableComplaints={MOCK_CONTEXTS}
@@ -129,6 +129,9 @@ const DemoHeader = () => (
         <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
 
         <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: {formattedDate} </p>
-        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 underline"><a href="https://github.com/omsrivastava512/clinic-demo/commits/" target="_blank" rel="noopener" >Track Progress↗ </a></p>
+        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2">
+            <a className='underline' href="https://github.com/omsrivastava512/clinic-demo/commits/" target="_blank" rel="noopener" >Track Progress↗ </a> &nbsp; | &nbsp;
+            <a className='underline' href="#complaints" rel="noopener" >Jump to working component↓ </a>
+            </p>
     </header>
 )
