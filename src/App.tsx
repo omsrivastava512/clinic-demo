@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
-import {NewPatientIntake} from './features/patient';
+import { NewPatientIntake } from './features/patient';
 import { MOCK_CONTEXTS, MOCK_PATIENTS } from './data/mock_data';
 import { PresentationSection } from '@/PresentationSection';
-import {ComplaintSelector, InvoiceBuilder, ProcedureLogger} from './features/visit';
+import { ComplaintSelector, InvoiceBuilder, ProcedureLogger } from './features/visit';
 import DailyLedger from '@/features/ledger';
 import { Moon, Sun } from 'lucide-react';
 
@@ -46,7 +46,7 @@ const App = () => {
     return (
         <div >
             <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
-            
+
                 <ToggleDarkButton isDarkMode={isDarkMode} toggleDark={() => setIsDarkMode(!isDarkMode)} />
 
                 <DemoHeader />
@@ -74,7 +74,7 @@ const App = () => {
                             patient={MOCK_PATIENTS[0]}
                             availableComplaints={MOCK_CONTEXTS}
                             onConfirm={handleLog}
-                            onCancel={() => {}}
+                            onCancel={() => { }}
                         />
                     </div>
                 </PresentationSection>
@@ -132,6 +132,6 @@ const DemoHeader = () => (
         <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2">
             <a className='underline' href="https://github.com/omsrivastava512/clinic-demo/commits/" target="_blank" rel="noopener" >Track Progress↗ </a> &nbsp; | &nbsp;
             <a className='underline' href="#complaints" rel="noopener" >Jump to working component↓ </a>
-            </p>
+        </p>
     </header>
 )
