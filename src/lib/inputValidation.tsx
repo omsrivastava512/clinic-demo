@@ -17,6 +17,8 @@ export const capitalizeEachWord = (val: string) => (val).trimStart().split(/\s+/
         ?.concat(s.slice(1))
 ).join(' ')
 
+export const cleanTextBeginning = (val: string) => (val).trimStart().replace(/^[^a-zA-Z0-9]+/,"")
+
 export const filterAge = (val: string) => val.replace(/[^0-9]/g, "").slice(0, 2);
 
 export const cleanSearchInput = (input: string): string => {
@@ -56,10 +58,10 @@ export const normalizeAddress = (addr: string) => normalizeWhitespaces(addr)
 export const validateAddress = (addr: string) => /^(?=.*[A-Za-z]).{5,}$/.test(addr)
 
 export const deepTrimStrings = (value: unknown): unknown => {
-    if (typeof value === 'string') return value.trim() 
+    if (typeof value === 'string') return value.trim()
 
     if (Array.isArray(value)) {
-        return value.map(deepTrimStrings) 
+        return value.map(deepTrimStrings)
     }
 
     if (value && typeof value === 'object') {
@@ -71,10 +73,10 @@ export const deepTrimStrings = (value: unknown): unknown => {
 }
 
 export const deepCapitalizeWords = (value: unknown): unknown => {
-    if (typeof value === 'string') return capitalizeEachWord(value) 
+    if (typeof value === 'string') return capitalizeEachWord(value)
 
     if (Array.isArray(value)) {
-        return value.map(deepCapitalizeWords) 
+        return value.map(deepCapitalizeWords)
     }
 
     if (value && typeof value === 'object') {

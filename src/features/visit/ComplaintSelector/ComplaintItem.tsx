@@ -2,17 +2,19 @@ import { cn } from "@/lib";
 import { ComplaintMetadata } from "./primitives";
 import { Checkbox } from "./primitives";
 import type { MedicalComplaint } from "@/types";
+import { XIcon } from "lucide-react";
 
 
 export interface ComplaintItemProps {
     complaint: MedicalComplaint;
     isSelected: boolean;
     onToggle: (id: string) => void;
+    remove(i: string): void;
 }
 
 
 export const ComplaintItem: React.FC<ComplaintItemProps> = ({
-    complaint, isSelected, onToggle,
+    complaint, isSelected, onToggle, remove
 }) => (
     <div
         onClick={() => onToggle(complaint.id)}
@@ -37,5 +39,15 @@ export const ComplaintItem: React.FC<ComplaintItemProps> = ({
             </div>
             <ComplaintMetadata complaint={complaint} />
         </div>
+        {complaint.type === "NEW" &&
+            <button type="button" title="Delete" onClick={()=>remove(complaint.id)}
+                className={cn(
+                    "hidden group-hover:block",
+                    "text-zinc-600 dark:text-zinc-400",
+                    "hover:text-zinc-900 hover:dark:text-white"
+                )}>
+                <XIcon />
+            </button>
+        }
     </div>
 );

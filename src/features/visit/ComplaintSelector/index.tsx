@@ -5,7 +5,7 @@ import { SectionLabel } from "./primitives";
 import { NewComplaintInput } from "./NewComplaintInput";
 import { FooterActions } from "./FooterActions";
 import { ComplaintItem } from "./ComplaintItem";
-import { capitalizeEachWord } from "@/lib";
+import { capitalizeEachWord, cleanTextBeginning } from "@/lib";
 import { useComplaintSelection } from "./hook/useComplaintSelection";
 
 interface ComplaintSelectorProps {
@@ -22,7 +22,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     onCancel,
 }) => {
 
-    const { add, allComplaints, reset, selectedIds, toggle } = useComplaintSelection(availableComplaints)
+    const { add, remove, allComplaints, reset, selectedIds, toggle } = useComplaintSelection(availableComplaints)
     const [newComplaintInput, setNewComplaintInput] = useState("");
 
 
@@ -38,10 +38,12 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
 
     const addNewComplaint = () => {
         const trimmedInput = newComplaintInput.trim();
-        if (!trimmedInput) return;
-
-        add(capitalizeEachWord(trimmedInput))
+        const cleaned = capitalizeEachWord(cleanTextBeginning(trimmedInput))
+        if (!cleaned) return;
+        
+        add(cleaned)
         setNewComplaintInput("");
+
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -65,6 +67,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
                             complaint={complaint}
                             isSelected={selectedIds.has(complaint.id)}
                             onToggle={toggle}
+                            remove={remove}
                         />
                     ))}
 
@@ -85,11 +88,5 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
         </div>
     );
 };
-
-
-
-
-
-
 
 export default ComplaintSelector;

@@ -4,7 +4,7 @@ import type { MedicalComplaint } from "@/types";
 export function useComplaintSelection(available: MedicalComplaint[]) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [customComplaints, setCustomComplaints] = useState<MedicalComplaint[]>([]);
-  
+
   const allComplaints = useMemo(
     () => [...available, ...customComplaints],
     [available, customComplaints]
@@ -36,11 +36,16 @@ export function useComplaintSelection(available: MedicalComplaint[]) {
     setCustomComplaints([]);
   };
 
+  const remove = (i: string) => {
+    setCustomComplaints(c => c.filter(c => c.id !== i))
+  }
+
   return {
     allComplaints,
     selectedIds,
     toggle,
     add,
+    remove,
     reset,
   };
 }
