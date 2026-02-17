@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import type { MedicalComplaint } from "@/types";
 
 export function useComplaintSelection(available: MedicalComplaint[]) {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set()); // O(1) lookup againts O(n) in array
   const [customComplaints, setCustomComplaints] = useState<MedicalComplaint[]>([]);
 
   const allComplaints = useMemo(

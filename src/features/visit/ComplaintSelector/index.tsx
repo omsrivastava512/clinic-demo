@@ -21,10 +21,8 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     onConfirm,
     onCancel,
 }) => {
-
     const { add, remove, allComplaints, reset, selectedIds, toggle } = useComplaintSelection(availableComplaints)
     const [newComplaintInput, setNewComplaintInput] = useState("");
-
 
     const handleCancel = () => {
         reset()
@@ -36,7 +34,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
         onConfirm(Array.from(selectedIds));
     };
 
-    const addNewComplaint = () => {
+    const handleAddNewComplaint = () => {
         const trimmedInput = newComplaintInput.trim();
         const formatted = formatBracketText(trimmedInput)
         if (!formatted) return;
@@ -49,7 +47,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            addNewComplaint();
+            handleAddNewComplaint();
         }
     };
 
@@ -75,7 +73,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
                         value={newComplaintInput}
                         onChange={setNewComplaintInput}
                         onKeyDown={handleKeyDown}
-                        onAdd={addNewComplaint}
+                        onAdd={handleAddNewComplaint}
                     />
                 </div>
             </div>
