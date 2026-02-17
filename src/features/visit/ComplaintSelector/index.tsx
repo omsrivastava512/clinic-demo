@@ -5,7 +5,7 @@ import { SectionLabel } from "./primitives";
 import { NewComplaintInput } from "./NewComplaintInput";
 import { FooterActions } from "./FooterActions";
 import { ComplaintItem } from "./ComplaintItem";
-import { capitalizeEachWord, cleanTextBeginning } from "@/lib";
+import { formatBracketText } from "@/lib";
 import { useComplaintSelection } from "./hook/useComplaintSelection";
 
 interface ComplaintSelectorProps {
@@ -38,10 +38,10 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
 
     const addNewComplaint = () => {
         const trimmedInput = newComplaintInput.trim();
-        const cleaned = capitalizeEachWord(cleanTextBeginning(trimmedInput))
-        if (!cleaned) return;
-        
-        add(cleaned)
+        const formatted = formatBracketText(trimmedInput)
+        if (!formatted) return;
+
+        add(formatted)
         setNewComplaintInput("");
 
     };

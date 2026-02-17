@@ -17,7 +17,24 @@ export const capitalizeEachWord = (val: string) => (val).trimStart().split(/\s+/
         ?.concat(s.slice(1))
 ).join(' ')
 
-export const cleanTextBeginning = (val: string) => (val).trimStart().replace(/^[^a-zA-Z0-9]+/,"")
+export const cleanTextBeginning = (val: string) => (val).trimStart().replace(/^[^a-zA-Z0-9]+/, "")
+
+export const normalizeParenthesisContent = (val: string) =>
+    val.replace(/\(\s*([A-Za-z]+)\s*\)/g, (_, inner) => {
+        const clean = inner[0].toUpperCase() + inner.slice(1).toLowerCase()
+        return ` (${clean})`
+    })
+
+export const normalizeBeforeParenthesis = (val: string) =>
+    val.replace(/([A-Za-z])\s*\(/g, (_, c) => `${c.toUpperCase()} (`)
+
+export const formatBracketText = (val: string) => {
+    let v = val
+    v = cleanTextBeginning(v)
+    v = normalizeParenthesisContent(v)
+    v = normalizeBeforeParenthesis(v)
+    return v
+}
 
 export const filterAge = (val: string) => val.replace(/[^0-9]/g, "").slice(0, 2);
 
