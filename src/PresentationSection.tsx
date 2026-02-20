@@ -21,3 +21,5 @@ export const PresentationSection = ({hidden=false, title, number, description, c
         </div>
     </section>
 );
+
+export default PresentationSection

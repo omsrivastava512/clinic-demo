@@ -1,13 +1,13 @@
 import { useState, useReducer } from 'react';
 import ClinicalNotesBuilder from '../ClinicalNotesBuilder';
-import { type ClinicalNote } from '../../types';
+import { type ClinicalNote } from '../types';
 import { capitalizeEachWord, deepTrimStrings, filterAge, filterAlphabetsAndSpaces, filterPhoneNumber, normalizeAddress, validateAddress, } from '@/lib';
-import { Input, IntakeLayout, TextArea, } from './primitives';
-import FormHeader from './FormHeader';
-import ReferralSection from './ReferralSection';
-import DemographicsSection from './DemographicsSection';
-import FormFooter from './FormFooter';
-import type { FormData } from '../../types';
+import { Input, IntakeLayout, TextArea, } from './components/primitives';
+import FormHeader from './components/FormHeader';
+import ReferralSection from './components/ReferralSection';
+import DemographicsSection from './components/DemographicsSection';
+import FormFooter from './components/FormFooter';
+import type { FormData } from '../types';
 
 const validateAndCapitalizeName = (val: string) => capitalizeEachWord(filterAlphabetsAndSpaces(val))
 

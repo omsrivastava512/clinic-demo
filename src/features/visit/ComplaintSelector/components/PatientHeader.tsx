@@ -1,5 +1,5 @@
 import type { Patient } from "@/types";
-import { getLastVisit, getAge } from "./lib";
+import { getLastVisit, getAge } from "../lib";
 
 export const PatientHeader = ({ patient }: { patient: Patient }) => (
     <div className="flex justify-between items-start mb-6">

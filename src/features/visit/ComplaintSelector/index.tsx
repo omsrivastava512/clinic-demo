@@ -1,10 +1,10 @@
 import { useState } from "react";
 import type { MedicalComplaint, Patient } from "@/types";
-import { PatientHeader } from "./PatientHeader";
-import { SectionLabel } from "./primitives";
-import { NewComplaintInput } from "./NewComplaintInput";
-import { FooterActions } from "./FooterActions";
-import { ComplaintItem } from "./ComplaintItem";
+import { PatientHeader } from "./components/PatientHeader";
+import { SectionLabel } from "./components/primitives";
+import { NewComplaintInput } from "./components/NewComplaintInput";
+import { FooterActions } from "./components/FooterActions";
+import { ComplaintItem } from "./components/ComplaintItem";
 import { formatBracketText } from "@/lib";
 import { useComplaintSelection } from "./hook/useComplaintSelection";
 

@@ -1,6 +1,6 @@
 import { AlertTriangleIcon, PlusIcon } from "lucide-react";
 import { useState, type ChangeEvent } from "react";
-import type { ClinicalNote } from ".";
+import type { ClinicalNote } from "..";
 import { cn, filterAlphabetsAndNormalizeSpaces, filterAlphaNumeric } from "@/lib";
 
 

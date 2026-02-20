@@ -1,5 +1,5 @@
 import { AlertTriangleIcon, Trash2Icon } from "lucide-react"
-import type { ClinicalNote } from "."
+import type { ClinicalNote } from ".."
 import { cn } from "@/lib"
 
 

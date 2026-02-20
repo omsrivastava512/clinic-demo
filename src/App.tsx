@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 
-import { NewPatientIntake } from './features/patient';
+import  NewPatientIntake  from './features/patient/NewPatientIntake';
 import { MOCK_CONTEXTS, MOCK_PATIENTS } from './data/mock_data';
-import { PresentationSection } from '@/PresentationSection';
-import { ComplaintSelector, InvoiceBuilder, ProcedureLogger } from './features/visit';
+import PresentationSection from '@/PresentationSection';
 import DailyLedger from '@/features/ledger';
+import ComplaintSelector from './features/visit/ComplaintSelector';
+import InvoiceBuilder from './features/visit/InvoiceBuilder';
+import ProcedureLogger from './features/visit/ProcedureLogger';
 import { Moon, Sun } from 'lucide-react';
 
 const lastUpdated = new Date(import.meta.env.VITE_LAST_UPDATED);
@@ -67,7 +69,7 @@ const App = () => {
                     </div>
                 </PresentationSection>
 
-                <PresentationSection title="Complaint Selector (Diagnosis)"
+                <PresentationSection hidden title="Complaint Selector (Diagnosis)"
                     number='03' description='Upcoming: Add a suggestive complaint drop down as the user starts typing in the add a new complaint box (searchable by category)'>
                     <div className="flex justify-center" id='complaints'>
                         <ComplaintSelector

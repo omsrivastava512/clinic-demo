@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { cn, deepCapitalizeWords } from '@/lib';
-import { CNBHeader } from './CNBHeader';
-import { CNBList } from './CNBList';
-import { CNBInput } from './CNBInput';
-import { CNBFooter } from './CNBFooter';
+import { CNBHeader } from './components/CNBHeader';
+import { CNBList } from './components/CNBList';
+import { CNBInput } from './components/CNBInput';
+import { CNBFooter } from './components/CNBFooter';
 import useConfirm from '@/components/useConfirm';
 import isEqual from 'lodash.isequal';
 

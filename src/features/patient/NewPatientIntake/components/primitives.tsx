@@ -1,6 +1,6 @@
 import { cn } from "@/lib"
 import { forwardRef, type ComponentPropsWithoutRef, type ComponentPropsWithRef, type ReactNode } from "react";
-import { defaultInputClasses, getReferralButtonClass, getToggleButtonClass, intakeLayoutClasses } from "./styles";
+import { defaultInputClasses, getReferralButtonClass, getToggleButtonClass, intakeLayoutClasses } from "../styles";
 
 
 export const IntakeLayout = ({ children }: { children: ReactNode }) => (
