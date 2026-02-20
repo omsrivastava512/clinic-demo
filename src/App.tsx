@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import  NewPatientIntake  from './features/patient/NewPatientIntake';
+import NewPatientIntake from './features/patient/NewPatientIntake';
 import { MOCK_CONTEXTS, MOCK_PATIENTS } from './data/mock_data';
 import PresentationSection from '@/PresentationSection';
 import DailyLedger from '@/features/ledger';
@@ -63,26 +63,28 @@ const App = () => {
                 </PresentationSection>
 
                 <PresentationSection hidden title="New Patient Registration"
-                    number='02' description='Upcoming: add preset suggestions in clinical notes, convert age to dob'>
-                    <div className="flex gap-5 flex-wrap" id='register'>
-                        <NewPatientIntake onClose={() => { }} initialName="Arjun" onSubmit={() => { }} />
-                    </div>
+                    number='02' description='Upcoming: add preset suggestions in clinical notes, convert age to dob'
+                    className="flex gap-5 flex-wrap" tag='register'
+                >
+                    <NewPatientIntake onClose={() => { }} initialName="Arjun" onSubmit={() => { }} />
                 </PresentationSection>
 
                 <PresentationSection hidden title="Complaint Selector (Diagnosis)"
-                    number='03' description='Upcoming: Add a suggestive complaint drop down as the user starts typing in the add a new complaint box (searchable by category)'>
-                    <div className="flex justify-center" id='complaints'>
-                        <ComplaintSelector
-                            patient={MOCK_PATIENTS[0]}
-                            availableComplaints={MOCK_CONTEXTS}
-                            onConfirm={handleLog}
-                            onCancel={() => { }}
-                        />
-                    </div>
+                    number='03' description='Upcoming: Add a suggestive complaint drop down as the user starts typing in the add a new complaint box (searchable by category)'
+                    className="flex justify-center" tag='complaints'
+                >
+                    <ComplaintSelector
+                        patient={MOCK_PATIENTS[0]}
+                        availableComplaints={MOCK_CONTEXTS}
+                        onConfirm={handleLog}
+                        onCancel={() => { }}
+                    />
                 </PresentationSection>
 
                 <PresentationSection title="Procedure Logger (Multi-Context Logic)"
-                    number='04' description='Upcoming: Add Search Bar to find less common procedures and heading with selected complaints and validate all have been selected'>
+                    number='04' tag='procedure'
+                    description='Upcoming: Add Search Bar to find less common procedures and heading with selected complaints and validate all have been selected'
+                >
                     {/* We simulate passing TWO contexts to show the grouping logic */}
                     <ProcedureLogger
                         selectedContexts={[...MOCK_CONTEXTS]}
@@ -91,7 +93,9 @@ const App = () => {
                 </PresentationSection>
 
                 <PresentationSection title="Invoice & Payment (Indian Locale)"
-                    number='05' description='Upcoming: options to add pay later'>
+                    number='05' description='Upcoming: options to add pay later'
+                    tag='billing'
+                >
                     <InvoiceBuilder
                         items={[
                             { procedureId: '1', contextId: 'C1', name: 'Ultrasonic Therapy', contextName: 'Right Knee ACL', cost: 250 },
@@ -133,7 +137,7 @@ const DemoHeader = () => (
         <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: {formattedDate} </p>
         <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2">
             <a className='underline' href="https://github.com/omsrivastava512/clinic-demo/commits/" target="_blank" rel="noopener" >Track Progress↗ </a> &nbsp; | &nbsp;
-            <a className='underline' href="#complaints" rel="noopener" >Jump to working component↓ </a>
+            <a className='underline' href="#procedure" rel="noopener" >Jump to working component↓ </a>
         </p>
     </header>
 )
