@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import NewPatientIntake from './features/patient/NewPatientIntake';
 import { MOCK_CONTEXTS, MOCK_PATIENTS } from './data/mock_data';
-import PresentationSection from '@/PresentationSection';
+import PresentationSection from '@/components/PresentationSection';
 import DailyLedger from '@/features/ledger';
 import ComplaintSelector from './features/visit/ComplaintSelector';
 import InvoiceBuilder from './features/visit/InvoiceBuilder';
@@ -24,7 +24,7 @@ const timePart = lastUpdated.toLocaleTimeString('en-US', {
 });
 
 const formattedDate = `${datePart} | ${timePart}`;
-console.log(formattedDate); // Output: Tue Jan 06, 2026 | 23:50
+// console.log(formattedDate); // Output: Tue Jan 06, 2026 | 23:50
 
 
 // ==========================================
@@ -87,7 +87,7 @@ const App = () => {
                 >
                     {/* We simulate passing TWO contexts to show the grouping logic */}
                     <ProcedureLogger
-                        selectedContexts={[...MOCK_CONTEXTS]}
+                        selectedComplaints={[...MOCK_CONTEXTS]}
                         onComplete={handleLog}
                     />
                 </PresentationSection>
@@ -98,8 +98,8 @@ const App = () => {
                 >
                     <InvoiceBuilder
                         items={[
-                            { procedureId: '1', contextId: 'C1', name: 'Ultrasonic Therapy', contextName: 'Right Knee ACL', cost: 250 },
-                            { procedureId: '2', contextId: 'C2', name: 'Interferential Therapy', contextName: 'Lower Back', cost: 300 },
+                            { procedureId: '1', complaintId: 'C1', name: 'Ultrasonic Therapy', complaintName: 'Right Knee ACL', cost: 250 },
+                            { procedureId: '2', complaintId: 'C2', name: 'Interferential Therapy', complaintName: 'Lower Back', cost: 300 },
                         ]}
                         patientName="Amitabh Bachchan"
                         onClose={() => alert('Visit Closed')}
