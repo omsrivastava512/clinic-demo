@@ -8,6 +8,7 @@ import ComplaintSelector from './features/visit/ComplaintSelector';
 import InvoiceBuilder from './features/visit/InvoiceBuilder';
 import ProcedureLogger from './features/visit/ProcedureLogger';
 import { Moon, Sun } from 'lucide-react';
+import WelcomeTip from './components/WelcomeTip';
 
 const lastUpdated = new Date(import.meta.env.VITE_LAST_UPDATED);
 
@@ -47,15 +48,15 @@ const App = () => {
 
     return (
         <div >
-            <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
+            <WelcomeTip
+                skipText='Dismiss'
+                description='Click on the section heading to hide/unhide the component.'
+            />
 
+            <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
                 <ToggleDarkButton isDarkMode={isDarkMode} toggleDark={() => setIsDarkMode(!isDarkMode)} />
 
                 <DemoHeader />
-                {/* 
-                <PresentationSection description='' title='' number=''>
-                    <PatientRecord /> 
-                </PresentationSection> */}
 
                 <PresentationSection hidden title="The Daily Ledger & Search"
                     number='01' description='Upcoming Features: ShimmerUI in search results floater, Add status wise filter '>
