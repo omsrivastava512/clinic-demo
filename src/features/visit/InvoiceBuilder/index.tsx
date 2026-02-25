@@ -45,7 +45,7 @@ const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, onC
                                 <tr key={i}>
                                     <td className="py-2">
                                         <div className="font-medium">{item.name}</div>
-                                        <div className="text-[10px] text-zinc-500 dark:text-zinc-600">{item.contextName}</div>
+                                        <div className="text-[10px] text-zinc-500 dark:text-zinc-600">{item.complaintName}</div>
                                     </td>
                                     <td className="py-2 text-right font-mono">₹{item.cost}</td>
                                 </tr>
