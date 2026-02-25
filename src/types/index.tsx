@@ -42,9 +42,9 @@ export interface Procedure {
 
 export interface InvoiceItem {
     procedureId: string;
-    contextId: string; // Links the procedure to a specific body part/issue
+    complaintId: string; // Links the procedure to a specific body part/issue
     name: string;
-    contextName: string;
+    complaintName: string;
     cost: number;
 }
 
