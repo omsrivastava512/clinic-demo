@@ -11,7 +11,7 @@ import {
 export default function WelcomeTip({
   title = "Quick Tip",
   description = "",
-  footerNote = "",
+  footerNote = "1/1",
   hasNext = false,
   handleNext = () => {},
   skipText="Skip"
@@ -21,7 +21,7 @@ export default function WelcomeTip({
   if (!isVisible) return null;
 
   return (
-    <TourCard position="bottom-right">
+    <TourCard position="bottom-right" >
       <TourHeader onClose={() => setIsVisible(false)}>
         <TourTitle>{title}✨</TourTitle>
       </TourHeader>

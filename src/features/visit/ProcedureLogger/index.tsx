@@ -1,7 +1,7 @@
 
 import type { InvoiceItem, MedicalComplaint } from "@/types";
 import { useProcedureLogger } from "./hook/useProcedureLogger.tsx";
-import { RecieptFooter } from "./components/primitives.tsx";
+import { RecieptFooter } from "./components/RecieptFooter.tsx";
 import { ComplaintSection } from "./components/ComplaintSection.tsx";
 import { ReceiptList } from "./components/ReceiptList.tsx";
 
