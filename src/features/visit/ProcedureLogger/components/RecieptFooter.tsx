@@ -8,7 +8,7 @@ export const RecieptFooter = ({ totalCost, onComplete, isDisabled }: RecieptFoot
     <div className="flex justify-between items-center mb-4">
         <span className="text-zinc-500 dark:text-zinc-400">Total</span>
         <span className="text-2xl font-bold text-zinc-900 dark:text-white font-mono">
-            ₹{totalCost}
+            {rupee.format(totalCost)}
         </span>
     </div>
     {/* Disabled until at least one procedure is selected.  */}
@@ -20,3 +20,7 @@ export const RecieptFooter = ({ totalCost, onComplete, isDisabled }: RecieptFoot
         Create Invoice
     </button>
 </div>);
+
+export default RecieptFooter;
+
+const rupee = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });

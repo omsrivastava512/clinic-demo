@@ -21,7 +21,7 @@ export const PresentationSection = ({ hidden = false, title, number, description
             <div className="mb-6 px-4 m:mb-12 ml-2 max-w-3xl">
                 <div className="flex items-baseline gap-4 md:gap-6 mb-4">
                     <span className="text-4xl md:text-7xl font-serif text-zinc-400 dark:text-zinc-600 font-bold">{number}</span>
-                    <button onClick={() => setIsHidden(h => !h)} className="flex items-baseline gap-4">
+                    <button onClick={() => setIsHidden(h => !h)} className="flex items-center gap-4 ">
                         <h2 className="text-2xl md:text-3xl font-bold tracking-tight dark:text-white">{title}</h2>
                         <pre>{ishidden && "hidden"}</pre>
                     </button>

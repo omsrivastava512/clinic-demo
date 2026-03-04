@@ -9,6 +9,7 @@ import InvoiceBuilder from './features/visit/InvoiceBuilder';
 import ProcedureLogger from './features/visit/ProcedureLogger';
 import { Moon, Sun } from 'lucide-react';
 import WelcomeTip from './components/WelcomeTip';
+import type { InvoiceItem } from './types';
 
 const lastUpdated = new Date(import.meta.env.VITE_LAST_UPDATED);
 
@@ -38,7 +39,11 @@ const App = () => {
     const [isDarkMode, setIsDarkMode] = useState(true);
 
     // Dummy Handlers for display purposes
-    const handleLog = () => { };
+    const handleLog = (i: InvoiceItem[]) => {
+        console.log(i)
+        const totalCost = i.reduce((s,i)=>s+i.cost,0)
+        alert("Bill Generated: ₹"+totalCost)
+    };
 
     useEffect(() => {
         if (isDarkMode) document.documentElement.classList.add("dark")
@@ -77,7 +82,7 @@ const App = () => {
                     <ComplaintSelector
                         patient={MOCK_PATIENTS[0]}
                         availableComplaints={MOCK_CONTEXTS}
-                        onConfirm={handleLog}
+                        onConfirm={()=>{}}
                         onCancel={() => { }}
                     />
                 </PresentationSection>
@@ -88,7 +93,7 @@ const App = () => {
                 >
                     {/* We simulate passing TWO contexts to show the grouping logic */}
                     <ProcedureLogger
-                        selectedComplaints={[...MOCK_CONTEXTS]}
+                        selectedComplaints={MOCK_CONTEXTS.slice(0)}
                         onComplete={handleLog}
                     />
                 </PresentationSection>

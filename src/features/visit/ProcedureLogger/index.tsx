@@ -4,8 +4,14 @@ import { useProcedureLogger } from "./hook/useProcedureLogger.tsx";
 import { RecieptFooter } from "./components/RecieptFooter.tsx";
 import { ComplaintSection } from "./components/ComplaintSection.tsx";
 import { ReceiptList } from "./components/ReceiptList.tsx";
+import type { ItemRecord } from "./types.tsx";
 
-
+const validateInvoiceItems = (items:ItemRecord, selectedComplaints:MedicalComplaint[])=>{
+    const selectedIds = new Set(selectedComplaints.map(c=>c.id));
+    
+    return Object.values(items).filter(
+    item => selectedIds.has(item.complaintId))
+}
 
 // ─── ProcedureLogger ───────────────────────────────────────────────────────────
 //
@@ -55,7 +61,7 @@ const ProcedureLogger: React.FC<ProcedureLoggerProps> = ({ selectedComplaints, o
                 {/* Footer: total + submit — pinned to the bottom of the receipt panel */}
                 <RecieptFooter
                     totalCost={totalCost}
-                    onComplete={() => onComplete(Object.values(items))}
+                    onComplete={() => onComplete(validateInvoiceItems(items, selectedComplaints))}
                     isDisabled={!hasItems}
                 />
             </div>
