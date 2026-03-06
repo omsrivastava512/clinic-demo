@@ -77,3 +77,4 @@ export function useProcedureLogger(selectedComplaints: MedicalComplaint[]) {
 
     return { items, clearAll, toggleProcedure, isProcedureSelected, getItemsForComplaint, totalCost, hasItems };
 }
+

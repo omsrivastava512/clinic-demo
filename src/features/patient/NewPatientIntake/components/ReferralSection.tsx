@@ -5,9 +5,9 @@ import type { FormData } from '../../types';
 
 // ASSUME: REFERRAL_OPTIONS is have only these options
 const REFERRAL_OPTIONS = [
-    { id: 'WALKIN' as const, icon: FootprintsIcon, label: 'Walk-In' },
-    { id: 'GOOGLE' as const, icon: MapPinIcon, label: 'Google Maps' },
-    { id: 'DOCTOR' as const, icon: StethoscopeIcon, label: 'Dr. Referral' }
+    { id: 'WALKIN' as const, Icon: FootprintsIcon, label: 'Walk-In' },
+    { id: 'GOOGLE' as const, Icon: MapPinIcon, label: 'Google Maps' },
+    { id: 'DOCTOR' as const, Icon: StethoscopeIcon, label: 'Dr. Referral' }
 ] as const;
 
 type ReferralId = FormData['referral'];
@@ -38,7 +38,7 @@ const ReferralSection = ({ selectedReferral, changeReferral, doctorInfo, changeD
                         onClick={() => changeReferral(ref.id)}
                         isActive={selectedReferral === ref.id}
                     >
-                        <ref.icon className='inline' />
+                        <ref.Icon className='inline' />
                         <span className={`hidden sm:block `}>{ref.label}</span>
                     </ReferralButton>
                 ))}

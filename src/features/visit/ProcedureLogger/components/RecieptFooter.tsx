@@ -1,3 +1,5 @@
+import { rupee } from "@/lib/utils";
+
 // ─── ReceiptFooter ───────────────────────────────────────────────────────────────
 type RecieptFooterProps = {
     totalCost: number;
@@ -23,4 +25,4 @@ export const RecieptFooter = ({ totalCost, onComplete, isDisabled }: RecieptFoot
 
 export default RecieptFooter;
 
-const rupee = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
+

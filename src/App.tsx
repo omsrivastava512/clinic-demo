@@ -99,14 +99,15 @@ const App = () => {
                 </PresentationSection>
 
                 <PresentationSection title="Invoice & Payment (Indian Locale)"
-                    number='05' description='Upcoming: options to add pay later'
+                    number='05' description='Upcoming: options to add pay later,  visual confirmation of selected payment mode, Clinic/doctor/issuer name in the header'
                     tag='billing'
                 >
                     <InvoiceBuilder
+                        invoiceNumber='INV-2026-0306-088'
                         items={[
                             { procedureId: '1', complaintId: 'C1', name: 'Ultrasonic Therapy', complaintName: 'Right Knee ACL', cost: 250 },
                             { procedureId: '2', complaintId: 'C2', name: 'Interferential Therapy', complaintName: 'Lower Back', cost: 300 },
-                        ]}
+                        ].slice(0)}
                         patientName="Amitabh Bachchan"
                         onClose={() => alert('Visit Closed')}
                     />
@@ -127,6 +128,7 @@ type ToggleDarkButtonProps = {
 
 const ToggleDarkButton = ({ isDarkMode, toggleDark }: ToggleDarkButtonProps) => (
     <button
+        type='button'
         onClick={toggleDark}
         className="fixed top-6 right-6 z-50 p-3 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-lg text-zinc-900 dark:text-white hover:scale-105 transition-transform"
         title="Toggle Theme"
