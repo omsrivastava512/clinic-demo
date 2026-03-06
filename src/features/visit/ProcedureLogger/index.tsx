@@ -38,7 +38,7 @@ const ProcedureLogger: React.FC<ProcedureLoggerProps> = ({ selectedComplaints, o
         useProcedureLogger(selectedComplaints);
 
     return (
-        <div className="h-[90vh] flex flex-col">
+        <div className="h-[90dvh] flex flex-col">
             <ProcedureHeader
                 complaintList={selectedComplaints.map(c => c.title)}
                 patientName="Amit Trivedi"

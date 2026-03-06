@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import NewPatientIntake from './features/patient/NewPatientIntake';
 import { MOCK_CONTEXTS, MOCK_PATIENTS } from './data/mock_data';
 import PresentationSection from '@/components/PresentationSection';
+import NewPatientIntake from './features/patient/NewPatientIntake';
 import DailyLedger from '@/features/ledger';
 import ComplaintSelector from './features/visit/ComplaintSelector';
 import InvoiceBuilder from './features/visit/InvoiceBuilder';

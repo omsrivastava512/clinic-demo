@@ -52,13 +52,13 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     };
 
     return (
-        <div className="w-full max-w-2xl bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 shadow-2xl transition-colors duration-300">
+        <div className="w-full max-h-[90dvh] flex flex-col max-w-2xl bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 shadow-2xl transition-colors duration-300">
             <PatientHeader patient={patient} />
 
-            <div className="mb-6">
+            <div className="mb-6 flex-1 min-h-0">
                 <SectionLabel text="Select Visit Complaint (Multiple Selection Allowed)" />
 
-                <div className="space-y-3">
+                <div className="h-full  space-y-3 overflow-y-auto pr-3">
                     {allComplaints.map((complaint) => (
                         <ComplaintItem
                             key={complaint.id}

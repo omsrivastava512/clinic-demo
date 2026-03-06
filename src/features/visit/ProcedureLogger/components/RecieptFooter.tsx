@@ -1,4 +1,4 @@
-import { rupee } from "@/lib/utils";
+import { cn, rupee } from "@/lib/utils";
 
 // ─── ReceiptFooter ───────────────────────────────────────────────────────────────
 type RecieptFooterProps = {
@@ -17,8 +17,17 @@ export const RecieptFooter = ({ totalCost, onComplete, isDisabled }: RecieptFoot
     <button
         onClick={onComplete}
         disabled={isDisabled}
-        className="w-full bg-zinc-900 dark:bg-white text-white dark:text-black font-bold py-3 rounded hover:bg-zinc-700 dark:hover:bg-zinc-200 disabled:opacity-50 transition-colors"
-    >
+        className={cn(
+            "w-full",
+            "py-2.5 md:py-3 px-4 md:px-6",
+            "rounded",
+            "font-bold text-sm md:text-base",
+            "bg-zinc-900 dark:bg-white",
+            "text-white dark:text-black",
+            "hover:bg-zinc-700 dark:hover:bg-zinc-200",
+            "disabled:opacity-50 disabled:cursor-not-allowed",
+            "transition-colors"
+        )}    >
         Create Invoice
     </button>
 </div>);

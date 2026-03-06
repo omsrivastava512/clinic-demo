@@ -26,6 +26,7 @@ export const defaultInputClasses = cn(
     "placeholder-zinc-400 dark:placeholder-zinc-600"
 );
 export const intakeLayoutClasses = cn(
+    "max-h-[90dvh]",
     "w-full max-w-xl mx-auto my-4",
     "bg-white dark:bg-black",
     "border border-zinc-200 dark:border-zinc-800 rounded-xl",

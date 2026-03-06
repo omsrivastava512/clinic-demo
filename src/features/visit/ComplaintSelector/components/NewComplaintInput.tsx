@@ -40,7 +40,7 @@ export const NewComplaintInput: React.FC<NewComplaintInputProps> = ({
       onClick={onAdd}
       disabled={!value.trim()}
       className={cn(
-        "p-2 rounded bg-zinc-200 dark:bg-zinc-800",
+        "p-2 rounded bg-zinc-200 dark:bg-zinc-800 ",
         "hover:bg-zinc-300 dark:hover:bg-zinc-700",
         "text-zinc-600 dark:text-zinc-300 disabled:opacity-50"
       )}

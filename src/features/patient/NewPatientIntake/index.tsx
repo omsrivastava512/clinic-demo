@@ -136,7 +136,7 @@ export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onCl
             {/* Header */}
             <FormHeader onClose={onClose} />
 
-            <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-6 bg-white dark:bg-black transition-colors">
+            <form onSubmit={handleSubmit} className="overflow-y-auto p-6 flex flex-col gap-6 bg-white dark:bg-black transition-colors">
 
                 {/* ROW 1: NAME */}
                 <NameInput
