@@ -1,6 +1,7 @@
 import { cn } from "@/lib";
 import type { InvoiceItem, Procedure } from "@/types";
 import { CheckIcon, SearchIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
 // ─── ProcedureCard ─────────────────────────────────────────────────────────────
 // A single selectable procedure tile. Renders the procedure name, cost, and a
@@ -90,4 +91,33 @@ export const SearchMoreProcedures = () => (
     </div>
 )
 
+type LayoutProps = {
+    children: ReactNode
+}
+export const RightLayout = ({ children }: LayoutProps) => (
+    <div 
+    className={cn(
+    "w-full md:w-80",
+    "flex flex-col",
+    "bg-zinc-50 dark:bg-zinc-900/30",
+    "border border-zinc-200 dark:border-zinc-800 rounded-xl",
+    "p-6"
+)}
+>
+        {children}
+    </div>
+)
+
+export const ProcedureBodyLayout = ({ children }: LayoutProps) => (
+    <div
+        className={cn(
+            "w-full flex-1",
+            "md:flex md:flex-row",
+            "gap-6",
+            "overflow-y-auto",
+            "transition-colors duration-300"
+        )}
+    >{children}
+    </div>
+)
 

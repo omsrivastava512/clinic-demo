@@ -41,7 +41,7 @@ const ProcedureGrid = ({ isSelected, ctxId, onToggle }: ProcedureGridProps) => (
         <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Common Procedures</h3>
         <div className=" grid grid-cols-1 sm:grid-cols-2 gap-3 pl-4 border-l-2 border-zinc-300 dark:border-zinc-800">
 
-            {PHYSIO_PROCEDURES.slice(0, 4).map(proc => (
+            {PHYSIO_PROCEDURES.slice(0).map(proc => (
                 <ProcedureCard
                     key={proc.id}
                     proc={proc}

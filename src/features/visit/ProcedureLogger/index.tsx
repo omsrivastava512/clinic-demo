@@ -5,12 +5,14 @@ import { RecieptFooter } from "./components/RecieptFooter.tsx";
 import { ComplaintSection } from "./components/ComplaintSection.tsx";
 import { ReceiptList } from "./components/ReceiptList.tsx";
 import type { ItemRecord } from "./types.tsx";
+import ProcedureHeader from "./components/ProcedureHeader.tsx";
+import { ProcedureBodyLayout, RightLayout } from "./components/primitives.tsx";
 
-const validateInvoiceItems = (items:ItemRecord, selectedComplaints:MedicalComplaint[])=>{
-    const selectedIds = new Set(selectedComplaints.map(c=>c.id));
-    
+const validateInvoiceItems = (items: ItemRecord, selectedComplaints: MedicalComplaint[]) => {
+    const selectedIds = new Set(selectedComplaints.map(c => c.id));
+
     return Object.values(items).filter(
-    item => selectedIds.has(item.complaintId))
+        item => selectedIds.has(item.complaintId))
 }
 
 // ─── ProcedureLogger ───────────────────────────────────────────────────────────
@@ -36,37 +38,46 @@ const ProcedureLogger: React.FC<ProcedureLoggerProps> = ({ selectedComplaints, o
         useProcedureLogger(selectedComplaints);
 
     return (
-        <div className="w-full md:flex overflow-y-scroll md:flex-row gap-6 h-lvh py-4 transition-colors duration-300">
+        <div className="h-[90vh] flex flex-col">
+            <ProcedureHeader
+                complaintList={selectedComplaints.map(c => c.title)}
+                patientName="Amit Trivedi"
+            />
+            <ProcedureBodyLayout
+            >
+                {/* LEFT: Scrollable procedure selection — one section per complaint */}
+                <div className="flex-1 overflow-y-auto pr-2 space-y-8 h-full">
+                    {selectedComplaints.map((ctx, index) => (
+                        <ComplaintSection
+                            key={ctx.id}
+                            ctx={ctx}
+                            index={index}
+                            isSelected={isProcedureSelected}
+                            onToggle={toggleProcedure}
+                        />
+                    ))}
+                </div>
 
-            {/* LEFT: Scrollable procedure selection — one section per complaint */}
-            <div className="flex-1 overflow-y-auto pr-2 space-y-8 h-full">
-                {selectedComplaints.map((ctx, index) => (
-                    <ComplaintSection
-                        key={ctx.id}
-                        ctx={ctx}
-                        index={index}
-                        isSelected={isProcedureSelected}
-                        onToggle={toggleProcedure}
+                {/* RIGHT: Live receipt — updates instantly on every toggle */}
+                <RightLayout
+                   
+                >
+                    <ReceiptList
+                        hasItems={hasItems}
+                        selectedComplaints={selectedComplaints}
+                        getItemsForComplaint={getItemsForComplaint}
                     />
-                ))}
-            </div>
-
-            {/* RIGHT: Live receipt — updates instantly on every toggle */}
-            <div className="w-full md:w-80 bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 flex flex-col">
-                <ReceiptList
-                    hasItems={hasItems}
-                    selectedComplaints={selectedComplaints}
-                    getItemsForComplaint={getItemsForComplaint}
-                />
-                {/* Footer: total + submit — pinned to the bottom of the receipt panel */}
-                <RecieptFooter
-                    totalCost={totalCost}
-                    onComplete={() => onComplete(validateInvoiceItems(items, selectedComplaints))}
-                    isDisabled={!hasItems}
-                />
-            </div>
+                    {/* Footer: total + submit — pinned to the bottom of the receipt panel */}
+                    <RecieptFooter
+                        totalCost={totalCost}
+                        onComplete={() => onComplete(validateInvoiceItems(items, selectedComplaints))}
+                        isDisabled={!hasItems}
+                    />
+                </RightLayout>
+            </ProcedureBodyLayout>
         </div>
     );
 };
 
 export default ProcedureLogger;
+
