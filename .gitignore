@@ -13,6 +13,7 @@ dist-ssr
 *.local
 ignore
 er.name
+test.js
 
 # Editor directories and files
 .vscode/*
