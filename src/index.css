@@ -139,3 +139,10 @@ button:disabled {
 html {
   scroll-behavior: smooth;
 }
+
+[aria-disabled="true"],
+[data-disabled],
+[data-state="disabled"] {
+  pointer-events: auto !important;
+  cursor: not-allowed;
+}
