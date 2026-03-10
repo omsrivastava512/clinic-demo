@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { Moon, Sun } from 'lucide-react';
 import WelcomeTip from './components/WelcomeTip';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 
@@ -85,13 +85,13 @@ const DemoHeader = () => (
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
         <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
 
-        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-mono">Last Updated: {formattedDate} </p>
+        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-1mono">Last Updated: {formattedDate} </p>
         <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2">
             <a className='underline' href="https://github.com/omsrivastava512/clinic-demo/commits/" target="_blank" rel="noopener" >Track Progress↗ </a> &nbsp; | &nbsp;
             <a className='underline' href="#procedure" rel="noopener" >Jump to working component↓ </a>
         </p>
         <nav className='mt-5 p-5 flex justify-center'>
-            <TabsLine/>
+            <TabsLine />
         </nav>
 
     </header>
@@ -99,14 +99,16 @@ const DemoHeader = () => (
 
 
 export function TabsLine() {
+    const location = useLocation()
+
     return (
-        <Tabs defaultValue="workflow">
+        <Tabs defaultValue={location.pathname}>
             <TabsList variant="line">
-                <TabsTrigger value="workflow">
-                    <NavLink to="/">Visit Workflow</NavLink>
-                </TabsTrigger>
-                <TabsTrigger disabled value="dashboard">Dashboard</TabsTrigger>
-                <TabsTrigger disabled value="reports">Reports</TabsTrigger>
+                <NavLink to="/">
+                    <TabsTrigger value="/">Visit Workflow</TabsTrigger>
+                </NavLink>
+                <TabsTrigger disabled value="/dashboard">Dashboard</TabsTrigger>
+                <TabsTrigger disabled value="/reports">Reports</TabsTrigger>
             </TabsList>
         </Tabs>
     )
