@@ -109,6 +109,9 @@ export function TabsLine() {
                 </NavLink>
                 <TabsTrigger disabled value="/dashboard">Dashboard</TabsTrigger>
                 <TabsTrigger disabled value="/reports">Reports</TabsTrigger>
+                <NavLink to="/roadmap">
+                    <TabsTrigger value="/roadmap">Roadmap</TabsTrigger>
+                </NavLink>
             </TabsList>
         </Tabs>
     )

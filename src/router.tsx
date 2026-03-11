@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import VisitWorkflow from "./pages/vistitworkflow";
 import ErrorElement from "./components/NotFound";
+import {  RoadmapPanel } from "./pages/roadmap";
 
 
 
@@ -19,8 +20,14 @@ export const router = createBrowserRouter([
                 errorElement: <ErrorElement />
             },
             {
+                path: "roadmap",
+                element: <RoadmapPanel currentStage="V0" />,
+                errorElement: <ErrorElement />
+
+            },
+            {
                 path: "*",
-                element: <ErrorElement />   
+                element: <ErrorElement />
             }
         ]
     }
