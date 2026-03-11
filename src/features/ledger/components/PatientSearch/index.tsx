@@ -2,7 +2,7 @@ import { cleanSearchInput } from "@/lib";
 import SearchInput from "./SearchInput"
 import SearchSuggestions from "./SearchSuggestion"
 import { MOCK_PATIENTS } from "@/data/mock_data";
-import {  useState } from "react"
+import { useState } from "react"
 import type { Patient } from "@/types";
 
 const PatientSearch = () => {
@@ -83,6 +83,9 @@ const PatientSearch = () => {
         // TODO: Find a suitable implementation of this (Created on 2025-12-24)
         // onPatientIdentified(i); // dummy call
     };
+
+
+
 
 
     return (
