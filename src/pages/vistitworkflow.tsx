@@ -18,7 +18,7 @@ const VisitWorkflow = () => {
 
     return (
         <>
-            <PresentationSection hidden title="The Daily Ledger & Search"
+            <PresentationSection  title="The Daily Ledger & Search"
                 number='01' description='Upcoming Features: ShimmerUI in search results floater, Add status wise filter '>
                 <DailyLedger />
             </PresentationSection>
@@ -30,7 +30,7 @@ const VisitWorkflow = () => {
                 <NewPatientIntake onClose={() => { }} initialName="Arjun" onSubmit={() => { }} />
             </PresentationSection>
 
-            <PresentationSection hidden title="Complaint Selector (Diagnosis)"
+            <PresentationSection  title="Complaint Selector (Diagnosis)"
                 number='03' description='Upcoming: Add a suggestive complaint drop down as the user starts typing in the add a new complaint box (searchable by category)'
                 className="flex justify-center" tag='complaints'
             >
