@@ -2,8 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import VisitWorkflow from "./pages/vistitworkflow";
 import ErrorElement from "./components/NotFound";
-import {  RoadmapPanel } from "./pages/roadmap";
+import { RoadmapPanel, type StageId } from "./pages/roadmap";
 
+const STAGE_PROGRESS: Partial<Record<StageId, number>> = {
+    V0: 5, // first 4 items done in the current stage
+};
 
 
 // import { createBrowserRouter } from "react-router-dom";
@@ -21,7 +24,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: "roadmap",
-                element: <RoadmapPanel currentStage="V0" />,
+                element: <RoadmapPanel currentStage="V0" stageProgress={STAGE_PROGRESS} />,
                 errorElement: <ErrorElement />
 
             },
@@ -33,3 +36,5 @@ export const router = createBrowserRouter([
     }
 ]);
 export default router
+
+
