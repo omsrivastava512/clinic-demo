@@ -7,7 +7,12 @@ import ComplaintSelector from '@/features/visit/ComplaintSelector';
 import InvoiceBuilder from '@/features/visit/InvoiceBuilder';
 import ProcedureLogger from '@/features/visit/ProcedureLogger';
 import type { InvoiceItem } from '@/types';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 const VisitWorkflow = () => {
+
+    const [isStarted, setIsStarted] = useState(false)
+    const start = () => setIsStarted(true)
 
     // Dummy Handlers for display purposes
     const handleInvoiceLog = (i: InvoiceItem[]) => {
@@ -16,9 +21,21 @@ const VisitWorkflow = () => {
         alert("Bill Generated: ₹" + totalCost)
     };
 
+    if (!isStarted) return (
+        <div className='flex flex-col items-center justify-center text-center gap-4'>
+            <Button
+                onClick={start}
+                variant="outline" size="lg"
+                className={"p-4  font-bold tracking-wide"}
+            >
+                Start Workflow
+            </Button>
+            <em className='text-sm text-zinc-500 max-w-xs'>Opens the Daily Ledger, scrolled to the most recent entry. Expect a sudden scroll.</em>
+        </div>
+    );
     return (
         <>
-            <PresentationSection  title="The Daily Ledger & Search"
+            <PresentationSection title="The Daily Ledger & Search"
                 number='01' description='Upcoming Features: ShimmerUI in search results floater, Add status wise filter '>
                 <DailyLedger />
             </PresentationSection>
@@ -30,7 +47,7 @@ const VisitWorkflow = () => {
                 <NewPatientIntake onClose={() => { }} initialName="Arjun" onSubmit={() => { }} />
             </PresentationSection>
 
-            <PresentationSection  title="Complaint Selector (Diagnosis)"
+            <PresentationSection title="Complaint Selector (Diagnosis)"
                 number='03' description='Upcoming: Add a suggestive complaint drop down as the user starts typing in the add a new complaint box (searchable by category)'
                 className="flex justify-center" tag='complaints'
             >
