@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Check, ChevronRight, Circle, X, Moon, Sun } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { Check, ChevronRight, Circle, X, } from 'lucide-react';
 import { ROADMAP_STAGES } from '@/data/roadmap_data';
 
 // ─────────────────────────────────────────────
@@ -54,7 +54,7 @@ function StageBadge({ status }: StageBadgeProps) {
         );
     }
     return (
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400 shrink-0">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400 shrink-0">
             <Circle className="h-3 w-3" />
             Next
         </span>
@@ -68,7 +68,7 @@ interface ChecklistItemProps {
 
 function ChecklistItem({ checked, children }: ChecklistItemProps) {
     return (
-        <li className="flex items-start gap-3 rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-3 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
+        <li className="flex items-start gap-3 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800">
             <span
                 className={
                     checked
@@ -110,10 +110,10 @@ function RoadmapStageCard({ stage, stageIndex, currentIndex, stageProgress }: Ro
         <section
             className={
                 isCurrent
-                    ? 'rounded-3xl border border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-900/60 p-5 shadow-sm'
+                    ? 'rounded-3xl ring-2 ring-zinc-300 dark:ring-zinc-600 bg-white dark:bg-zinc-950 p-5 shadow-sm'
                     : isDone
-                        ? 'rounded-3xl border border-emerald-100 dark:border-emerald-900 bg-white dark:bg-zinc-900 p-5 shadow-sm opacity-80'
-                        : 'rounded-3xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm'
+                        ? 'rounded-3xl ring-4 ring-emerald-100 dark:ring-emerald-900  bg-white dark:bg-zinc-950 p-5 shadow-sm opacity-80'
+                        : 'rounded-3xl ring-2 ring-zinc-200 dark:ring-zinc-800 bg-zinc-50 dark:bg-zinc-900/50  p-5 shadow-sm'
             }
         >
             {/* Header */}
@@ -143,8 +143,8 @@ function RoadmapStageCard({ stage, stageIndex, currentIndex, stageProgress }: Ro
                     Checklist
                 </div>
                 <ul className="grid gap-3">
-                    {stage.items.map((item,i) => (
-                        <ChecklistItem key={item} checked={i<completedCount}>
+                    {stage.items.map((item, i) => (
+                        <ChecklistItem key={item} checked={i < completedCount}>
                             {item}
                         </ChecklistItem>
                     ))}
@@ -172,8 +172,8 @@ export interface RoadmapPanelProps {
 
 export function RoadmapPanel({
     currentStage = 'V0',
-    title = 'Clinic roadmap',
-    subtitle = 'Roadmap',
+    title = 'Development Roadmap',
+    subtitle = 'Roadmap covering the phases and their features and tasks for the clinic app. You can also check the commit history above.',
     headerAction = null,
     stageProgress
 }: RoadmapPanelProps) {
@@ -181,8 +181,8 @@ export function RoadmapPanel({
     const current = ROADMAP_STAGES[currentIndex];
 
     return (
-        <div className="flex flex-col overflow-hidden rounded-[2rem] border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 shadow-2xl w-full">
-            <header className="flex items-start justify-between gap-4 border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-6 py-5">
+        <div className="flex flex-col overflow-hidden rounded-[2rem] ring-2 ring-zinc-200 dark:ring-zinc-800 bg-zinc-50 dark:bg-zinc-950 shadow-2xl w-full">
+            <header className="flex items-start justify-between gap-4 ring-b ring-2 ring-zinc-200 dark:ring-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-6 py-5">
                 <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         Roadmap model
@@ -199,7 +199,7 @@ export function RoadmapPanel({
 
             <div className="overflow-y-auto px-6 py-6">
                 {/* Header */}
-                <div className="mb-6 rounded-3xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
+                <div className="mb-6 rounded-3xl ring-2 ring-zinc-200 dark:ring-zinc-800 bg-white dark:bg-zinc-950 p-5 shadow-sm">
                     <div className="flex flex-wrap items-center gap-3">
                         <span className="rounded-full bg-zinc-950 dark:bg-zinc-100 px-3 py-1 text-xs font-semibold text-white dark:text-zinc-950">
                             Current position: {current.id}
@@ -221,7 +221,7 @@ export function RoadmapPanel({
                             key={stage.id}
                             stage={stage}
                             stageIndex={i}
-                            stageProgress={stageProgress?.[stage.id]??0}
+                            stageProgress={stageProgress?.[stage.id] ?? 0}
                             currentIndex={currentIndex}
                         />
                     ))}
@@ -288,7 +288,7 @@ export function RoadmapModal({
                     <button
                         type="button"
                         onClick={() => onOpenChange(false)}
-                        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 transition hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-zinc-950 dark:hover:text-zinc-50"
+                        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 transition hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-zinc-950 dark:hover:text-zinc-50"
                         aria-label="Close roadmap modal"
                     >
                         <X className="h-5 w-5" />
@@ -296,91 +296,5 @@ export function RoadmapModal({
                 }
             />
         </ModalOverlay>
-    );
-}
-
-// ─────────────────────────────────────────────
-// Demo page
-// ─────────────────────────────────────────────
-
-export function ClinicRoadmapDemoPage() {
-    const [open, setOpen] = useState<boolean>(false);
-    const [activeStage, setActiveStage] = useState<StageId>('V0');
-    const [darkMode, setDarkMode] = useState<boolean>(false);
-
-    function openAt(stageId: StageId): void {
-        setActiveStage(stageId);
-        setOpen(true);
-    }
-
-    return (
-        <div className={darkMode ? 'dark' : ''}>
-            <div className="min-h-screen bg-zinc-100 dark:bg-zinc-950 p-6 text-zinc-950 dark:text-zinc-50 transition-colors duration-300">
-                <div className="mx-auto max-w-5xl space-y-4">
-
-                    {/* Dark mode toggle */}
-                    <div className="flex justify-end">
-                        <button
-                            type="button"
-                            onClick={() => setDarkMode((d) => !d)}
-                            className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 shadow-sm transition hover:bg-zinc-50 dark:hover:bg-zinc-700"
-                            aria-label="Toggle dark mode"
-                        >
-                            {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                            {darkMode ? 'Light mode' : 'Dark mode'}
-                        </button>
-                    </div>
-
-                    {/* Trigger card */}
-                    <div className="rounded-[2rem] border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-8 shadow-sm">
-                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-                            Clinic demo
-                        </p>
-                        <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-                            Roadmap trigger component
-                        </h1>
-                        <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                            Each button opens the modal at a specific stage. Stage state is lifted to the
-                            parent so the modal always reflects the correct position.
-                        </p>
-
-                        <div className="mt-6 flex flex-wrap gap-3">
-                            <button
-                                type="button"
-                                onClick={() => openAt('V0')}
-                                className="inline-flex items-center gap-2 rounded-full bg-zinc-950 dark:bg-zinc-100 px-5 py-3 text-sm font-medium text-white dark:text-zinc-950 transition hover:bg-zinc-800 dark:hover:bg-zinc-200"
-                            >
-                                Open at V0 (current)
-                                <ChevronRight className="h-4 w-4" />
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => openAt('V1')}
-                                className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-5 py-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 transition hover:bg-zinc-50 dark:hover:bg-zinc-700"
-                            >
-                                Open at V1
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => openAt('V3')}
-                                className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-5 py-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 transition hover:bg-zinc-50 dark:hover:bg-zinc-700"
-                            >
-                                Open at V3
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <RoadmapModal
-                    open={open}
-                    onOpenChange={setOpen}
-                    currentStage={activeStage}
-                    title="Clinic roadmap"
-                    subtitle="Track where the product stands and what comes next."
-                />
-            </div>
-        </div>
     );
 }
