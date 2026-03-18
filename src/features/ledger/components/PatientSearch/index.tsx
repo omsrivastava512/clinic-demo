@@ -4,6 +4,7 @@ import SearchSuggestions from "./SearchSuggestion"
 import { MOCK_PATIENTS } from "@/data/mock_data";
 import { useState } from "react"
 import type { Patient } from "@/types";
+import { isEmptyInput, isMinInputLength } from "./utils";
 
 const PatientSearch = () => {
 
@@ -12,15 +13,21 @@ const PatientSearch = () => {
     const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
     const [focusedIndex, setFocusedIndex] = useState(-1);
 
-    // Handle Input Changes
+    const resetAll = () => {
+        setFocusedIndex(-1)
+        setFilteredPatients([]) // force a rerender so the input element doesn't lose track of sanitized state value (React skipped updates because state was getting the same sanitized value even when the input was littered)
+    }
+
+    // ────── Search Input Handling ───────────────────────────────────────
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const raw = e.currentTarget.value
         const val = cleanSearchInput(raw)
 
         setInput(val);
 
-        // Trigger Logic: Only show if at least 3 characters (starts at 3 chars)
-        if (val.length >= 3) {
+
+        // Trigger #1: Only show results if at least 3 characters (starts at 3 chars)
+        if (isMinInputLength(val)) {
             const results = MOCK_PATIENTS.filter(p =>
                 p.fullName.toLowerCase().includes(val.toLowerCase()) ||
                 p.phone.includes(val)
@@ -30,20 +37,25 @@ const PatientSearch = () => {
             if (results.length === 0 && focusedIndex !== 0) {
                 setFocusedIndex(0);
             }
+        }
+        // Trigger #1: Displays overlay as immediate feedback
+        else if (!isEmptyInput(val)) {
+            setShowSuggestions(true);
+            resetAll();
         } else {
             setShowSuggestions(false);
-            setFocusedIndex(-1)
-            setFilteredPatients([]) // force a rerender so the input element doesn't lose track of sanitized state value (React skipped updates because state was getting the same sanitized value even when the input was littered)
+            resetAll();
         }
     };
 
 
+    // ────── Key Navigation ───────────────────────────────────────
     const handleKeyNavigation = (e: React.KeyboardEvent<HTMLInputElement>) => {
         // filteredPatients is your list results
         // We add +1 to length to account for the "Add New" button at the bottom
         const totalItems = filteredPatients.length + 1;
 
-        if (!showSuggestions) return;
+        if (!showSuggestions || !isMinInputLength(input)) return;
 
         if (e.key === 'ArrowUp') {
             e.preventDefault(); // Stop cursor from moving in text box
@@ -60,22 +72,24 @@ const PatientSearch = () => {
         }
     };
 
-
-    /**
-     * Suggestion: Add logic to detect if new patient added using Name or Phone Number
-     * @param i Index of the selected patient/option
-     * @returns 
-     **/
+    // ────── onEnter - Selection  Handling ───────────────────────────────────────
+    //   TODO: Add logic to detect if new patient added using Name or Phone Number
     const handleSelect = (i: number) => {
+
         if (filteredPatients.length > 0 && i === -1) return; // Or trigger search
+        // -1 means focus is still on Search Input
+
+        if(!isMinInputLength(input)) return; // trigger #2 not active yet        
 
         if (i < filteredPatients.length && i !== -1) {
             // It's a patient from the list
             const patient = filteredPatients[i];
             alert(`Selected Existing: ${patient.fullName}`);
-        } else {
+        }
+        else if (i === filteredPatients.length) {
             // It's the "Add New" button (last item)
             alert(`Triggering Add New Patient for: ${input}`);
+
         }
         setInput('');
         setShowSuggestions(false);

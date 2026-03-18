@@ -46,7 +46,7 @@ export const cleanSearchInput = (input: string): string => {
 
     // 2. Find first meaningful character
     const firstChar = normalized[0];
-    if (!firstChar) return "";
+    if (firstChar.length === 0) return "";
 
     // if the string starts with a Letter
     if (/[a-zA-Z]/.test(firstChar)) {

@@ -1,4 +1,4 @@
-import {cn} from "@/lib"
+import { cn } from "@/lib"
 import { SearchIcon } from "lucide-react"
 
 type SearchInputProps = {
@@ -48,7 +48,7 @@ const SearchInput = ({ input, isFocused, handleInputChange, handleKeyNavigation 
                         "px-1.5 py-0.5  bg-white dark:bg-zinc-800",  // bg + padding
                         "rounded border border-zinc-200 dark:border-zinc-700"  // border
                     )}>
-                        {input.length < 3 ? "Start typing" : isFocused ? "Press ↑↓" : "↵ ENTER"}
+                        {input.length === 0 ? "Start typing" : input.length < 3 ? "Keep typing" : isFocused ? "Press ↑↓" : "↵ ENTER"}
                     </span>
                 </div>
             </div>

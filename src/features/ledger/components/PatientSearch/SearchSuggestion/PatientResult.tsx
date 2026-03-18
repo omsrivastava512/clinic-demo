@@ -1,7 +1,8 @@
 import type { Patient } from "@/types";
 import { ArrowUpRightIcon, MapPinHouseIcon, SmartphoneIcon, UserIcon } from "lucide-react";
 import { ListItemButton } from "./primitives";
-import {cn} from "@/lib"
+import { cn } from "@/lib"
+import { isMinInputLength } from "../utils";
 
 
 type PatientListProps = {
@@ -12,22 +13,32 @@ type PatientListProps = {
 }
 
 const PatientResult = ({ filteredPatients, handleSelect, focusedIndex, input }: PatientListProps) => {
+
     return (
         <div className="overflow-y-auto max-h-50">
-            {filteredPatients.map((p, i) => (
-                <PatientListItem
-                    onSelect={() => handleSelect(i)}
-                    isSelected={i === focusedIndex}
-                    patient={p}
-                />
-            ))}
+            {isMinInputLength(input) &&
+                filteredPatients.map((p, i) => (
+                    <PatientListItem
+                        onSelect={() => handleSelect(i)}
+                        isSelected={i === focusedIndex}
+                        patient={p}
+                    />
+                ))
+            }
 
             {/* No Results */}
-            {filteredPatients.length === 0 && (
-                <div className="px-4 py-6 text-center text-zinc-500 text-sm italic cursor-not-allowed ">
-                    No existing patients found for "{input}"
-                </div>
-            )}
+            {
+                !isMinInputLength(input) ? (
+                    <div className="px-4 py-6 text-center text-zinc-500 text-sm tracking-widest italic cursor-not-allowed ">
+                        Keep Typing....
+                    </div>
+                )
+                    : filteredPatients.length === 0 && (
+                        <div className="px-4 py-6 text-center text-zinc-500 text-sm tracking-widest italic cursor-not-allowed ">
+                            No existing patients found for "{input}"
+                        </div>
+                    )
+            }
         </div>
     )
 }
