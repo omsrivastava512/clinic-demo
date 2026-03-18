@@ -45,7 +45,11 @@ const App = () => {
         <>
             <WelcomeTip
                 skipText='Dismiss'
-                description='Click on the section heading to hide/unhide the component.'
+                description={[
+                    'Click on the section headings in Visit Workflow to hide/expand the components.',
+                    'Check the Roadmap tab to understand the scope and future of the final app and track the current progress.',
+                    "Some tabs are under development and do not lead anywhere. Don't bother clicking.",
+                ]}
             />
 
             <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">

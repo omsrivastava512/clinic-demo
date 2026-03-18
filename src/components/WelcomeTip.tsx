@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   TourCard,
   TourHeader,
@@ -8,39 +8,58 @@ import {
   TourButton
 } from './ui/TourComponents';
 
+type WelcomeTipProps = {
+  title?: string | string[],
+  description: string | string[],
+  footerNote?: string,
+  skipText?: string,
+}
 export default function WelcomeTip({
-  title = "Quick Tip",
-  description = "",
-  footerNote = "1/1",
-  hasNext = false,
-  handleNext = () => {},
-  skipText="Skip"
-}) {
+  title = "Quick Tip✨",
+  description,
+  footerNote,
+  skipText = "Skip"
+}: WelcomeTipProps) {
   const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [curr, setCurr] = useState(0)
+
+  const length = Array.isArray(description) ? description.length : 1;
+  const hasNext = (curr: number) => curr + 1 < length
+
+  const handleNext = () => {
+    setCurr(c => hasNext(c) ? c + 1 : c)
+  }
+
+  useEffect(()=>{
+      // TODO: implement checking from local storage to avoid opening the tip on every reload (Created on 2026-03-19)
+      // Based on all tips viewed, last updated and last checked
+  },[])
+
 
   if (!isVisible) return null;
 
   return (
     <TourCard position="bottom-right" >
       <TourHeader onClose={() => setIsVisible(false)}>
-        <TourTitle>{title}✨</TourTitle>
+        <TourTitle>
+          {Array.isArray(title) ? title[curr] : title}
+        </TourTitle>
       </TourHeader>
 
       <TourDescription>
-        {description}
+        {length > 1 ? description[curr] : description}
       </TourDescription>
 
       <TourFooter>
         <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
-          {footerNote}
+          {footerNote ?? `${curr + 1}/${length}`}
         </div>
         <div className="flex gap-2">
           {/* Native HTML props like 'disabled' now work perfectly with TypeScript */}
           <TourButton variant="ghost" onClick={() => setIsVisible(false)}>
             {skipText}
-            
           </TourButton>
-          {hasNext && 
+          {hasNext(curr) &&
             <TourButton variant="primary" onClick={handleNext}>
               Next
             </TourButton>
