@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 
 import { Moon, Sun } from 'lucide-react';
 import WelcomeTip from './components/WelcomeTip';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+import { DemoAppHeader } from './components/DemoAppHeader';
+import { Outlet } from 'react-router-dom';
 
 
 const lastUpdated = new Date(import.meta.env.VITE_LAST_UPDATED);
@@ -55,7 +56,7 @@ const App = () => {
             <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
                 <ToggleDarkButton isDarkMode={isDarkMode} toggleDark={() => setIsDarkMode(!isDarkMode)} />
 
-                <DemoHeader />
+                <DemoAppHeader formattedDate={formattedDate} />
 
                 <Outlet />
 
@@ -84,39 +85,4 @@ const ToggleDarkButton = ({ isDarkMode, toggleDark }: ToggleDarkButtonProps) => 
     </button>
 )
 
-const DemoHeader = () => (
-    <header className="text-center">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
-        <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
 
-        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-1mono">Last Updated: {formattedDate} </p>
-        <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2">
-            <a className='underline' href="https://github.com/omsrivastava512/clinic-demo/commits/" target="_blank" rel="noopener" >Track Progress↗ </a> &nbsp; | &nbsp;
-            <a className='underline' href="#procedure" rel="noopener" >Jump to working component↓ </a>
-        </p>
-        <nav className='mt-5 p-5 flex justify-center'>
-            <TabsLine />
-        </nav>
-
-    </header>
-)
-
-
-export function TabsLine() {
-    const location = useLocation()
-
-    return (
-        <Tabs defaultValue={location.pathname}>
-            <TabsList variant="line">
-                <NavLink to="/">
-                    <TabsTrigger value="/">Visit Workflow</TabsTrigger>
-                </NavLink>
-                <TabsTrigger disabled value="/dashboard">Dashboard</TabsTrigger>
-                <TabsTrigger disabled value="/reports">Reports</TabsTrigger>
-                <NavLink to="/roadmap">
-                    <TabsTrigger value="/roadmap">Roadmap</TabsTrigger>
-                </NavLink>
-            </TabsList>
-        </Tabs>
-    )
-}

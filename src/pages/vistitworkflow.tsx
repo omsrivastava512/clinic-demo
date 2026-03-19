@@ -22,7 +22,7 @@ const VisitWorkflow = () => {
     };
 
     if (!isStarted) return (
-        <div className='flex flex-col items-center justify-center text-center gap-4'>
+        <div className='flex flex-col items-center justify-center text-center gap-4 max-w-xs mx-auto'>
             <Button
                 onClick={start}
                 variant="outline" size="lg"
@@ -30,7 +30,8 @@ const VisitWorkflow = () => {
             >
                 Start Workflow
             </Button>
-            <em className='text-sm text-zinc-500 max-w-xs'>Opens the Daily Ledger, scrolled to the most recent entry. Expect a sudden scroll.</em>
+            <em className='text-sm text-zinc-500 font-semibold '>Opens the Daily Ledger, scrolled to the most recent entry. Expect a sudden scroll.</em>
+            <em className='text-sm text-zinc-500 '>This button was introduced to force explicit user intent in starting the app and prevent components of the app from hijacking intial page orientation and header on load. </em>
         </div>
     );
     return (
