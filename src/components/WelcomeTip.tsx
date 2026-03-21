@@ -14,8 +14,11 @@ type WelcomeTipProps = {
   footerNote?: string,
   skipText?: string,
 }
+
+const INITIAL_TITLE = "Quick Tip✨";
+
 export default function WelcomeTip({
-  title = "Quick Tip✨",
+  title = INITIAL_TITLE,
   description,
   footerNote,
   skipText = "Skip"
@@ -30,10 +33,10 @@ export default function WelcomeTip({
     setCurr(c => hasNext(c) ? c + 1 : c)
   }
 
-  useEffect(()=>{
-      // TODO: implement checking from local storage to avoid opening the tip on every reload (Created on 2026-03-19)
-      // Based on all tips viewed, last updated and last checked
-  },[])
+  useEffect(() => {
+    // TODO: implement checking from local storage to avoid opening the tip on every reload (Created on 2026-03-19)
+    // Based on all tips viewed, last updated and last checked
+  }, [])
 
 
   if (!isVisible) return null;
@@ -42,7 +45,7 @@ export default function WelcomeTip({
     <TourCard position="bottom-right" >
       <TourHeader onClose={() => setIsVisible(false)}>
         <TourTitle>
-          {Array.isArray(title) ? title[curr] : title}
+          {(Array.isArray(title) ? title[curr] : title) || INITIAL_TITLE}
         </TourTitle>
       </TourHeader>
 
