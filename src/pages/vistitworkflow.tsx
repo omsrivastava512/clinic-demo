@@ -31,7 +31,7 @@ const VisitWorkflow = () => {
                 Start Workflow
             </Button>
             <em className='text-sm text-zinc-500 font-semibold '>Opens the Daily Ledger, scrolled to the most recent entry. Expect a sudden scroll.</em>
-            <em className='text-sm text-zinc-500 '>This button was introduced to force explicit user intent in starting the app and prevent components of the app from hijacking intial page orientation and header on load. </em>
+            <em className='text-sm text-zinc-500 '>This button was introduced to force explicit user intent in starting the app and prevent components of the app from hijacking intial page orientation and the header text on load. </em>
         </div>
     );
     return (

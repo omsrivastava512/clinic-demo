@@ -7,7 +7,7 @@ export const DemoAppHeader = ({ formattedDate }: { formattedDate: string; }) => 
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-zinc-900 dark:text-white mb-4">Clinic App Catalogue</h1>
         <p className="text-zinc-600 dark:text-zinc-500">Modular React + TS components for Indian Physiotherapy Clinics.</p>
         <TextExpander collapseLabel='' className="text-zinc-600 dark:text-zinc-500 max-w-2xl mx-auto text-center p-2">
-            This repository is not the final clinic application. It is a component catalogue and interaction prototype for a clinic management system. The goal is to validate each UI module individually before those components are integrated into a full backend-connected product.
+            This is not the final clinic application. It is a component catalogue and interaction prototype for a clinic management system. The goal is to validate each UI module individually before those components are integrated into a full backend-connected product. Check out the roadmap to understand the full scope of the project.
         </TextExpander>
 
         <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-1mono">Last Updated: {formattedDate} </p>

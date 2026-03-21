@@ -128,7 +128,7 @@ function RoadmapStageCard({ stage, stageIndex, currentIndex, stageProgress }: Ro
                         </span>
                     </div>
                     <h3 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{stage.title}</h3>
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                    <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
                         {stage.description}
                     </p>
                 </div>
@@ -163,17 +163,22 @@ function RoadmapStageCard({ stage, stageIndex, currentIndex, stageProgress }: Ro
 export interface RoadmapPanelProps {
     currentStage?: StageId;
     title?: string;
-    subtitle?: string;
+    subtitles?: string[];
     /** Slot for a close button or any header action */
     headerAction?: React.ReactNode;
     stageProgress?: Partial<Record<StageId, number>>;
 
 }
+const INITIAL_TITLE = 'Development Roadmap'
+const INITIAL_SUBTITLES = [
+    'Roadmap covering the phases and their features and tasks for the clinic app. You can also check the commit history above.',
+    'Note: This roadmap component is primarily AI coded and can contain inconsistencies.'
+]
 
 export function RoadmapPanel({
     currentStage = 'V0',
-    title = 'Development Roadmap',
-    subtitle = 'Roadmap covering the phases and their features and tasks for the clinic app. You can also check the commit history above.',
+    title = INITIAL_TITLE,
+    subtitles = INITIAL_SUBTITLES,
     headerAction = null,
     stageProgress
 }: RoadmapPanelProps) {
@@ -190,9 +195,12 @@ export function RoadmapPanel({
                     <h2 className="mt-1 text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
                         {title}
                     </h2>
-                    <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                        {subtitle}
-                    </p>
+                    {
+                        subtitles?.map(s =>
+                            <p className="mt-2  text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                                {s}
+                            </p>
+                        )}
                 </div>
                 {headerAction}
             </header>
@@ -208,7 +216,7 @@ export function RoadmapPanel({
                             {current.title}
                         </span>
                     </div>
-                    <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                    <p className="mt-3  text-sm leading-6 text-zinc-600 dark:text-zinc-400">
                         The checklist is not interactive, prop-driven and for presentation only.
                         Earlier stages read as completed. The current stage is highlighted. Later stages remain upcoming.
                     </p>
@@ -268,7 +276,7 @@ export interface RoadmapModalProps {
     onOpenChange: (open: boolean) => void;
     currentStage?: StageId;
     title?: string;
-    subtitle?: string;
+    subtitles?: string[];
 }
 
 export function RoadmapModal({
@@ -276,14 +284,14 @@ export function RoadmapModal({
     onOpenChange,
     currentStage = 'V0',
     title = 'Clinic roadmap',
-    subtitle = 'Roadmap',
+    subtitles = ['Roadmap'],
 }: RoadmapModalProps) {
     return (
         <ModalOverlay open={open} onOpenChange={onOpenChange}>
             <RoadmapPanel
                 currentStage={currentStage}
                 title={title}
-                subtitle={subtitle}
+                subtitles={subtitles}
                 headerAction={
                     <button
                         type="button"

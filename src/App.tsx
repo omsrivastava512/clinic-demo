@@ -25,11 +25,6 @@ const formattedDate = `${datePart} | ${timePart}`;
 // console.log(formattedDate); // Output: Tue Jan 06, 2026 | 23:50
 
 
-// ==========================================
-// 3. UI COMPONENTS
-// ==========================================
-
-
 const App = () => {
     // Theme state
     const [isDarkMode, setIsDarkMode] = useState(true);
