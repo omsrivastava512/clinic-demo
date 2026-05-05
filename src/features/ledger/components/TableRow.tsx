@@ -1,13 +1,28 @@
 import type { LedgerEntry } from "@/types";
 import {cn} from "@/lib";
 import { ledgerRowLayout } from "../ledgerRow.styles";
+import { useNavigate } from "react-router-dom";
 
-const TableRow = ({ entry }: { entry: LedgerEntry }) => (
-    <div key={entry.id} className={cn(
-        ledgerRowLayout.main,    // grid
-        "border-b border-zinc-100 dark:border-zinc-900",    // border
-        "hover:bg-zinc-50 dark:hover:bg-zinc-900/50"    // hover
-    )}>
+const TableRow = ({ entry }: { entry: LedgerEntry }) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        if (entry.patientId) {
+            navigate(`/patient/${entry.patientId}`);
+        }
+    };
+
+    return (
+    <div
+        key={entry.id}
+        onClick={handleClick}
+        className={cn(
+            ledgerRowLayout.main,    // grid
+            "border-b border-zinc-100 dark:border-zinc-900",    // border
+            "hover:bg-zinc-50 dark:hover:bg-zinc-900/50",    // hover
+            entry.patientId && "cursor-pointer"
+        )}
+    >
         <div className={cn(
             ledgerRowLayout.time,
             "text-zinc-500 font-mono text-xs"
@@ -38,7 +53,8 @@ const TableRow = ({ entry }: { entry: LedgerEntry }) => (
             </span>
         </div>
     </div>
-)
+    );
+}
 
 export default TableRow
 
