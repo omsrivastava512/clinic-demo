@@ -43,7 +43,7 @@ const TableBody = () => {
 
     return (
         <>
-            <div ref={listContainerRef} onScroll={handleScroll} className="flex-1 z-50 overflow-y-auto flex flex-col">
+            <div ref={listContainerRef} onScroll={handleScroll} className="flex-1 z-50 overflow-y-auto flex flex-col [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                 {/* Dynamic Rows */}
                 {MOCK_LEDGER_ENTRIES
                     .sort((a, b) => compTime(a.time, b.time))
