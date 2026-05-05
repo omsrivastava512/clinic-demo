@@ -25,3 +25,7 @@ test.js
 *.njsproj
 *.sln
 *.sw?
+
+# Design mockups and Kiro specs
+demo/
+.kiro/
