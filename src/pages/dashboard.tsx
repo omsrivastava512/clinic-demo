@@ -1,136 +1,128 @@
-import { useNavigate } from 'react-router-dom';
-import { MOCK_PATIENT_PROFILES, MOCK_INVOICES, MOCK_VISITS } from '@/data/mock_data';
-import { calculateAge, getInitials } from '@/lib';
-import { Users, Activity, CreditCard, AlertTriangle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, UserPlus, Settings } from 'lucide-react';
+import { DashboardSettingsModal } from '../features/dashboard/components/DashboardSettingsModal';
+import type { WidgetConfig } from '../features/dashboard/types';
+import { WIDGET_REGISTRY } from '../features/dashboard/WidgetRegistry';
 
-// ─── Derived stats ────────────────────────────────────────────────────────────
-
-const totalPatients = MOCK_PATIENT_PROFILES.length;
-const totalVisits = MOCK_VISITS.length;
-const totalRevenue = MOCK_INVOICES
-  .filter((i) => i.paymentStatus === 'Paid')
-  .reduce((sum, i) => sum + i.amount, 0);
-const pendingInvoices = MOCK_INVOICES.filter(
-  (i) => i.paymentStatus === 'Pending' || i.paymentStatus === 'Overdue'
-).length;
-
-const STATS = [
-  { label: 'Total Patients', value: String(totalPatients), icon: Users },
-  { label: 'Total Visits', value: String(totalVisits), icon: Activity },
-  { label: 'Revenue Collected', value: `₹${totalRevenue.toLocaleString('en-IN')}`, icon: CreditCard },
-  { label: 'Pending / Overdue', value: String(pendingInvoices), icon: AlertTriangle },
+// We map the requested layout into specific column configurations.
+// Switching to a 4-column grid provides better balance for a 50/50 split on the second row,
+// while allowing the 4 smaller widgets to neatly occupy the third row.
+const DEFAULT_LAYOUT: WidgetConfig[] = [
+  { 
+    id: 'QUICK_ACTIONS', 
+    colSpan: 'full',
+    settings: {
+      quickActions: [
+        { label: 'New Patient', iconName: 'UserPlus', route: '/patients/new', colorClass: 'indigo' },
+        { label: 'Start Visit', iconName: 'Activity', route: '/visits/new', colorClass: 'emerald' },
+        { label: 'Ledger', iconName: 'CreditCard', route: '/today', colorClass: 'amber' },
+        { label: 'Documents', iconName: 'FileText', route: '/documents', colorClass: 'blue' }
+      ]
+    }
+  },
+  { 
+    id: 'REVENUE_TREND', 
+    colSpan: 2,
+    settings: { timeRange: '30d' } // We change this from default 7d to 30d to prove the config works!
+  },
+  { 
+    id: 'METRICS', 
+    colSpan: 1,
+    // By providing this array, we dictate exactly which KPIs render.
+    settings: { metricsToShow: ['REVENUE', 'NEW_PATIENTS', 'PENDING_INVOICES'] } 
+  },
+  { id: 'CLINIC_HEALTH', colSpan: 1 },
+  { 
+    id: 'ACTION_ITEMS', 
+    colSpan: 1,
+    settings: { actionThresholds: { overdueDays: 30 } } // Strict threshold config
+  },
+  { id: 'REFERRAL_SOURCES', colSpan: 1 },
+  { id: 'RECENT_PATIENTS', colSpan: 2 },
 ];
 
-function alertClass(type: 'ALLERGY' | 'FALL_RISK' | 'DNR' | 'OTHER') {
-  switch (type) {
-    case 'ALLERGY':   return 'bg-red-950/50 text-red-200 border border-red-900/50';
-    case 'FALL_RISK': return 'bg-amber-950/50 text-amber-200 border border-amber-900/50';
-    case 'DNR':       return 'bg-blue-950/50 text-blue-200 border border-blue-900/50';
-    default:          return 'bg-zinc-800 text-zinc-100 border border-zinc-700';
-  }
-}
-
 export default function Dashboard() {
-  const navigate = useNavigate();
+  const [layout, setLayout] = useState<WidgetConfig[]>(DEFAULT_LAYOUT);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+  /*
+    Decision: Replaced `w-full` with `w-[95%] lg:w-[80%] mx-auto` per user feedback.
+    Reason: A 100% width on an ultrawide monitor can make scanning left-to-right difficult. 
+    Restricting to 80% keeps the layout expansive but contained.
+  */
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-
-      {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight text-white">Patient Passport</h2>
-        <p className="text-zinc-400 text-sm mt-1">Click any patient card to open their full clinical record.</p>
-      </div>
-
-      {/* ── Stats row ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {STATS.map(({ label, value, icon: Icon }) => (
-          <div
-            key={label}
-            className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4 flex flex-col justify-between"
-          >
-            <div className="flex justify-between items-start">
-              <span className="text-sm font-medium text-zinc-500">{label}</span>
-              <Icon className="w-4 h-4 text-zinc-600" />
+    <div className="w-[95%] lg:w-[80%] mx-auto space-y-6 pb-12">
+      {/* Top Header & Actions - Restored from Draft 1 */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-4">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Good morning, Dr. Smith</h2>
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">Here is what's happening at the clinic today.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="relative group cursor-pointer hidden sm:block" title="Search patients, invoices, or appointments (Cmd+K)">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-md pl-9 pr-4 py-2 text-sm text-zinc-500 dark:text-zinc-400 w-64 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors shadow-sm dark:shadow-none">
+              Search anything... (Cmd+K)
             </div>
-            <div className="text-2xl font-bold tabular-nums tracking-tight text-white mt-3">{value}</div>
           </div>
-        ))}
-      </div>
+          
+          {/* Settings Trigger */}
+          <button 
+            onClick={() => setIsSettingsOpen(true)}
+            title="Customize Dashboard"
+            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white p-2 rounded-md transition-colors shadow-sm dark:shadow-none"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
 
-      {/* ── Patient cards ── */}
-      <div>
-        <div className="text-[10px] font-bold text-zinc-500 mb-3 tracking-wider uppercase">
-          Patient Profiles
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {MOCK_PATIENT_PROFILES.map((patient) => {
-            const age = calculateAge(patient.dateOfBirth);
-            const initials = getInitials(patient.fullName);
-            const visits = MOCK_VISITS.filter((v) => v.patientId === patient.id);
-            const invoices = MOCK_INVOICES.filter((i) => i.patientId === patient.id);
-            const outstanding = invoices.filter(
-              (i) => i.paymentStatus === 'Pending' || i.paymentStatus === 'Overdue'
-            );
-
-            return (
-              <button
-                key={patient.id}
-                type="button"
-                onClick={() => navigate(`/patient/${patient.id}`)}
-                className="text-left bg-zinc-900/50 border border-zinc-800 rounded-lg p-5 hover:border-zinc-600 hover:bg-zinc-900 transition-all active:scale-[0.99] cursor-pointer"
-              >
-                {/* Avatar + name */}
-                <div className="flex items-center gap-3 mb-4">
-                  {patient.photoUrl ? (
-                    <img
-                      src={patient.photoUrl}
-                      alt={patient.fullName}
-                      className="w-10 h-10 rounded-full object-cover border border-zinc-700"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full border border-zinc-700 bg-zinc-800 flex items-center justify-center text-sm font-semibold text-zinc-400 shrink-0">
-                      {initials}
-                    </div>
-                  )}
-                  <div className="min-w-0">
-                    <p className="font-semibold text-white truncate">{patient.fullName}</p>
-                    <p className="text-xs text-zinc-500 capitalize mt-0.5">
-                      {age} yrs · {patient.gender} · {patient.bloodType}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Alerts */}
-                {patient.alerts.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {patient.alerts.map((alert, i) => (
-                      <span
-                        key={i}
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${alertClass(alert.type)}`}
-                      >
-                        {alert.label}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* Footer stats */}
-                <div className="flex gap-4 text-xs text-zinc-500 border-t border-zinc-800 pt-3">
-                  <span>{visits.length} visit{visits.length !== 1 ? 's' : ''}</span>
-                  <span className="font-mono">{patient.mrn}</span>
-                  {outstanding.length > 0 && (
-                    <span className="text-amber-400 font-medium ml-auto">
-                      {outstanding.length} unpaid
-                    </span>
-                  )}
-                </div>
-              </button>
-            );
-          })}
+          <button 
+            title="Open New Patient Workflow"
+            className="bg-indigo-600 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-indigo-700 dark:hover:bg-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors cursor-pointer shadow-sm dark:shadow-none"
+          >
+            <UserPlus className="w-4 h-4" />
+            <span className="hidden sm:inline">New Patient</span>
+          </button>
         </div>
       </div>
 
+      {/* 
+        Widget Canvas 
+        Trade-off: We are wrapping the Widget components in a div that controls the grid span.
+        This forces the child widget to be 100% width/height of its container (h-full), 
+        preventing widgets from bleeding out of their grid assignments or forcing layout shifts.
+        Decision: Changed to grid-cols-4 on large screens.
+        Reason: This allows the Metrics and Revenue Trend widgets to share the screen 50/50 (col-span-2 each), 
+        while letting the four smaller widgets fit neatly into a single row underneath.
+      */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
+        {layout.map((config, index) => {
+          const WidgetComponent = WIDGET_REGISTRY[config.id];
+          if (!WidgetComponent) {
+            console.warn(`Widget ${config.id} not found in registry`);
+            return null;
+          }
+
+          // Compute the wrapper class based on the configuration.
+          let spanClass = 'lg:col-span-1';
+          if (config.colSpan === 2) spanClass = 'lg:col-span-2';
+          if (config.colSpan === 3) spanClass = 'lg:col-span-3';
+          if (config.colSpan === 4 || config.colSpan === 'full') spanClass = 'lg:col-span-full';
+
+          return (
+            <div key={`${config.id}-${index}`} className={`${spanClass} flex`}>
+              {/* Passing the config down in case the widget needs to adapt its internal layout based on its allocated size */}
+              <WidgetComponent config={config} />
+            </div>
+          );
+        })}
+      </div>
+
+      <DashboardSettingsModal 
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        currentLayout={layout}
+        onSave={(newLayout) => setLayout(newLayout)}
+      />
     </div>
   );
 }
