@@ -1,5 +1,6 @@
 import type { WidgetProps, MetricId } from '../types';
 import { MOCK_INVOICES, MOCK_VISITS, MOCK_PATIENT_PROFILES } from '@/data/mock_data';
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export function MetricsWidget({ config }: WidgetProps) {
   
@@ -8,12 +9,12 @@ export function MetricsWidget({ config }: WidgetProps) {
     REVENUE: {
       label: 'Total Revenue',
       value: `₹${MOCK_INVOICES.filter((i) => i.paymentStatus === 'Paid').reduce((sum, i) => sum + i.amount, 0).toLocaleString('en-IN')}`,
-      colorClass: 'text-zinc-900 dark:text-white'
+      colorClass: 'text-foreground'
     },
     VISITS: {
       label: 'Total Visits',
       value: MOCK_VISITS.length.toString(),
-      colorClass: 'text-zinc-900 dark:text-white'
+      colorClass: 'text-foreground'
     },
     PENDING_INVOICES: {
       label: 'Pending Invoices',
@@ -36,23 +37,25 @@ export function MetricsWidget({ config }: WidgetProps) {
   const metricsToShow: MetricId[] = config.settings?.metricsToShow || ['REVENUE', 'VISITS', 'PENDING_INVOICES'];
 
   return (
-    <div className="w-full h-full bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 flex flex-col shadow-sm dark:shadow-none">
-      <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-4">Key Metrics</h3>
-      <div className="flex flex-col gap-4 flex-1 justify-center">
+    <Card className="w-full h-full flex flex-col">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-semibold">Key Metrics</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4 flex-1 justify-center">
         {metricsToShow.map((metricId, index) => {
           const metricData = dataMap[metricId];
           const isLast = index === metricsToShow.length - 1;
           
           return (
-            <div key={metricId} className={`flex justify-between items-end ${!isLast ? 'border-b border-zinc-100 dark:border-zinc-800 pb-3' : ''}`}>
+            <div key={metricId} className={`flex justify-between items-end ${!isLast ? 'border-b border-border pb-3' : ''}`}>
               <div>
-                <div className="text-zinc-500 dark:text-zinc-400 text-xs font-medium mb-1">{metricData.label}</div>
+                <div className="text-muted-foreground text-xs font-medium mb-1">{metricData.label}</div>
                 <div className={`text-2xl font-bold ${metricData.colorClass}`}>{metricData.value}</div>
               </div>
             </div>
           );
         })}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

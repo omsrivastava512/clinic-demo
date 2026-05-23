@@ -57,12 +57,12 @@ export function QuickActionsWidget({ config }: WidgetProps) {
             <button 
               key={`${action.label}-${idx}`}
               onClick={() => navigate(action.route)}
-              className={`bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 ${colors.hoverBorder} hover:shadow-md dark:hover:shadow-none dark:hover:bg-zinc-800 rounded-xl p-4 flex flex-col items-center justify-center gap-3 transition-all group shadow-sm dark:shadow-none`}
+              className={`bg-card border border-border ${colors.hoverBorder} hover:shadow-md hover:bg-muted/50 rounded-xl p-4 flex flex-col items-center justify-center gap-3 transition-all group shadow-sm`}
             >
               <div className={`w-10 h-10 rounded-full ${colors.iconBg} flex items-center justify-center ${colors.iconText} group-hover:scale-110 transition-transform`}>
                 {renderIcon(action.iconName, "w-5 h-5")}
               </div>
-              <span className="text-sm font-medium text-zinc-900 dark:text-zinc-300">{action.label}</span>
+              <span className="text-sm font-medium text-card-foreground">{action.label}</span>
             </button>
           );
         })}

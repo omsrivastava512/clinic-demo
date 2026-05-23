@@ -1,4 +1,5 @@
 import type { WidgetProps } from '../types';
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export function ClinicHealthWidget({ config }: WidgetProps) {
   /*
@@ -10,15 +11,17 @@ export function ClinicHealthWidget({ config }: WidgetProps) {
   */
   
   return (
-    <div className="w-full h-full bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 flex flex-col shadow-sm dark:shadow-none">
-      <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-4">Clinic Health</h3>
+    <Card className="w-full h-full flex flex-col">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-semibold">Clinic Health</CardTitle>
+      </CardHeader>
       
-      <div className="flex flex-col gap-4 flex-1 justify-center">
+      <CardContent className="flex flex-col gap-4 flex-1 justify-center">
         {/* KPI 1 */}
         <div className="flex justify-between items-center">
           <div>
-            <div className="text-zinc-500 dark:text-zinc-400 text-xs font-medium mb-1">No-show Rate</div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-white">4.2%</div>
+            <div className="text-muted-foreground text-xs font-medium mb-1">No-show Rate</div>
+            <div className="text-xl font-bold text-foreground">4.2%</div>
           </div>
           <div className="text-emerald-700 dark:text-emerald-400 text-xs bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-transparent px-2 py-1 rounded-full">
             Healthy
@@ -28,10 +31,10 @@ export function ClinicHealthWidget({ config }: WidgetProps) {
         {/* KPI 2 */}
         <div className="flex justify-between items-center">
           <div>
-            <div className="text-zinc-500 dark:text-zinc-400 text-xs font-medium mb-1">New vs Returning</div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-white">1 : 4</div>
+            <div className="text-muted-foreground text-xs font-medium mb-1">New vs Returning</div>
+            <div className="text-xl font-bold text-foreground">1 : 4</div>
           </div>
-          <div className="text-zinc-500 dark:text-zinc-400 text-xs">
+          <div className="text-muted-foreground text-xs">
             Past 30d
           </div>
         </div>
@@ -39,11 +42,11 @@ export function ClinicHealthWidget({ config }: WidgetProps) {
         {/* KPI 3 */}
         <div className="flex justify-between items-center">
           <div>
-            <div className="text-zinc-500 dark:text-zinc-400 text-xs font-medium mb-1">Active Treatment Plans</div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-white">28</div>
+            <div className="text-muted-foreground text-xs font-medium mb-1">Active Treatment Plans</div>
+            <div className="text-xl font-bold text-foreground">28</div>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,5 +1,7 @@
 import type { WidgetProps } from '../types';
 
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
 export function RevenueTrendWidget({ config }: WidgetProps) {
   const timeRange = config.settings?.timeRange || '7d';
   /*
@@ -33,21 +35,21 @@ export function RevenueTrendWidget({ config }: WidgetProps) {
   const totalRevenue = data.reduce((acc, d) => acc + d.revenue, 0);
 
   return (
-    <div className="w-full h-full bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 flex flex-col shadow-sm dark:shadow-none">
-      <div className="flex justify-between items-center mb-6">
+    <Card className="w-full h-full flex flex-col">
+      <CardHeader className="flex flex-row justify-between items-center pb-2">
         <div>
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">Revenue Trend</h3>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+          <CardTitle className="text-sm font-semibold">Revenue Trend</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">
             {timeRange === '7d' ? 'Last 7 Days' : 'Last 30 Days'}
           </p>
         </div>
         <div className="text-right">
-          <div className="text-xl font-bold text-zinc-900 dark:text-white">₹{totalRevenue.toLocaleString('en-IN')}</div>
+          <div className="text-xl font-bold text-foreground">₹{totalRevenue.toLocaleString('en-IN')}</div>
           <div className="text-emerald-600 dark:text-emerald-400 text-xs font-medium">+12% vs prior period</div>
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="flex-1 flex items-end justify-between gap-1 pt-4">
+      <CardContent className="flex-1 flex items-end justify-between gap-1 pt-4">
         {data.map((item, idx) => {
           const heightPercent = Math.max((item.revenue / maxRevenue) * 100, 5);
           
@@ -65,14 +67,14 @@ export function RevenueTrendWidget({ config }: WidgetProps) {
               </div>
               {/* Only show labels if it's 7d to avoid crowding */}
               {timeRange === '7d' && (
-                <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200 transition-colors">
+                 <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
                   {item.label}
                 </span>
               )}
             </div>
           );
         })}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

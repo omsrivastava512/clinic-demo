@@ -4,6 +4,8 @@ import { DashboardSettingsModal } from '../features/dashboard/components/Dashboa
 import type { WidgetConfig } from '../features/dashboard/types';
 import { WIDGET_REGISTRY } from '../features/dashboard/WidgetRegistry';
 
+import { Button } from "@/components/ui/button";
+
 // We map the requested layout into specific column configurations.
 // Switching to a 4-column grid provides better balance for a 50/50 split on the second row,
 // while allowing the 4 smaller widgets to neatly occupy the third row.
@@ -55,33 +57,34 @@ export default function Dashboard() {
       {/* Top Header & Actions - Restored from Draft 1 */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Good morning, Dr. Smith</h2>
-          <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">Here is what's happening at the clinic today.</p>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Good morning, Dr. Smith</h2>
+          <p className="text-muted-foreground text-sm mt-1">Here is what's happening at the clinic today.</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative group cursor-pointer hidden sm:block" title="Search patients, invoices, or appointments (Cmd+K)">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
-            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-md pl-9 pr-4 py-2 text-sm text-zinc-500 dark:text-zinc-400 w-64 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors shadow-sm dark:shadow-none">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <div className="bg-background border border-input rounded-md pl-9 pr-4 py-2 text-sm text-muted-foreground w-64 hover:border-ring transition-colors shadow-sm">
               Search anything... (Cmd+K)
             </div>
           </div>
           
           {/* Settings Trigger */}
-          <button 
+          <Button 
+            variant="outline"
+            size="icon"
             onClick={() => setIsSettingsOpen(true)}
             title="Customize Dashboard"
-            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white p-2 rounded-md transition-colors shadow-sm dark:shadow-none"
           >
-            <Settings className="w-5 h-5" />
-          </button>
+            <Settings className="w-5 h-5 text-muted-foreground" />
+          </Button>
 
-          <button 
+          <Button 
             title="Open New Patient Workflow"
-            className="bg-indigo-600 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-indigo-700 dark:hover:bg-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors cursor-pointer shadow-sm dark:shadow-none"
+            className="flex items-center gap-2"
           >
             <UserPlus className="w-4 h-4" />
             <span className="hidden sm:inline">New Patient</span>
-          </button>
+          </Button>
         </div>
       </div>
 
