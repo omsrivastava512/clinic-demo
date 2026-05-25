@@ -13,8 +13,8 @@ export function OverviewTab({ vitals, courses }: OverviewTabProps) {
     <div>
       <VitalsGrid vitals={vitals} />
 
-      <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-        <Activity className="w-4 h-4 text-zinc-500" />
+      <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+        <Activity className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
         Complaint History
       </h3>
       <div className="overflow-y-auto max-h-[420px] px-1 pr-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
