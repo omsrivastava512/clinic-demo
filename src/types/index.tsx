@@ -112,6 +112,8 @@ export interface VisitService {
     serviceId: string;
     serviceName: string;                 // denormalised for display
     serviceCategory: 'STANDARD' | 'PREMIUM';
+    // DEBT: isCharged and chargedAmount should be derived at read time, not stored
+    // Use shouldChargeService() and calculateServiceCharge() from patientUtils instead
     isCharged: boolean;                  // derived: true if MACHINE_ONLY or PREMIUM
     chargedAmount: number;               // 0 if not charged
 }
@@ -126,6 +128,8 @@ export interface Visit {
     visitType: 'CONSULTATION' | 'MACHINE_ONLY';
     // Only for CONSULTATION:
     consultationType?: 'FIRST' | 'SUBSEQUENT';
+    // DEBT: These billing fields should be derived at read time, not stored
+    // Use calculateConsultationFee() from patientUtils instead
     consultationFee: number;             // 300 (FIRST) | 200 (SUBSEQUENT) | 0 (MACHINE_ONLY)
     services: VisitService[];            // all services used this session
     servicesTotal: number;               // sum of charged VisitServices
@@ -133,6 +137,7 @@ export interface Visit {
 }
 
 // ── Legacy VisitRecord kept for backward compat during transition ──────────────
+// REMOVE: Legacy type, migrate all code to Visit model
 export interface VisitRecord {
     id: string;
     patientId: string;

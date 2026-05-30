@@ -1,4 +1,3 @@
-import { useSearchParams } from 'react-router-dom';
 import type { ComplaintCourse, Visit } from '@/types';
 import { StatusBadge } from '@/components/common/status-badge';
 import { ServiceTag } from '../components/ServiceTag';
@@ -9,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { usePatientProfileUrlState } from '../hooks/usePatientProfileUrlState';
 
 export interface VisitsTabProps {
   visits: Visit[];
@@ -22,27 +22,18 @@ const VISIT_TYPE_OPTIONS = [
 ] as const;
 
 export function VisitsTab({ visits, courses }: VisitsTabProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const activeType      = searchParams.get('type') ?? '';
-  const activeComplaint = searchParams.get('complaint') ?? '';
-
-  function setParam(key: string, value: string) {
-    setSearchParams(prev => {
-      const next = new URLSearchParams(prev);
-      if (value) next.set(key, value); else next.delete(key);
-      return next;
-    }, { replace: true });
-  }
+  // Using centralized URL state hook
+  const { visitType, complaintId, setVisitType, setComplaintId, clearVisitFilters } = usePatientProfileUrlState();
 
   const filtered = visits.filter(v => {
-    if (activeType      && v.visitType   !== activeType)      return false;
-    if (activeComplaint && v.complaintId !== activeComplaint) return false;
+    // URL params are validated by the hook, but we still check here for safety
+    if (visitType      && v.visitType   !== visitType)      return false;
+    if (complaintId && v.complaintId !== complaintId) return false;
     return true;
   });
 
   const sorted = [...filtered].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  const hasFilters = activeType || activeComplaint;
+  const hasFilters = visitType || complaintId;
 
   return (
     <div className="flex flex-col min-h-0 flex-1 gap-4 pb-8">
@@ -53,9 +44,9 @@ export function VisitsTab({ visits, courses }: VisitsTabProps) {
         {/* Visit type — segmented control (3 fixed options, ToggleGroup not available) */}
         <div className="flex items-center rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden text-xs font-medium">
           {VISIT_TYPE_OPTIONS.map(({ value, label }) => {
-            const active = activeType === value;
+            const active = visitType === value;
             return (
-              <button key={value} type="button" onClick={() => setParam('type', value)}
+              <button key={value} type="button" onClick={() => setVisitType(value as any)}
                 className={`px-3 py-1.5 transition-colors whitespace-nowrap ${
                   active
                     ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
@@ -68,11 +59,11 @@ export function VisitsTab({ visits, courses }: VisitsTabProps) {
         </div>
 
         {/* Complaint — ShadCN Select */}
-        <Select value={activeComplaint !== '' ? activeComplaint : '__all__'} onValueChange={(v) => v && setParam('complaint', v === '__all__' ? '' : v)}>
+        <Select value={complaintId !== '' ? complaintId : '__all__'} onValueChange={(v) => v && setComplaintId(v === '__all__' ? '' : v)}>
           <SelectTrigger size="sm" className="text-xs w-fit">
             <SelectValue>
-              {activeComplaint
-                ? (courses.find(c => c.id === activeComplaint)?.complaintName ?? 'All complaints')
+              {complaintId
+                ? (courses.find(c => c.id === complaintId)?.complaintName ?? 'All complaints')
                 : 'All complaints'}
             </SelectValue>
           </SelectTrigger>
@@ -88,11 +79,7 @@ export function VisitsTab({ visits, courses }: VisitsTabProps) {
 
         {hasFilters && (
           <button type="button"
-            onClick={() => setSearchParams(prev => {
-              const n = new URLSearchParams(prev);
-              n.delete('type'); n.delete('complaint');
-              return n;
-            }, { replace: true })}
+            onClick={clearVisitFilters}
             className="text-xs text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">
             Clear filters
           </button>

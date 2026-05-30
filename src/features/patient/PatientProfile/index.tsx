@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import type { PatientProfile } from '@/types';
 import {
@@ -13,12 +13,19 @@ import { ClinicalHistoryPanel } from './ClinicalHistoryPanel';
 
 type ActivePanel = 'profile' | 'history';
 
-function fetchPatientProfile(id: string): Promise<PatientProfile | null> {
-  return new Promise((resolve, reject) => {
+// Discriminated union — treating "not found" as a valid outcome, not an exception
+type FetchResult =
+  | { kind: 'ok'; data: PatientProfile }
+  | { kind: 'not-found' }
+  | { kind: 'error'; message: string };
+
+function fetchPatientProfile(id: string): Promise<FetchResult> {
+  return new Promise((resolve) => {
     setTimeout(() => {
-      try {
-        resolve(MOCK_PATIENT_PROFILES.find((p) => p.id === id) ?? null);
-      } catch (err) { reject(err); }
+      const patient = MOCK_PATIENT_PROFILES.find((p) => p.id === id);
+      if (patient) resolve({ kind: 'ok', data: patient });
+      else resolve({ kind: 'not-found' });
+      // Future: network errors will resolve with { kind: 'error', message: '...' }
     }, 100);
   });
 }
@@ -32,24 +39,42 @@ export function PatientProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [activePanel, setActivePanel] = useState<ActivePanel>('profile');
 
-  const loadProfile = () => {
-    if (!id) { setLoading(false); setError(null); setProfile(null); return; }
-    setLoading(true); setError(null);
-    fetchPatientProfile(id)
-      .then(setProfile)
-      .catch(() => setError('Unable to load patient data. Please try again.'))
-      .finally(() => setLoading(false));
-  };
+  // Memoized to avoid recreating on every render — used in effect and retry button
+  const loadProfile = useCallback(() => {
+    // Explicit check for undefined id prevents rendering literal "undefined" in UI
+    if (!id) { 
+      setLoading(false); 
+      setError('Invalid patient ID in URL'); 
+      setProfile(null); 
+      return; 
+    }
+    
+    setLoading(true); 
+    setError(null);
+    
+    fetchPatientProfile(id).then((result) => {
+      if (result.kind === 'ok') {
+        setProfile(result.data);
+      } else if (result.kind === 'not-found') {
+        setProfile(null);
+      } else {
+        setError(result.message);
+      }
+    }).finally(() => setLoading(false));
+  }, [id]);
 
-  useEffect(() => { loadProfile(); }, [id]); // eslint-disable-line
+  // Effect only depends on loadProfile, which is stable (memoized on id)
+  useEffect(() => { 
+    loadProfile(); 
+  }, [loadProfile]);
 
-  const handleBack = () => navigate(-1);
+  const handleBack = useCallback(() => navigate(-1), [navigate]);
 
-  // ── Derived data — owned here, passed as props ────────────────────────────
-  const visits    = MOCK_VISITS_V2.filter((v) => v.patientId === id);
-  const courses   = MOCK_COMPLAINT_COURSES.filter((c) => c.patientId === id);
-  const purchases = MOCK_PURCHASES.filter((p) => p.patientId === id);
-  const invoices  = MOCK_INVOICES.filter((i) => i.patientId === id);
+  // Memoized derived data — avoid refiltering on every render (e.g., activePanel toggle)
+  const visits    = useMemo(() => MOCK_VISITS_V2.filter((v) => v.patientId === id), [id]);
+  const courses   = useMemo(() => MOCK_COMPLAINT_COURSES.filter((c) => c.patientId === id), [id]);
+  const purchases = useMemo(() => MOCK_PURCHASES.filter((p) => p.patientId === id), [id]);
+  const invoices  = useMemo(() => MOCK_INVOICES.filter((i) => i.patientId === id), [id]);
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -83,7 +108,8 @@ export function PatientProfilePage() {
       <div className="flex flex-col items-center gap-4 max-w-sm text-center">
         <p className="text-zinc-700 dark:text-zinc-300 font-medium">Patient not found</p>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          No patient record matches the ID <span className="font-mono">{id}</span>.
+          {/* Safe rendering — id is guaranteed to be defined here (checked in loadProfile) */}
+          No patient record matches the ID <span className="font-mono">{id ?? 'unknown'}</span>.
         </p>
         <button type="button" onClick={handleBack}
           className="px-4 py-2 rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-sm font-medium hover:bg-zinc-700 dark:hover:bg-zinc-300 transition-colors">

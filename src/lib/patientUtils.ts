@@ -132,3 +132,79 @@ export function calculateVitalStatus(vital: VitalSign): {
       }
   }
 }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ── Billing Utilities ─────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+//
+// ⚠️ EXPERIMENTAL: No consumers yet. Added to document business logic from
+// requirements, but billing UI hasn't been built. May need adjustment when
+// actually implemented. See @experimental tags on each function.
+//
+// ══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Pure function to calculate if a service should be charged.
+ * 
+ * @experimental This function has no consumers yet. It was added to document
+ * billing business logic from requirements, but the billing UI hasn't been built.
+ * When building the billing UI, validate these rules against actual requirements
+ * before using — they may need adjustment.
+ * 
+ * Billing logic (from requirements):
+ * - PREMIUM services are always charged (e.g., cupping, ISTM)
+ * - STANDARD services are free in CONSULTATION visits, charged in MACHINE_ONLY
+ * 
+ * @param serviceCategory - 'STANDARD' or 'PREMIUM'
+ * @param visitType - 'CONSULTATION' or 'MACHINE_ONLY'
+ * @returns true if the service should be charged
+ */
+export function shouldChargeService(
+  serviceCategory: 'STANDARD' | 'PREMIUM',
+  visitType: 'CONSULTATION' | 'MACHINE_ONLY'
+): boolean {
+  if (serviceCategory === 'PREMIUM') return true;
+  return visitType === 'MACHINE_ONLY';
+}
+
+/**
+ * Pure function to calculate the charged amount for a service.
+ * 
+ * @experimental This function has no consumers yet. It was added to document
+ * billing business logic from requirements, but the billing UI hasn't been built.
+ * When building the billing UI, validate these rules against actual requirements
+ * before using — they may need adjustment.
+ * 
+ * @param standalonePrice - The service's standalone price
+ * @param serviceCategory - 'STANDARD' or 'PREMIUM'
+ * @param visitType - 'CONSULTATION' or 'MACHINE_ONLY'
+ * @returns The amount to charge (0 if not charged)
+ */
+export function calculateServiceCharge(
+  standalonePrice: number,
+  serviceCategory: 'STANDARD' | 'PREMIUM',
+  visitType: 'CONSULTATION' | 'MACHINE_ONLY'
+): number {
+  return shouldChargeService(serviceCategory, visitType) ? standalonePrice : 0;
+}
+
+/**
+ * Pure function to calculate consultation fee based on type.
+ * 
+ * @experimental This function has no consumers yet. It was added to document
+ * billing business logic from requirements, but the billing UI hasn't been built.
+ * When building the billing UI, validate these rules against actual requirements
+ * before using — they may need adjustment.
+ * 
+ * @param visitType - 'CONSULTATION' or 'MACHINE_ONLY'
+ * @param consultationType - 'FIRST' or 'SUBSEQUENT' (only for CONSULTATION)
+ * @returns The consultation fee (0 for MACHINE_ONLY)
+ */
+export function calculateConsultationFee(
+  visitType: 'CONSULTATION' | 'MACHINE_ONLY',
+  consultationType?: 'FIRST' | 'SUBSEQUENT'
+): number {
+  if (visitType === 'MACHINE_ONLY') return 0;
+  // Assumed pricing: FIRST = 300, SUBSEQUENT = 200
+  return consultationType === 'FIRST' ? 300 : 200;
+}

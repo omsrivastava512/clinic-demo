@@ -1,6 +1,6 @@
-import { useSearchParams } from 'react-router-dom';
 import type { ComplaintCourse } from '@/types';
 import { StatusBadge } from '@/components/common/status-badge';
+import { usePatientProfileUrlState } from '../hooks/usePatientProfileUrlState';
 
 export interface ClinicalTimelineProps {
   courses: ComplaintCourse[];
@@ -11,17 +11,8 @@ function fmt(d: string) {
 }
 
 export function ClinicalTimeline({ courses }: ClinicalTimelineProps) {
-  const [, setSearchParams] = useSearchParams();
-
-  function goToVisits(courseId: string) {
-    setSearchParams(prev => {
-      const next = new URLSearchParams(prev);
-      next.set('tab', 'visits');
-      next.set('complaint', courseId);
-      next.delete('type');
-      return next;
-    }, { replace: true });
-  }
+  // Using centralized URL state hook
+  const { goToVisits } = usePatientProfileUrlState();
 
   if (courses.length === 0) {
     return <p className="text-sm text-zinc-500 italic">No complaint history recorded.</p>;
@@ -50,7 +41,7 @@ export function ClinicalTimeline({ courses }: ClinicalTimelineProps) {
             }`} />
 
             {isActive ? (
-              <button type="button" onClick={() => goToVisits(course.id)}
+              <button type="button" onClick={() => goToVisits({ complaintId: course.id })}
                 className="ml-4 w-[calc(100%-1rem)] text-left bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 border-l-4 border-l-emerald-500 rounded-lg p-4 shadow-sm dark:shadow-none hover:shadow-md dark:hover:bg-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all group">
                 <div className="flex justify-between items-start gap-2 mb-1">
                   <span className="font-semibold text-zinc-900 dark:text-white leading-snug group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors">
@@ -70,7 +61,7 @@ export function ClinicalTimeline({ courses }: ClinicalTimelineProps) {
                 </div>
               </button>
             ) : (
-              <button type="button" onClick={() => goToVisits(course.id)}
+              <button type="button" onClick={() => goToVisits({ complaintId: course.id })}
                 className={`ml-4 w-[calc(100%-1rem)] text-left transition-opacity hover:opacity-100 group ${isFirst ? '' : 'opacity-60'}`}>
                 <div className="flex justify-between items-start gap-2 mb-1">
                   <span className="font-medium text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors">

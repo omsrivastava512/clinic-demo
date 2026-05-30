@@ -1,26 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { MOCK_PATIENT_PROFILES, MOCK_INVOICES, MOCK_VISITS } from '@/data/mock_data';
+import { MOCK_PATIENT_PROFILES, MOCK_INVOICES, MOCK_VISITS_V2 } from '@/data/mock_data';
 import { calculateAge, getInitials } from '@/lib';
 import { Users, Activity, CreditCard, AlertTriangle } from 'lucide-react';
 import { StatusBadge } from '@/components/common/status-badge';
 import type { StatusBadgeVariant } from '@/components/common/status-badge';
 import type { PatientAlert } from '@/types';
-
-const totalPatients = MOCK_PATIENT_PROFILES.length;
-const totalVisits = MOCK_VISITS.length;
-const totalRevenue = MOCK_INVOICES
-  .filter((i) => i.paymentStatus === 'Paid')
-  .reduce((sum, i) => sum + i.amount, 0);
-const pendingInvoices = MOCK_INVOICES.filter(
-  (i) => i.paymentStatus === 'Pending' || i.paymentStatus === 'Overdue'
-).length;
-
-const STATS = [
-  { label: 'Total Patients',    value: String(totalPatients),                       icon: Users },
-  { label: 'Total Visits',      value: String(totalVisits),                         icon: Activity },
-  { label: 'Revenue Collected', value: `₹${totalRevenue.toLocaleString('en-IN')}`,  icon: CreditCard },
-  { label: 'Pending / Overdue', value: String(pendingInvoices),                     icon: AlertTriangle },
-];
 
 const ALERT_VARIANT: Record<PatientAlert['type'], StatusBadgeVariant> = {
   ALLERGY:   'allergy',
@@ -32,6 +16,25 @@ const ALERT_VARIANT: Record<PatientAlert['type'], StatusBadgeVariant> = {
 export default function Dashboard() {
   const navigate = useNavigate();
 
+  // Stats computed inside component, not at module scope
+  // This ensures stats update when data changes (e.g., after real API integration)
+  // Removed useMemo — computation is trivial and doesn't benefit from memoization
+  const totalPatients = MOCK_PATIENT_PROFILES.length;
+  const totalVisits = MOCK_VISITS_V2.length; // Using Visit model instead of VisitRecord
+  const totalRevenue = MOCK_INVOICES
+    .filter((i) => i.paymentStatus === 'Paid')
+    .reduce((sum, i) => sum + i.amount, 0);
+  const pendingInvoices = MOCK_INVOICES.filter(
+    (i) => i.paymentStatus === 'Pending' || i.paymentStatus === 'Overdue'
+  ).length;
+
+  const stats = [
+    { label: 'Total Patients',    value: String(totalPatients),                       icon: Users },
+    { label: 'Total Visits',      value: String(totalVisits),                         icon: Activity },
+    { label: 'Revenue Collected', value: `₹${totalRevenue.toLocaleString('en-IN')}`,  icon: CreditCard },
+    { label: 'Pending / Overdue', value: String(pendingInvoices),                     icon: AlertTriangle },
+  ];
+
   return (
     <div className="max-w-5xl mx-auto space-y-8">
 
@@ -42,7 +45,7 @@ export default function Dashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {STATS.map(({ label, value, icon: Icon }) => (
+        {stats.map(({ label, value, icon: Icon }) => (
           <div key={label}
             className="bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm p-4 flex flex-col justify-between">
             <div className="flex justify-between items-start">
@@ -61,7 +64,8 @@ export default function Dashboard() {
           {MOCK_PATIENT_PROFILES.map((patient) => {
             const age = calculateAge(patient.dateOfBirth);
             const initials = getInitials(patient.fullName);
-            const visits = MOCK_VISITS.filter((v) => v.patientId === patient.id);
+            // Using Visit model (MOCK_VISITS_V2) instead of legacy VisitRecord
+            const visits = MOCK_VISITS_V2.filter((v) => v.patientId === patient.id);
             const invoices = MOCK_INVOICES.filter((i) => i.patientId === patient.id);
             const outstanding = invoices.filter(
               (i) => i.paymentStatus === 'Pending' || i.paymentStatus === 'Overdue'

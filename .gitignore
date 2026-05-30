@@ -28,4 +28,4 @@ test.js
 
 # Design mockups and Kiro specs
 demo/
-.kiro/
+.*

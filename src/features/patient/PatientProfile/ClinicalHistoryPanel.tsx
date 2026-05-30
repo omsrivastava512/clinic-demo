@@ -1,4 +1,3 @@
-import { useSearchParams } from 'react-router-dom';
 import type { ComplaintCourse, InvoiceRecord, PurchaseRecord, Visit } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OverviewTab } from './tabs/OverviewTab';
@@ -6,6 +5,7 @@ import { VisitsTab } from './tabs/VisitsTab';
 import { PurchasesTab } from './tabs/PurchasesTab';
 import { BillingsTab } from './tabs/BillingsTab';
 import type { VitalSign } from '@/types';
+import { usePatientProfileUrlState } from './hooks/usePatientProfileUrlState';
 
 export interface ClinicalHistoryPanelProps {
   vitals: VitalSign[];
@@ -22,24 +22,13 @@ const TABS = [
   { value: 'billings',  label: 'Billings'  },
 ] as const;
 
-type TabValue = typeof TABS[number]['value'];
-
 export function ClinicalHistoryPanel({ vitals, visits, courses, purchases, invoices }: ClinicalHistoryPanelProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = (searchParams.get('tab') ?? 'overview') as TabValue;
-
-  function setTab(value: string) {
-    setSearchParams(prev => {
-      const next = new URLSearchParams(prev);
-      next.set('tab', value);
-      if (value !== 'visits') { next.delete('type'); next.delete('complaint'); }
-      return next;
-    }, { replace: true });
-  }
+  // Using centralized URL state hook instead of inline useSearchParams
+  const { tab, setTab } = usePatientProfileUrlState();
 
   return (
     <div className="flex-1 min-h-0 bg-white dark:bg-black flex flex-col overflow-hidden">
-      <Tabs value={activeTab} onValueChange={setTab} className="flex flex-col flex-1 overflow-hidden">
+      <Tabs value={tab} onValueChange={setTab} className="flex flex-col flex-1 overflow-hidden">
 
         {/* Tab bar — uses variant="line" from the existing tabs component */}
         <div className="px-6 bg-white dark:bg-black shrink-0">
