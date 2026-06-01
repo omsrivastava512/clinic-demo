@@ -7,52 +7,52 @@ import { useRef, useEffect } from "react"
 
 const TableBody = () => {
     const listContainerRef = useRef<HTMLDivElement>(null);
-    const END_OF_LIST_HEIGHT = 49; // Height of the "End of the list" marker used for scroll snap calculations
+    const END_OF_LIST_HEIGHT = 49; // Height of the bottom marker for snap-back boundary checks
     const snapBackTimer = useRef<number | undefined>(undefined);
 
-    // Mount handler: scrolls the list to the absolute bottom (scrollHeight) to trigger the initial
-    // overscroll snapback intro, and brings the ledger viewport into the screen frame.
+    // Mount handler: sets initial scroll to the absolute bottom (0 in flex-col-reverse)
+    // to trigger the overscroll snapback and auto-hide the bottom marker on initial load.
+    // Viewport-level scrollIntoView is completely avoided to prevent window jumping.
     useEffect(() => {
         if (listContainerRef.current) {
-            listContainerRef.current.scrollTop = listContainerRef.current.scrollHeight;
-            listContainerRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+            listContainerRef.current.scrollTop = 0;
         }
     }, []);
 
     // Dynamic scroll tracking: when new entries are added, smoothly auto-scrolls the container to
-    // the bottom, provided the user is already looking at the bottom (within a 150px threshold).
+    // the resting bottom (scrollTop = -49px) to keep the bottom marker hidden.
     const entriesLength = MOCK_LEDGER_ENTRIES.length;
     useEffect(() => {
         const el = listContainerRef.current;
         if (!el) return;
 
-        const normalBottom = el.scrollHeight - el.clientHeight - END_OF_LIST_HEIGHT;
+        const restingBottom = -END_OF_LIST_HEIGHT;
         const THRESHOLD = 150; // px threshold from bottom boundary
-        const distanceToBottom = normalBottom - el.scrollTop;
-        const isNearBottom = distanceToBottom < THRESHOLD;
+        const distanceToBottom = el.scrollTop - restingBottom;
+        const isNearBottom = distanceToBottom > -THRESHOLD;
 
         if (isNearBottom) {
             el.scrollTo({
-                top: normalBottom,
+                top: restingBottom,
                 behavior: "smooth"
             });
         }
     }, [entriesLength]);
 
-    // Overscroll check: if user scrolls past normalBottom to reveal the bottom marker,
-    // schedules a smooth scroll transition to hide it behind the search bar after 200ms.
+    // Overscroll check: if user scrolls past restingBottom (towards 0), schedules
+    // a smooth scroll snapback to hide the bottom marker behind the search bar after 200ms.
     const handleScroll = () => {
         const el = listContainerRef.current;
         if (!el) return;
 
-        const normalBottom = el.scrollHeight - el.clientHeight - END_OF_LIST_HEIGHT;
-        const overscrollAmount = el.scrollTop - normalBottom;
+        const restingBottom = -END_OF_LIST_HEIGHT;
+        const overscrollAmount = el.scrollTop - restingBottom;
 
         if (overscrollAmount > 0) {
             clearTimeout(snapBackTimer.current);
             snapBackTimer.current = setTimeout(() => {
                 el.scrollTo({
-                    top: normalBottom,
+                    top: restingBottom,
                     behavior: 'smooth'
                 });
             }, 200);
@@ -61,26 +61,32 @@ const TableBody = () => {
 
     return (
         <>
-            <div
-                ref={listContainerRef}
-                onScroll={handleScroll}
-                className="flex-1 z-50 overflow-y-auto flex flex-col [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-            >
-                {/* Visual marker and line divider representing the start of chronological records */}
-                <Divider text="Start of the list" />
+            <div className="flex-1 z-50 flex flex-col min-h-0">
+                <div
+                    ref={listContainerRef}
+                    onScroll={handleScroll}
+                    className="flex-1 overflow-y-auto flex flex-col-reverse [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                >
+                    {/* End of list divider placed first in col-reverse DOM (renders at the visual bottom) */}
+                    <Divider 
+                        text="End of the list" 
+                        containerClassName="border-b border-zinc-100 dark:border-zinc-900" 
+                        textClassName="text-zinc-700/50 dark:text-zinc-300/50" 
+                    />
 
-                {/* Ledger timeline list mapped chronologically (oldest at the top, newest at the bottom) */}
-                {MOCK_LEDGER_ENTRIES
-                    .sort((a, b) => compTime(a.time, b.time))
-                    .map((entry) => (
-                        <TableRow key={entry.id} entry={entry} />
-                    ))
-                }
+                    {/* Mapped entries in reverse order: col-reverse visualizes chronological oldest-to-newest top-to-bottom */}
+                    {MOCK_LEDGER_ENTRIES
+                        .sort((a, b) => compTime(b.time, a.time))
+                        .map((entry) => (
+                            <TableRow key={entry.id} entry={entry} />
+                        ))
+                    }
 
-                {/* Symmetrical timeline bottom divider; remains hidden behind the search bar by default */}
-                <Divider text="End of the list" containerClassName="border-b border-zinc-100 dark:border-zinc-900" textClassName="text-zinc-700/50 dark:text-zinc-300/50" />
+                    {/* Start of list divider placed last in col-reverse DOM (renders at the visual top) */}
+                    <Divider text="Start of the list" />
+                </div>
 
-                {/* Sticky quick search and rapid-entry row docked at the bottom */}
+                {/* Sticky search input docked cleanly outside the scrollable area */}
                 <PatientSearch />
             </div>
         </>
