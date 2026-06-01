@@ -103,7 +103,7 @@ const PatientSearch = () => {
 
 
     return (
-        <div className="dark:bg-black p-1 w-full mt-auto">
+        <div className="relative dark:bg-black p-1 w-full mt-auto">
             {/* ACTIVE INPUT ROW */}
             <SearchInput input={input} isFocused={focusedIndex === -1} handleInputChange={handleInputChange} handleKeyNavigation={handleKeyNavigation} />
 
