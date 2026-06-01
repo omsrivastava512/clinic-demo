@@ -54,5 +54,6 @@ export interface LedgerEntry {
     patientName: string;
     treatment: string;
     status: 'Paid' | 'In Therapy' | 'Waiting';
+    patientId?: string;
 }
 
