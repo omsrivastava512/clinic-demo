@@ -30,8 +30,8 @@ const VisitWorkflow = () => {
             >
                 Start Workflow
             </Button>
-            <em className='text-sm text-zinc-500 font-semibold '>Opens the Daily Ledger, scrolled to the most recent entry. Expect a sudden scroll.</em>
-            <em className='text-sm text-zinc-500 '>This button was introduced to force explicit user intent in starting the app and prevent components of the app from hijacking intial page orientation and the header text on load. </em>
+            <em className='text-sm text-zinc-500 font-semibold '>Initialize the interactive clinical workflow suite. Experience high-fidelity modular components built for rapid entry.</em>
+            <em className='text-sm text-zinc-500 '>This presentation space showcases real-time OPD tracking, dynamic patient registration, multi-context procedure logging, and invoice billing. Components are fully self-contained to ensure seamless layout loading.</em>
         </div>
     );
     // NOTE: Wording in these presentation sections was updated to be highly user-centric and feature-focused,
