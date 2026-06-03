@@ -31,6 +31,9 @@ export interface MedicalComplaint {
     doctor?: string;
     isActive: boolean;
     type: 'EXISTING' | 'NEW';
+    // Optional: set for catalog entries so region chips can filter them.
+    // Patient-level complaints (EXISTING / NEW) don't carry a region.
+    region?: string;
 }
 
 export interface Procedure {
