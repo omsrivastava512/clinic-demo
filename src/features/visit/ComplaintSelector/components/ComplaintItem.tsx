@@ -19,7 +19,7 @@ export const ComplaintItem: React.FC<ComplaintItemProps> = ({
     <div
         onClick={() => onToggle(complaint.id)}
         className={cn(
-            "flex items-center p-4 rounded-lg border cursor-pointer transition-all group",
+            "flex items-center px-4 py-3 rounded-lg border cursor-pointer transition-all group",
             isSelected
                 ? "bg-zinc-100 border-zinc-900 dark:bg-zinc-900 dark:border-white"
                 : "bg-white border-zinc-200 dark:bg-black dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600"
