@@ -7,7 +7,7 @@ import { FooterActions } from "./components/FooterActions";
 import { ComplaintItem } from "./components/ComplaintItem";
 import { CatalogSearchPopover } from "./components/CatalogSearchPopover";
 import { COMPLAINT_CATALOG } from "@/data/complaints_catalog";
-import { formatBracketText } from "@/lib";
+
 import { useComplaintSelection } from "./hook/useComplaintSelection";
 
 interface ComplaintSelectorProps {
@@ -74,23 +74,10 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     onConfirm(Array.from(selectedIds));
   };
 
-  // Typing a completely free-form complaint and pressing Enter/clicking +
-  const handleAddFreeText = () => {
-    const trimmed = newComplaintInput.trim();
-    const formatted = formatBracketText(trimmed);
-    if (!formatted) return;
-    add(formatted);
-    setNewComplaintInput("");
-    // Close the suggestions popover once an item has been successfully added.
-    // This satisfies the requirement to dismiss suggestions immediately upon addition.
-    setPopoverOpen(false);
-  };
-
+  // handleKeyDown handles keyboard events. We removed the Enter key handler for free-text addition
+  // since custom/free-text complaints are no longer allowed. Keyboard navigation (up/down arrow/Enter selection)
+  // will be implemented here later.
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddFreeText();
-    }
     if (e.key === "Escape") {
       setPopoverOpen(false);
     }
@@ -159,7 +146,6 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
               setPopoverOpen(true);
             }}
             onKeyDown={handleKeyDown}
-            onAdd={handleAddFreeText}
             onFocus={() => setPopoverOpen(true)}
             onClick={() => {
               // Re-open suggestions popover on clicking the focused input text box itself,

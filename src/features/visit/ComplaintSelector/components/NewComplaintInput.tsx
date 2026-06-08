@@ -1,12 +1,11 @@
 import { forwardRef } from "react";
 import { cn } from "@/lib";
-import { PlusIcon, SearchIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 
 interface NewComplaintInputProps {
   value: string;
   onChange: (value: string) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  onAdd: () => void;
   onFocus: () => void;
   onBlur: () => void;
   onClick?: () => void;
@@ -15,7 +14,7 @@ interface NewComplaintInputProps {
 // forwardRef so the parent can pass anchorRef to this element —
 // the CatalogSearchPopover uses it to calculate its position.
 export const NewComplaintInput = forwardRef<HTMLLabelElement, NewComplaintInputProps>(
-  ({ value, onChange, onKeyDown, onAdd, onFocus, onBlur, onClick }, ref) => (
+  ({ value, onChange, onKeyDown, onFocus, onBlur, onClick }, ref) => (
     <label
       ref={ref}
       htmlFor="new_complaint"
@@ -42,22 +41,9 @@ export const NewComplaintInput = forwardRef<HTMLLabelElement, NewComplaintInputP
         // so we intentionally do NOT close the popover here — the popover's own
         // click-outside detector handles that correctly.
         onBlur={onBlur}
-        placeholder="Search or add new complaint..."
+        placeholder="Search complaints..."
         className="flex-1 bg-transparent border-none outline-none text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 font-medium text-sm"
       />
-      <button
-        type="button"
-        title="Add New Complaint"
-        onClick={onAdd}
-        disabled={!value.trim()}
-        className={cn(
-          "p-2 rounded bg-zinc-200 dark:bg-zinc-800",
-          "hover:bg-zinc-300 dark:hover:bg-zinc-700",
-          "text-zinc-600 dark:text-zinc-300 disabled:opacity-50"
-        )}
-      >
-        <PlusIcon className="w-4 h-4" />
-      </button>
     </label>
   )
 );
