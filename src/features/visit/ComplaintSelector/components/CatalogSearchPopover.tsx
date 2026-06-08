@@ -137,7 +137,7 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
       <div className="max-h-28 overflow-y-auto">
         {filteredItems.length === 0 ? (
           <p className="px-4 py-3 text-xs text-zinc-400 dark:text-zinc-500">
-            No matches — type a custom complaint and press Enter
+            No matches found
           </p>
         ) : (
           filteredItems.map((item) => {
