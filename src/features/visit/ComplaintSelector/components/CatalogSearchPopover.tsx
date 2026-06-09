@@ -107,6 +107,16 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
     });
   }, [query, selectedRegion, existingIds]);
 
+  // Decides whether to show a helper suggestion when a search term has no matches
+  // in the currently selected region, but matches exist in other regions.
+  // We use useMemo to avoid re-running this search on every render when dependencies are stable.
+  const hasMatchesInOtherRegions = useMemo(() => {
+    if (selectedRegion === "All" || !query) return false;
+    return COMPLAINT_CATALOG.some(
+      (c) => c.region !== selectedRegion && c.title.toLowerCase().includes(query.toLowerCase())
+    );
+  }, [query, selectedRegion]);
+
   // C3: Notify parent component when the filtered list of items changes.
   // We use a ref to track the last structural state of the list and perform an ID-based comparison.
   // This is a trade-off that prevents triggering parent state updates on every render cycle caused by
@@ -175,7 +185,13 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
       >
         {filteredItems.length === 0 ? (
           <p className="px-4 py-3 text-xs text-zinc-400 dark:text-zinc-500">
-            No matches — type a custom complaint and press Enter
+            {hasMatchesInOtherRegions ? (
+              <span>
+                No matches in <span className="font-semibold text-zinc-600 dark:text-zinc-400">{selectedRegion}</span>. Try switching to "All" regions.
+              </span>
+            ) : (
+              "No matches found"
+            )}
           </p>
         ) : (
           filteredItems.map((item, idx) => {
