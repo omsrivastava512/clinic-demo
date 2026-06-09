@@ -38,6 +38,12 @@ export function useComplaintSelection(available: MedicalComplaint[]) {
 
   const remove = (i: string) => {
     setCustomComplaints(c => c.filter(c => c.id !== i))
+    setSelectedIds(prev => {
+      if (!prev.has(i)) return prev;
+      const next = new Set(prev);
+      next.delete(i);
+      return next;
+    });
   }
 
   return {
