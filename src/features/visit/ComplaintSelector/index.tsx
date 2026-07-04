@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect, useMemo } from "react";
+import { useState, useRef, useCallback, useEffect, useId, useMemo } from "react";
 import type { MedicalComplaint, Patient } from "@/types";
 import { PatientHeader } from "./components/PatientHeader";
 import { SectionLabel } from "./components/primitives";
@@ -8,11 +8,6 @@ import { ComplaintItem } from "./components/ComplaintItem";
 import { CatalogSearchPopover } from "./components/CatalogSearchPopover";
 import { COMPLAINT_CATALOG, CATALOG_REGIONS, type CatalogRegion } from "@/data/complaints_catalog";
 import { useComplaintSelection } from "./hook/useComplaintSelection";
-
-// C3: Dynamic ARIA control IDs. We declare them as constants to link the combobox input
-// with its option listbox elements correctly for accessibility.
-const INPUT_ID = "new_complaint_input";
-const LISTBOX_ID = "new_complaint_listbox";
 
 interface ComplaintSelectorProps {
   patient: Patient;
@@ -30,6 +25,12 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
 }) => {
   const { add, remove, allComplaints, reset, selectedIds, toggle } =
     useComplaintSelection(availableComplaints);
+
+  // Generate dynamic, unique IDs to link the search input with its popover listbox
+  // for accessibility. This guarantees DOM ID uniqueness even if multiple selectors are on the page.
+  const uniqueId = useId();
+  const inputId = `${uniqueId}-input`;
+  const listboxId = `${uniqueId}-listbox`;
 
   // ── "Add new complaint" input state ────────────────────────────────────────
   const [newComplaintInput, setNewComplaintInput] = useState("");
@@ -245,9 +246,9 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
               setPopoverOpen(true);
             }}
             onBlur={() => {/* intentionally empty — popover handles close */ }}
-            // C3: Pass down ARIA properties to bind them directly on the input element
-            inputId={INPUT_ID}
-            listboxId={LISTBOX_ID}
+            // Pass down ARIA properties to bind them directly on the input element
+            inputId={inputId}
+            listboxId={listboxId}
             popoverOpen={popoverOpen}
             focusedIndex={focusedIndex}
           />
@@ -270,11 +271,11 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
         onSelect={handleCatalogSelect}
         onClose={handlePopoverClose}
         existingIds={catalogExistingIds}
-        // C3: Pass down state and callback props to keep popover in sync with lifted navigation state
+        // Pass down state and callback props to keep popover in sync with lifted navigation state
         focusedIndex={focusedIndex}
-        listboxId={LISTBOX_ID}
+        listboxId={listboxId}
         onFilteredItemsChange={setFilteredCatalogItems}
-        // C3: Pass down lifted region state and setter callback
+        // Pass down lifted region state and setter callback
         selectedRegion={selectedRegion}
         onRegionChange={setSelectedRegion}
       />
