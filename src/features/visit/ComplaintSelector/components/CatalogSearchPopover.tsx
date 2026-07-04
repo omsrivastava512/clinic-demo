@@ -57,11 +57,10 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
       left: rect.left,
       width: rect.width,
     });
-    // Empty dependency array is correct here. Even though anchorRef is a prop, the ref object's 
-    // reference is stable. More importantly, ref.current is accessed at execution-time (run-time) 
-    // rather than captured at definition-time (like state variables). Thus, no recreation is needed 
-    // when the DOM element in the ref changes.
-  }, []);
+    // Empty dependency array was technically correct because the ref object's reference is stable and
+    // ref.current is accessed at execution-time. However, since anchorRef is passed as a prop, ESLint 
+    // and the React Compiler cannot guarantee its stability statically, so we list it in dependencies to satisfy them.
+  }, [anchorRef]);
 
   // Recalculate on open and on scroll/resize so the popover tracks the input.
   useEffect(() => {
@@ -121,7 +120,7 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
     );
   }, [query, selectedRegion]);
 
-  // C3: Notify parent component when the filtered list of items changes.
+  // Notify parent component when the filtered list of items changes.
   // We use a ref to track the last structural state of the list and perform an ID-based comparison.
   // This is a trade-off that prevents triggering parent state updates on every render cycle caused by
   // referential instability of props (like existingIds which is recreated as a new Set on each parent render).
@@ -239,7 +238,7 @@ const CatalogItem: React.FC<CatalogItemProps> = ({
 }) => {
   const itemRef = useRef<HTMLButtonElement>(null);
 
-  // C3: Align with the Daily Ledger Search suggestion list.
+  // Align with the Daily Ledger Search suggestion list.
   // We scroll the item into view using smooth scrolling and nearest alignment when it gets focused via keyboard.
   useEffect(() => {
     if (isFocused && itemRef.current) {
