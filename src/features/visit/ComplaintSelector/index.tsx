@@ -56,26 +56,26 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
   const listContainerRef = useRef<HTMLDivElement>(null);
 
   // Tracks the previous count of complaints to identify when a new item is added.
-  const prevCountRef = useRef(allComplaints.length);
+  const complaintsCountRef = useRef(allComplaints.length);
 
   // Scroll to the bottom of the list when a new complaint item is appended.
   // We check if the current count is greater than the previous count to avoid scrolling on deletion or initial mount.
   // We use a small setTimeout delay to allow the browser to complete layout calculations and paint the new item,
   // ensuring listContainerRef.current.scrollHeight is up-to-date and the item is fully visible.
   useEffect(() => {
-    if (allComplaints.length > prevCountRef.current) {
-      if (listContainerRef.current) {
-        const container = listContainerRef.current;
-        const timer = setTimeout(() => {
-          container.scrollTo({
-            top: container.scrollHeight,
-            behavior: "smooth",
-          });
-        }, 50);
-        return () => clearTimeout(timer);
-      }
+    const prevCount = complaintsCountRef.current;
+    complaintsCountRef.current = allComplaints.length;
+
+    if (allComplaints.length > prevCount && listContainerRef.current) {
+      const container = listContainerRef.current;
+      const timer = setTimeout(() => {
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 50);
+      return () => clearTimeout(timer);
     }
-    prevCountRef.current = allComplaints.length;
   }, [allComplaints.length]);
 
   // C3: Reset focused index to the first element (0) by default whenever the search results change.
