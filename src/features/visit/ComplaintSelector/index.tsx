@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect, useId, useMemo } from "react";
+import { useState, useRef, useCallback, useEffect, useId } from "react";
 import type { MedicalComplaint, Patient } from "@/types";
 import { PatientHeader } from "./components/PatientHeader";
 import { SectionLabel } from "./components/primitives";
@@ -40,15 +40,15 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
   // it to measure position and detect click-outside correctly.
   const inputRef = useRef<HTMLLabelElement>(null);
 
-  // C3: State for tracking currently focused item in the search results popover.
+  // State for tracking currently focused item in the search results popover.
   // Lifted from the popover component to handle arrow keys cleanly via React event handling.
   const [focusedIndex, setFocusedIndex] = useState(0);
 
-  // C3: State to keep track of the currently filtered catalog items array.
+  // State to keep track of the currently filtered catalog items array.
   // Received from CatalogSearchPopover to clamp keyboard focus limits and handle selection.
   const [filteredCatalogItems, setFilteredCatalogItems] = useState<MedicalComplaint[]>([]);
 
-  // C3: State for the selected region filter chip. Lifted up to index.tsx to allow
+  // State for the selected region filter chip. Lifted up to index.tsx to allow
   // unified keyboard navigation (ctrl + ArrowLeft/Right) inside the input's handleKeyDown.
   const [selectedRegion, setSelectedRegion] = useState<CatalogRegion>("All");
 
@@ -56,17 +56,27 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
   // Choosing container.scrollTo over element.scrollIntoView to avoid layout jitter and keep scrolling contained strictly within the panel.
   const listContainerRef = useRef<HTMLDivElement>(null);
 
-  // Tracks the previous count of complaints to identify when a new item is added.
-  const complaintsCountRef = useRef(allComplaints.length);
+  // Derive state: reset focus index if filtered results change while popover is open.
+  // This prevents staleness where focusedIndex points to the wrong item after list content changes.
+  // Doing this during render avoids the react-hooks/set-state-in-effect warning.
+  const [prevFilteredCatalogItems, setPrevFilteredCatalogItems] = useState(filteredCatalogItems);
+  if (filteredCatalogItems !== prevFilteredCatalogItems) {
+    setPrevFilteredCatalogItems(filteredCatalogItems);
+    if (popoverOpen) {
+      setFocusedIndex(0);
+    }
+  }
+
+  // Tracks the previous count of complaints to identify when a new item is added for scrolling.
+  const complaintsScrollRef = useRef(allComplaints.length);
 
   // Scroll to the bottom of the list when a new complaint item is appended.
   // We check if the current count is greater than the previous count to avoid scrolling on deletion or initial mount.
   // We use a small setTimeout delay to allow the browser to complete layout calculations and paint the new item,
   // ensuring listContainerRef.current.scrollHeight is up-to-date and the item is fully visible.
   useEffect(() => {
-    const prevCount = complaintsCountRef.current;
-    complaintsCountRef.current = allComplaints.length;
-
+    const prevCount = complaintsScrollRef.current;
+    complaintsScrollRef.current = allComplaints.length;
     if (allComplaints.length > prevCount && listContainerRef.current) {
       const container = listContainerRef.current;
       const timer = setTimeout(() => {
@@ -79,18 +89,8 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     }
   }, [allComplaints.length]);
 
-  // C3: Reset focused index to the first element (0) by default whenever the search results change.
-  // This satisfies the requirement to have default focus on the first search result.
-  useEffect(() => {
-    setFocusedIndex(0);
-  }, [filteredCatalogItems]);
-
-  // C3: Reset focused index to the first element when the popover closes.
-  useEffect(() => {
-    if (!popoverOpen) {
-      setFocusedIndex(0);
-    }
-  }, [popoverOpen]);
+  // Note: Resetting of focusedIndex is now handled inline inside event handlers (onChange, onRegionChange, handleKeyDown, onClose)
+  // and in the filteredCatalogItems derived state above to avoid cascading renders while maintaining full coverage.
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleCancel = () => {
@@ -98,21 +98,24 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     setNewComplaintInput("");
     setPopoverOpen(false);
     onCancel();
-    // C3: Reset keyboard focus index on cancel
+    // Reset keyboard focus index on cancel
     setFocusedIndex(0);
     setSelectedRegion("All"); // Reset region chip filter on cancel
   };
 
   // Stable onClose callback to prevent the child component's click-outside event listener 
   // from repeatedly tearing down and rebuilding on every render.
-  const handlePopoverClose = useCallback(() => setPopoverOpen(false), []);
+  const handlePopoverClose = useCallback(() => {
+    setPopoverOpen(false);
+    setFocusedIndex(0);
+  }, []);
 
   const handleConfirm = () => {
     onConfirm(Array.from(selectedIds));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // C3: Key navigation listener for search results.
+    // Key navigation listener for search results.
     // ArrowDown, ArrowUp, Enter, and Ctrl+ArrowRight/Left keys are intercepted when the popover is open.
     if (popoverOpen) {
       // ctrl + ArrowRight/Left triggers region chip change
@@ -121,6 +124,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
         const currentIndex = CATALOG_REGIONS.indexOf(selectedRegion);
         const nextIndex = (currentIndex + 1) % CATALOG_REGIONS.length;
         setSelectedRegion(CATALOG_REGIONS[nextIndex]);
+        setFocusedIndex(0);
         return;
       }
       if (e.ctrlKey && e.key === "ArrowLeft") {
@@ -128,36 +132,37 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
         const currentIndex = CATALOG_REGIONS.indexOf(selectedRegion);
         const nextIndex = (currentIndex - 1 + CATALOG_REGIONS.length) % CATALOG_REGIONS.length;
         setSelectedRegion(CATALOG_REGIONS[nextIndex]);
+        setFocusedIndex(0);
         return;
       }
 
       if (filteredCatalogItems.length > 0) {
+        const safeIndex = Math.max(0, Math.min(focusedIndex, filteredCatalogItems.length - 1));
+
         if (e.key === "ArrowDown") {
           e.preventDefault();
           // Clamp focus to the last element of the list
-          setFocusedIndex((prev) => Math.min(prev + 1, filteredCatalogItems.length - 1));
+          setFocusedIndex(Math.min(safeIndex + 1, filteredCatalogItems.length - 1));
           return;
         }
         if (e.key === "ArrowUp") {
           e.preventDefault();
           // Clamp focus to the first element of the list
-          setFocusedIndex((prev) => Math.max(prev - 1, 0));
+          setFocusedIndex(Math.max(safeIndex - 1, 0));
           return;
         }
         if (e.key === "Enter") {
           // Intercept enter press to select highlighted catalog suggestion item
-          if (focusedIndex >= 0 && focusedIndex < filteredCatalogItems.length) {
-            const item = filteredCatalogItems[focusedIndex];
-            const alreadyAdded = catalogExistingIds.has(item.id);
-            if (!alreadyAdded) {
-              e.preventDefault();
-              handleCatalogSelect(item);
-              return;
-            } else {
-              // Block adding disabled suggestion as custom text
-              e.preventDefault();
-              return;
-            }
+          const item = filteredCatalogItems[safeIndex];
+          const alreadyAdded = catalogExistingIds.has(item.id);
+          if (!alreadyAdded) {
+            e.preventDefault();
+            handleCatalogSelect(item);
+            return;
+          } else {
+            // Block adding disabled suggestion as custom text
+            e.preventDefault();
+            return;
           }
         }
       }
@@ -166,6 +171,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     if (e.key === "Escape") {
       setPopoverOpen(false);
       setSelectedRegion("All"); // Reset region chip to All on escape
+      setFocusedIndex(0);
     }
   };
 
@@ -182,7 +188,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     // We intentionally keep the popover open on item selection to support multiple selections in a row.
     // This is a trade-off where the user has to close the popover explicitly (e.g. click outside, Escape, Cancel),
     // but it speeds up multi-selection workflows significantly.
-    // C3: Reset keyboard focus index on selection
+    // Reset keyboard focus index on selection
     setFocusedIndex(0);
   }
 
@@ -191,14 +197,16 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
   // produced by useComplaintSelection. O(n*m) but both sets are tiny (<60 items).
   // TODO: [Backend Integration] When a backend API is added, store the catalog ID on the
   // active complaint schema. This will allow matching by stable ID instead of title strings.
-  const catalogExistingIds = useMemo(() => {
-    const existingTitlesLower = new Set(allComplaints.map((c) => c.title.toLowerCase()))
-    return new Set(
-      COMPLAINT_CATALOG
-        .filter((c) => existingTitlesLower.has(c.title.toLowerCase()))
-        .map((c) => c.id)
-    )
-  }, [allComplaints]);
+  const existingTitlesLower = new Set(allComplaints.map((c) => c.title.toLowerCase()));
+  const catalogExistingIds = new Set(
+    COMPLAINT_CATALOG
+      .filter((c) => existingTitlesLower.has(c.title.toLowerCase()))
+      .map((c) => c.id)
+  );
+
+  // Compute a structurally safe index that can never be out of bounds, 
+  // regardless of how or why the list length changes.
+  const safeFocusedIndex = Math.max(0, Math.min(focusedIndex, Math.max(0, filteredCatalogItems.length - 1)));
 
   return (
     <div className="w-full max-h-[90dvh] flex flex-col max-w-2xl bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 shadow-2xl transition-colors duration-300">
@@ -237,6 +245,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
               setNewComplaintInput(val);
               // Re-open suggestions popover if the user types or modifies text
               setPopoverOpen(true);
+              setFocusedIndex(0);
             }}
             onKeyDown={handleKeyDown}
             onFocus={() => setPopoverOpen(true)}
@@ -250,7 +259,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
             inputId={inputId}
             listboxId={listboxId}
             popoverOpen={popoverOpen}
-            focusedIndex={focusedIndex}
+            focusedIndex={safeFocusedIndex}
           />
         </div>
       </div>
@@ -272,12 +281,15 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
         onClose={handlePopoverClose}
         existingIds={catalogExistingIds}
         // Pass down state and callback props to keep popover in sync with lifted navigation state
-        focusedIndex={focusedIndex}
+        focusedIndex={safeFocusedIndex}
         listboxId={listboxId}
         onFilteredItemsChange={setFilteredCatalogItems}
         // Pass down lifted region state and setter callback
         selectedRegion={selectedRegion}
-        onRegionChange={setSelectedRegion}
+        onRegionChange={(region) => {
+          setSelectedRegion(region);
+          setFocusedIndex(0);
+        }}
       />
     </div>
   );
