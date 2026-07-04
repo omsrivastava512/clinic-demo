@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import type { MedicalComplaint, Patient } from "@/types";
 import { PatientHeader } from "./components/PatientHeader";
 import { SectionLabel } from "./components/primitives";
@@ -102,6 +102,10 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     setSelectedRegion("All"); // Reset region chip filter on cancel
   };
 
+  // Stable onClose callback to prevent the child component's click-outside event listener 
+  // from repeatedly tearing down and rebuilding on every render.
+  const handlePopoverClose = useCallback(() => setPopoverOpen(false), []);
+
   const handleConfirm = () => {
     onConfirm(Array.from(selectedIds));
   };
@@ -161,35 +165,39 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
     if (e.key === "Escape") {
       setPopoverOpen(false);
       setSelectedRegion("All"); // Reset region chip to All on escape
-      }
+    }
   };
 
   // Picking an item from the catalog popover — we treat it like a free-text add
   // but using the catalog item's title, then mark it auto-selected.
-  const handleCatalogSelect = useCallback(
-    (item: MedicalComplaint) => {
-      add(item.title);
-      // Clear the query so the popover returns to the default "all" view,
-      // ready for a possible second addition without visual clutter.
-      setNewComplaintInput("");
-      // We intentionally keep the popover open on item selection to support multiple selections in a row.
-      // This is a trade-off where the user has to close the popover explicitly (e.g. click outside, Escape, Cancel),
-      // but it speeds up multi-selection workflows significantly.
-      // C3: Reset keyboard focus index on selection
-      setFocusedIndex(0);
-    },
-    [add]
-  );
+  // TODO: Future optimization (Option 2): If catalog search results performance degrades,
+  // we can wrap this in a useCallback (requires wrapping the custom hook's `add` in useCallback first)
+  // and wrap CatalogSearchPopover in React.memo to prevent unnecessary re-renders.
+  const handleCatalogSelect = (item: MedicalComplaint) => {
+    add(item.title);
+    // Clear the query so the popover returns to the default "all" view,
+    // ready for a possible second addition without visual clutter.
+    setNewComplaintInput("");
+    // We intentionally keep the popover open on item selection to support multiple selections in a row.
+    // This is a trade-off where the user has to close the popover explicitly (e.g. click outside, Escape, Cancel),
+    // but it speeds up multi-selection workflows significantly.
+    // C3: Reset keyboard focus index on selection
+    setFocusedIndex(0);
+  }
 
   // Grey-out catalog entries whose titles are already in the active list.
   // We match by lowercased title since catalog IDs differ from complaint IDs
   // produced by useComplaintSelection. O(n*m) but both sets are tiny (<60 items).
-  const existingTitlesLower = new Set(allComplaints.map((c) => c.title.toLowerCase()));
-  const catalogExistingIds = new Set(
-    COMPLAINT_CATALOG
-      .filter((c) => existingTitlesLower.has(c.title.toLowerCase()))
-      .map((c) => c.id)
-  );
+  // TODO: [Backend Integration] When a backend API is added, store the catalog ID on the
+  // active complaint schema. This will allow matching by stable ID instead of title strings.
+  const catalogExistingIds = useMemo(() => {
+    const existingTitlesLower = new Set(allComplaints.map((c) => c.title.toLowerCase()))
+    return new Set(
+      COMPLAINT_CATALOG
+        .filter((c) => existingTitlesLower.has(c.title.toLowerCase()))
+        .map((c) => c.id)
+    )
+  }, [allComplaints]);
 
   return (
     <div className="w-full max-h-[90dvh] flex flex-col max-w-2xl bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 shadow-2xl transition-colors duration-300">
@@ -260,7 +268,7 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
         query={newComplaintInput}
         isOpen={popoverOpen}
         onSelect={handleCatalogSelect}
-        onClose={() => setPopoverOpen(false)}
+        onClose={handlePopoverClose}
         existingIds={catalogExistingIds}
         // C3: Pass down state and callback props to keep popover in sync with lifted navigation state
         focusedIndex={focusedIndex}
