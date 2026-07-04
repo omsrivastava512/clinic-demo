@@ -19,12 +19,12 @@ interface CatalogSearchPopoverProps {
   /** IDs that are already active on the patient — we grey these out. */
   existingIds: Set<string>;
 
-  // C3 accessibility properties lifted to the parent component for unified React event handling:
+  // accessibility properties lifted to the parent component for unified React event handling:
   focusedIndex: number;
   listboxId: string;
   onFilteredItemsChange: (items: MedicalComplaint[]) => void;
 
-  // C3: Lifted region state and callback to handle keyboard nav in index.tsx
+  // Lifted region state and callback to handle keyboard nav in index.tsx
   selectedRegion: CatalogRegion;
   onRegionChange: (region: CatalogRegion) => void;
 }
