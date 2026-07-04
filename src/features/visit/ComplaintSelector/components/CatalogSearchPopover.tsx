@@ -57,7 +57,11 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
       left: rect.left,
       width: rect.width,
     });
-  }, [anchorRef]);
+    // Empty dependency array is correct here. Even though anchorRef is a prop, the ref object's 
+    // reference is stable. More importantly, ref.current is accessed at execution-time (run-time) 
+    // rather than captured at definition-time (like state variables). Thus, no recreation is needed 
+    // when the DOM element in the ref changes.
+  }, []);
 
   // Recalculate on open and on scroll/resize so the popover tracks the input.
   useEffect(() => {
