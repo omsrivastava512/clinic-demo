@@ -55,8 +55,10 @@ export function PassportPanel({ patient, onBack }: PassportPanelProps) {
         <div className="p-3 bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
           <div className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mb-2 tracking-wider uppercase">Critical Alerts</div>
           <div className="flex flex-wrap gap-2">
-            {patient.alerts.map((alert, i) => (
-              <StatusBadge key={i} variant={ALERT_VARIANT[alert.type]}>
+            {patient.alerts.map((alert) => (
+              // DECISION: Changed alert.map key from array index `i` to composite natural key `${alert.type}-${alert.label}`
+              // to ensure stable element tracking and prevent rendering/re-ordering state issues.
+              <StatusBadge key={`${alert.type}-${alert.label}`} variant={ALERT_VARIANT[alert.type]}>
                 {alert.label}
               </StatusBadge>
             ))}

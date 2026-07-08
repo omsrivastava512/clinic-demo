@@ -1,39 +1,57 @@
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MOCK_PATIENT_PROFILES, MOCK_INVOICES, MOCK_VISITS_V2 } from '@/data/mock_data';
-import { calculateAge, getInitials } from '@/lib';
 import { Users, Activity, CreditCard, AlertTriangle } from 'lucide-react';
-import { StatusBadge } from '@/components/common/status-badge';
-import type { StatusBadgeVariant } from '@/components/common/status-badge';
-import type { PatientAlert } from '@/types';
-
-const ALERT_VARIANT: Record<PatientAlert['type'], StatusBadgeVariant> = {
-  ALLERGY:   'allergy',
-  FALL_RISK: 'fall-risk',
-  DNR:       'dnr',
-  OTHER:     'other',
-};
+import PatientCard from './PatientCard';
 
 export default function Dashboard() {
   const navigate = useNavigate();
 
+  // DECISION: Using high-performance pre-computation lookup maps (Hash Map Indexing)
+  // to avoid O(P * (V + I)) nested filtering in the render loop.
+  // This uses direct object mutation in a single pass to avoid memory allocation/garbage collection overhead,
+  // following the guidelines in `.workboard/sketchbook.md`.
+  const visitsCountLookup = useMemo(() => {
+    const lookup: Record<string, number> = {};
+    MOCK_VISITS_V2.forEach((visit) => {
+      const pId = visit.patientId;
+      lookup[pId] = (lookup[pId] || 0) + 1;
+    });
+    return lookup;
+  }, []);
+
+  const unpaidInvoicesCountLookup = useMemo(() => {
+    const lookup: Record<string, number> = {};
+    MOCK_INVOICES.forEach((invoice) => {
+      if (invoice.paymentStatus === 'Pending' || invoice.paymentStatus === 'Overdue') {
+        const pId = invoice.patientId;
+        lookup[pId] = (lookup[pId] || 0) + 1;
+      }
+    });
+    return lookup;
+  }, []);
+
   // Stats computed inside component, not at module scope
   // This ensures stats update when data changes (e.g., after real API integration)
   // Removed useMemo — computation is trivial and doesn't benefit from memoization
-  const totalPatients = MOCK_PATIENT_PROFILES.length;
-  const totalVisits = MOCK_VISITS_V2.length; // Using Visit model instead of VisitRecord
-  const totalRevenue = MOCK_INVOICES
-    .filter((i) => i.paymentStatus === 'Paid')
-    .reduce((sum, i) => sum + i.amount, 0);
-  const pendingInvoices = MOCK_INVOICES.filter(
-    (i) => i.paymentStatus === 'Pending' || i.paymentStatus === 'Overdue'
-  ).length;
+  // DECISION: Re-introduced useMemo wrapping stats calculation as requested by senior review to prevent redundant array allocations and filter/reduce calculations on every component render.
+  const stats = useMemo(() => {
+    const totalPatients = MOCK_PATIENT_PROFILES.length;
+    const totalVisits = MOCK_VISITS_V2.length; // Using Visit model instead of VisitRecord
+    const totalRevenue = MOCK_INVOICES
+      .filter((i) => i.paymentStatus === 'Paid')
+      .reduce((sum, i) => sum + i.amount, 0);
+    const pendingInvoices = MOCK_INVOICES.filter(
+      (i) => i.paymentStatus === 'Pending' || i.paymentStatus === 'Overdue'
+    ).length;
 
-  const stats = [
-    { label: 'Total Patients',    value: String(totalPatients),                       icon: Users },
-    { label: 'Total Visits',      value: String(totalVisits),                         icon: Activity },
-    { label: 'Revenue Collected', value: `₹${totalRevenue.toLocaleString('en-IN')}`,  icon: CreditCard },
-    { label: 'Pending / Overdue', value: String(pendingInvoices),                     icon: AlertTriangle },
-  ];
+    return [
+      { label: 'Total Patients',    value: String(totalPatients),                       icon: Users },
+      { label: 'Total Visits',      value: String(totalVisits),                         icon: Activity },
+      { label: 'Revenue Collected', value: `₹${totalRevenue.toLocaleString('en-IN')}`,  icon: CreditCard },
+      { label: 'Pending / Overdue', value: String(pendingInvoices),                     icon: AlertTriangle },
+    ];
+  }, []);
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -62,55 +80,19 @@ export default function Dashboard() {
         <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-3">Patient Profiles</p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {MOCK_PATIENT_PROFILES.map((patient) => {
-            const age = calculateAge(patient.dateOfBirth);
-            const initials = getInitials(patient.fullName);
-            // Using Visit model (MOCK_VISITS_V2) instead of legacy VisitRecord
-            const visits = MOCK_VISITS_V2.filter((v) => v.patientId === patient.id);
-            const invoices = MOCK_INVOICES.filter((i) => i.patientId === patient.id);
-            const outstanding = invoices.filter(
-              (i) => i.paymentStatus === 'Pending' || i.paymentStatus === 'Overdue'
-            );
+            const visitsCount = visitsCountLookup[patient.id] ?? 0;
+            const unpaidInvoicesCount = unpaidInvoicesCountLookup[patient.id] ?? 0;
 
+            // DECISION: Render extracted PatientCard with O(1) stats lookup from the pre-indexed maps,
+            // passing visitsCount and unpaidInvoicesCount directly as memoizable primitive props.
             return (
-              <button key={patient.id} type="button"
+              <PatientCard
+                key={patient.id}
+                patient={patient}
+                visitsCount={visitsCount}
+                unpaidInvoicesCount={unpaidInvoicesCount}
                 onClick={() => navigate(`/patient/${patient.id}`)}
-                className="text-left bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm p-5 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 transition-all active:scale-[0.99] cursor-pointer">
-
-                <div className="flex items-center gap-3 mb-4">
-                  {patient.photoUrl ? (
-                    <img src={patient.photoUrl} alt={patient.fullName}
-                      className="w-10 h-10 rounded-full object-cover border border-zinc-200 dark:border-zinc-700" />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-sm font-semibold text-zinc-500 dark:text-zinc-400 shrink-0">
-                      {initials}
-                    </div>
-                  )}
-                  <div className="min-w-0">
-                    <p className="font-semibold text-zinc-900 dark:text-white truncate">{patient.fullName}</p>
-                    <p className="text-xs text-zinc-500 capitalize mt-0.5">{age} yrs · {patient.gender} · {patient.bloodType}</p>
-                  </div>
-                </div>
-
-                {patient.alerts.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {patient.alerts.map((alert, i) => (
-                      <StatusBadge key={i} variant={ALERT_VARIANT[alert.type]}>
-                        {alert.label}
-                      </StatusBadge>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex gap-4 text-xs text-zinc-500 border-t border-zinc-100 dark:border-zinc-800 pt-3">
-                  <span>{visits.length} visit{visits.length !== 1 ? 's' : ''}</span>
-                  <span className="font-mono">{patient.mrn}</span>
-                  {outstanding.length > 0 && (
-                    <span className="text-amber-600 dark:text-amber-400 font-medium ml-auto">
-                      {outstanding.length} unpaid
-                    </span>
-                  )}
-                </div>
-              </button>
+              />
             );
           })}
         </div>
@@ -119,3 +101,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

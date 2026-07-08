@@ -3,7 +3,7 @@
 // 1. TYPES & INTERFACES (types.ts)
 // ==========================================
 
-import type { ClinicalNote, FormData } from '@/features/patient/types';
+import type { ClinicalNote } from '@/features/patient/types';
 
 
 
