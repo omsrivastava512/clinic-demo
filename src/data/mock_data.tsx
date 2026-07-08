@@ -688,26 +688,26 @@ export const MOCK_VISITS: VisitRecord[] = [
 
 export const MOCK_COMPLAINT_COURSES: ComplaintCourse[] = [
   // ── Priya Kapoor — 2 active + 4 past ──
-  { id: 'CC-p01-01', patientId: 'uuid-p01', complaintName: 'Ankle Sprain',          startDate: '2024-01-15', endDate: '2024-02-11', totalSessions: 10, status: 'Active' },
-  { id: 'CC-p01-02', patientId: 'uuid-p01', complaintName: 'Cervical Spondylosis',  startDate: '2024-01-15', endDate: '2024-02-09', totalSessions: 9,  status: 'Active' },
-  { id: 'CC-p01-03', patientId: 'uuid-p01', complaintName: 'Plantar Fasciitis',     startDate: '2023-06-01', endDate: '2023-07-15', totalSessions: 12, status: 'Completed' },
-  { id: 'CC-p01-04', patientId: 'uuid-p01', complaintName: 'Lower Back Pain',       startDate: '2023-01-10', endDate: '2023-02-28', totalSessions: 14, status: 'Completed' },
-  { id: 'CC-p01-05', patientId: 'uuid-p01', complaintName: 'Tennis Elbow (Left)',   startDate: '2022-08-05', endDate: '2022-09-10', totalSessions: 8,  status: 'Completed' },
-  { id: 'CC-p01-06', patientId: 'uuid-p01', complaintName: 'Knee Pain (Right)',     startDate: '2021-11-20', endDate: '2022-01-05', totalSessions: 18, status: 'Completed' },
+  { id: 'CC-p01-01', patientId: 'uuid-p01', complaintName: 'Ankle Sprain',          startDate: '2024-01-15', lastDate: '2024-02-11', totalSessions: 10, status: 'Active' },
+  { id: 'CC-p01-02', patientId: 'uuid-p01', complaintName: 'Cervical Spondylosis',  startDate: '2024-01-15', lastDate: '2024-02-09', totalSessions: 9,  status: 'Active' },
+  { id: 'CC-p01-03', patientId: 'uuid-p01', complaintName: 'Plantar Fasciitis',     startDate: '2023-06-01', lastDate: '2023-07-15', totalSessions: 12, status: 'Completed' },
+  { id: 'CC-p01-04', patientId: 'uuid-p01', complaintName: 'Lower Back Pain',       startDate: '2023-01-10', lastDate: '2023-02-28', totalSessions: 14, status: 'Completed' },
+  { id: 'CC-p01-05', patientId: 'uuid-p01', complaintName: 'Tennis Elbow (Left)',   startDate: '2022-08-05', lastDate: '2022-09-10', totalSessions: 8,  status: 'Completed' },
+  { id: 'CC-p01-06', patientId: 'uuid-p01', complaintName: 'Knee Pain (Right)',     startDate: '2021-11-20', lastDate: '2022-01-05', totalSessions: 18, status: 'Completed' },
 
   // ── Vikram Singh — 2 active + 3 past ──
-  { id: 'CC-p02-01', patientId: 'uuid-p02', complaintName: 'Frozen Shoulder',       startDate: '2024-02-20', endDate: '2024-03-18', totalSessions: 10, status: 'Active' },
-  { id: 'CC-p02-02', patientId: 'uuid-p02', complaintName: 'Lumbar Spondylosis',    startDate: '2024-02-20', endDate: '2024-03-18', totalSessions: 9,  status: 'Active' },
-  { id: 'CC-p02-03', patientId: 'uuid-p02', complaintName: 'Tennis Elbow (Right)',  startDate: '2023-03-10', endDate: '2023-04-20', totalSessions: 8,  status: 'Completed' },
-  { id: 'CC-p02-04', patientId: 'uuid-p02', complaintName: 'Sciatica',              startDate: '2022-07-01', endDate: '2022-08-30', totalSessions: 16, status: 'Completed' },
-  { id: 'CC-p02-05', patientId: 'uuid-p02', complaintName: 'Neck Stiffness',        startDate: '2021-09-15', endDate: '2021-10-20', totalSessions: 6,  status: 'Completed' },
+  { id: 'CC-p02-01', patientId: 'uuid-p02', complaintName: 'Frozen Shoulder',       startDate: '2024-02-20', lastDate: '2024-03-18', totalSessions: 10, status: 'Active' },
+  { id: 'CC-p02-02', patientId: 'uuid-p02', complaintName: 'Lumbar Spondylosis',    startDate: '2024-02-20', lastDate: '2024-03-18', totalSessions: 9,  status: 'Active' },
+  { id: 'CC-p02-03', patientId: 'uuid-p02', complaintName: 'Tennis Elbow (Right)',  startDate: '2023-03-10', lastDate: '2023-04-20', totalSessions: 8,  status: 'Completed' },
+  { id: 'CC-p02-04', patientId: 'uuid-p02', complaintName: 'Sciatica',              startDate: '2022-07-01', lastDate: '2022-08-30', totalSessions: 16, status: 'Completed' },
+  { id: 'CC-p02-05', patientId: 'uuid-p02', complaintName: 'Neck Stiffness',        startDate: '2021-09-15', lastDate: '2021-10-20', totalSessions: 6,  status: 'Completed' },
 
   // ── Anjali Devi — 2 active + 3 past ──
-  { id: 'CC-p03-01', patientId: 'uuid-p03', complaintName: 'Shoulder Impingement',  startDate: '2024-01-10', endDate: '2024-01-29', totalSessions: 7,  status: 'Active' },
-  { id: 'CC-p03-02', patientId: 'uuid-p03', complaintName: 'Knee Osteoarthritis',   startDate: '2023-04-12', endDate: '2024-01-29', totalSessions: 24, status: 'Active' },
-  { id: 'CC-p03-03', patientId: 'uuid-p03', complaintName: 'Cervical Radiculopathy',startDate: '2022-11-01', endDate: '2022-12-20', totalSessions: 15, status: 'Completed' },
-  { id: 'CC-p03-04', patientId: 'uuid-p03', complaintName: 'Hip Bursitis',          startDate: '2022-03-05', endDate: '2022-04-15', totalSessions: 10, status: 'Completed' },
-  { id: 'CC-p03-05', patientId: 'uuid-p03', complaintName: 'Wrist Sprain',          startDate: '2021-06-20', endDate: '2021-07-10', totalSessions: 5,  status: 'Completed' },
+  { id: 'CC-p03-01', patientId: 'uuid-p03', complaintName: 'Shoulder Impingement',  startDate: '2024-01-10', lastDate: '2024-01-29', totalSessions: 7,  status: 'Active' },
+  { id: 'CC-p03-02', patientId: 'uuid-p03', complaintName: 'Knee Osteoarthritis',   startDate: '2023-04-12', lastDate: '2024-01-29', totalSessions: 24, status: 'Active' },
+  { id: 'CC-p03-03', patientId: 'uuid-p03', complaintName: 'Cervical Radiculopathy',startDate: '2022-11-01', lastDate: '2022-12-20', totalSessions: 15, status: 'Completed' },
+  { id: 'CC-p03-04', patientId: 'uuid-p03', complaintName: 'Hip Bursitis',          startDate: '2022-03-05', lastDate: '2022-04-15', totalSessions: 10, status: 'Completed' },
+  { id: 'CC-p03-05', patientId: 'uuid-p03', complaintName: 'Wrist Sprain',          startDate: '2021-06-20', lastDate: '2021-07-10', totalSessions: 5,  status: 'Completed' },
 ];
 
 export const MOCK_PURCHASES: PurchaseRecord[] = [

@@ -70,7 +70,7 @@ export function ClinicalTimeline({ courses }: ClinicalTimelineProps) {
                   <StatusBadge variant="completed">Completed</StatusBadge>
                 </div>
                 <p className="text-xs text-zinc-400 dark:text-zinc-600">
-                  {fmt(course.startDate)} → {fmt(course.endDate)}
+                  {fmt(course.startDate)} → {fmt(course.lastDate)}
                   {' · '}<span className="tabular-nums">{course.totalSessions}</span> sessions
                   <span className="ml-2 text-zinc-300 dark:text-zinc-700 group-hover:text-zinc-500 transition-colors">View visits →</span>
                 </p>

@@ -1,0 +1,5 @@
+﻿refactor(patient-profile): rename endDate to lastDate and refactor utils
+
+- Renamed `endDate` to `lastDate` in `ComplaintCourse` interface, `MOCK_COMPLAINT_COURSES` mock data, and `ClinicalTimeline` rendering templates.
+- Refactored the `filterTimelineByCategory` helper in `patientUtils.ts` from a manual `for` loop to use standard `Array.prototype.filter`.
+- Added a TODO comment to `patientId` in `LedgerEntry` interface regarding required field constraints after backend integration.

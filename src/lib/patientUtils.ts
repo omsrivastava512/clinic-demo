@@ -81,15 +81,8 @@ export function filterTimelineByCategory(
   timeline: TimelineEvent[],
   category: TimelineEvent["category"]
 ): TimelineEvent[] {
-  const filtered: TimelineEvent[] = []
-
-  for (let i = 0; i < timeline.length; i++) {
-    if (timeline[i].category === category) {
-      filtered.push(timeline[i])
-    }
-  }
-
-  return filtered
+  // DECISION: Refactored the manual for loop to use standard Array.prototype.filter. This aligns with modern, clean code standards, and the performance overhead is completely negligible for small timeline event list sizes.
+  return timeline.filter((event) => event.category === category);
 }
 
 /**

@@ -61,6 +61,8 @@ export interface LedgerEntry {
     patientName: string;
     treatment: string;
     status: 'Paid' | 'In Therapy' | 'Waiting';
+    // TODO: Make patientId required once the database and backend integration is complete
+    // and patient profiles exist for all ledger entries (currently some mock entries lack profiles).
     patientId?: string;
 }
 
@@ -164,7 +166,7 @@ export interface ComplaintCourse {
     patientId: string;
     complaintName: string;               // e.g. "Ankle Sprain", "Knee Injury"
     startDate: string;                   // YYYY-MM-DD — date of first session
-    endDate: string;                     // YYYY-MM-DD — date of last session (or ongoing)
+    lastDate: string;                    // YYYY-MM-DD — date of last session (or ongoing)
     totalSessions: number;
     status: 'Active' | 'Completed';
 }
