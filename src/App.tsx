@@ -48,14 +48,14 @@ const App = () => {
                 ]}
             />
 
-            <div className="min-h-screen bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
+            <div className="min-h-screen flex flex-col bg-zinc-100 dark:bg-black text-zinc-900 dark:text-zinc-100 py-20 px-4 font-sans selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300">
                 <ToggleDarkButton isDarkMode={isDarkMode} toggleDark={() => setIsDarkMode(!isDarkMode)} />
 
                 <DemoAppHeader formattedDate={formattedDate} />
 
-                <Outlet />
-
-
+                <div className="flex-1 flex flex-col">
+                  <Outlet />
+                </div>
             </div>
         </>
     );

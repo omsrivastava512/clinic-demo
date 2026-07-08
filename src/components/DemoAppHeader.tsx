@@ -32,7 +32,9 @@ function TabsLine() {
                 <NavLink to="/">
                     <TabsTrigger value="/">Visit Workflow</TabsTrigger>
                 </NavLink>
-                <TabsTrigger disabled value="/dashboard">Dashboard</TabsTrigger>
+                <NavLink to="/dashboard">
+                    <TabsTrigger value="/dashboard">Dashboard</TabsTrigger>
+                </NavLink>
                 <TabsTrigger disabled value="/reports">Reports</TabsTrigger>
                 <NavLink to="/roadmap">
                     <TabsTrigger value="/roadmap">Roadmap</TabsTrigger>
