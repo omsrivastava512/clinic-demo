@@ -10,6 +10,9 @@ import {
 } from '@/data/mock_data';
 import { PassportPanel } from './PassportPanel';
 import { ClinicalHistoryPanel } from './ClinicalHistoryPanel';
+import { ProfileLoading } from './ProfileLoading';
+import { ProfileError } from './ProfileError';
+import { ProfileNotFound } from './ProfileNotFound';
 
 type ActivePanel = 'profile' | 'history';
 
@@ -22,6 +25,11 @@ type FetchResult =
 function fetchPatientProfile(id: string): Promise<FetchResult> {
   return new Promise((resolve) => {
     setTimeout(() => {
+      // DECISION: Randomly simulate a network error 20% of the time to test UI error boundaries and states.
+      if (Math.random() < 0.2) {
+        resolve({ kind: 'error', message: 'Simulated network error. Please try again.' });
+        return;
+      }
       const patient = MOCK_PATIENT_PROFILES.find((p) => p.id === id);
       if (patient) resolve({ kind: 'ok', data: patient });
       else resolve({ kind: 'not-found' });
@@ -40,19 +48,22 @@ export function PatientProfilePage() {
   const [activePanel, setActivePanel] = useState<ActivePanel>('profile');
 
   // Memoized to avoid recreating on every render — used in effect and retry button
-  const loadProfile = useCallback(() => {
+  // DECISION: Made controller optional to prevent TS errors and runtime crashes when the Retry button invokes it. Added a check for controller?.signal.aborted in the finally block to prevent calling setLoading(false) on an unmounted component.
+  const loadProfile = useCallback((controller?: AbortController) => {
     // Explicit check for undefined id prevents rendering literal "undefined" in UI
-    if (!id) { 
-      setLoading(false); 
-      setError('Invalid patient ID in URL'); 
-      setProfile(null); 
-      return; 
+    if (!id) {
+      setLoading(false);
+      setError('Invalid patient ID in URL');
+      setProfile(null);
+      return;
     }
-    
-    setLoading(true); 
+
+    setLoading(true);
     setError(null);
-    
+
     fetchPatientProfile(id).then((result) => {
+      if (controller?.signal.aborted) return;
+
       if (result.kind === 'ok') {
         setProfile(result.data);
       } else if (result.kind === 'not-found') {
@@ -60,64 +71,41 @@ export function PatientProfilePage() {
       } else {
         setError(result.message);
       }
-    }).finally(() => setLoading(false));
+    }).finally(() => {
+      if (controller?.signal.aborted) return;
+      setLoading(false);
+    });
   }, [id]);
 
   // Effect only depends on loadProfile, which is stable (memoized on id)
-  useEffect(() => { 
-    loadProfile(); 
+  // DECISION: We chose not to implement manual AbortController/ignore flag cleanup here. Since we plan to adopt a data-fetching library (like React Query or SWR) with Supabase in the next phase, implementing temporary async cleanup boilerplate now is redundant, as those libraries handle component lifecycle and race condition cleanup natively.
+  useEffect(() => {
+    const controller = new AbortController();
+    loadProfile(controller);
+
+    return () => { controller.abort() };
   }, [loadProfile]);
 
-  const handleBack = useCallback(() => navigate(-1), [navigate]);
+  // DECISION: Added fallback to handleBack. If a user lands here directly (e.g. from a new tab), window.history.state.idx will be 0 or undefined, so we fallback to '/ledger' instead of ejecting them from the app with navigate(-1).
+  const handleBack = useCallback(() => {
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate('/ledger');
+    }
+  }, [navigate]);
 
   // Memoized derived data — avoid refiltering on every render (e.g., activePanel toggle)
-  const visits    = useMemo(() => MOCK_VISITS_V2.filter((v) => v.patientId === id), [id]);
-  const courses   = useMemo(() => MOCK_COMPLAINT_COURSES.filter((c) => c.patientId === id), [id]);
+  const visits = useMemo(() => MOCK_VISITS_V2.filter((v) => v.patientId === id), [id]);
+  const courses = useMemo(() => MOCK_COMPLAINT_COURSES.filter((c) => c.patientId === id), [id]);
   const purchases = useMemo(() => MOCK_PURCHASES.filter((p) => p.patientId === id), [id]);
-  const invoices  = useMemo(() => MOCK_INVOICES.filter((i) => i.patientId === id), [id]);
+  const invoices = useMemo(() => MOCK_INVOICES.filter((i) => i.patientId === id), [id]);
 
-  if (loading) return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="flex flex-col items-center gap-3 text-zinc-500">
-        <div className="w-8 h-8 rounded-full border-2 border-zinc-300 dark:border-zinc-600 border-t-zinc-600 dark:border-t-zinc-300 animate-spin" />
-        <p className="text-sm">Loading patient profile…</p>
-      </div>
-    </div>
-  );
+  if (loading) return <ProfileLoading />;
 
-  if (error) return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="flex flex-col items-center gap-4 max-w-sm text-center">
-        <p className="text-zinc-700 dark:text-zinc-300 font-medium">{error}</p>
-        <div className="flex gap-3">
-          <button type="button" onClick={loadProfile}
-            className="px-4 py-2 rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-sm font-medium hover:bg-zinc-700 dark:hover:bg-zinc-300 transition-colors">
-            Retry
-          </button>
-          <button type="button" onClick={handleBack}
-            className="px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-            Back
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  if (error) return <ProfileError error={error} onRetry={() => loadProfile()} onBack={handleBack} />;
 
-  if (!profile) return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="flex flex-col items-center gap-4 max-w-sm text-center">
-        <p className="text-zinc-700 dark:text-zinc-300 font-medium">Patient not found</p>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          {/* Safe rendering — id is guaranteed to be defined here (checked in loadProfile) */}
-          No patient record matches the ID <span className="font-mono">{id ?? 'unknown'}</span>.
-        </p>
-        <button type="button" onClick={handleBack}
-          className="px-4 py-2 rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-sm font-medium hover:bg-zinc-700 dark:hover:bg-zinc-300 transition-colors">
-          Back to Ledger
-        </button>
-      </div>
-    </div>
-  );
+  if (!profile) return <ProfileNotFound id={id} onBack={handleBack} />;
 
   return (
     <div className="h-dvh flex flex-col rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black shadow-sm dark:shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_20px_40px_-15px_rgba(0,0,0,1)]">

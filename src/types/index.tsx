@@ -7,7 +7,10 @@ import type { ClinicalNote, FormData } from '@/features/patient/types';
 
 
 
-export interface Patient {
+// DECISION: Using an intersection with a discriminated union for Patient type
+// to enforce that referralDoctorInfo is only present and required when referralMode is 'DOCTOR',
+// matching the strict typing used in the NewPatientIntake FormData.
+export type Patient = {
   id: string;
   mrn: string;
   fullName: string;
@@ -17,12 +20,13 @@ export interface Patient {
   address: string;
   gender: string;
   notes?: ClinicalNote;
-  referralMode: FormData['referral'];
-  referralDoctorInfo?: string | never;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-}
+} & (
+  | { referralMode: 'WALKIN' | 'GOOGLE'; referralDoctorInfo?: never }
+  | { referralMode: 'DOCTOR'; referralDoctorInfo: string }
+);
 
 
 export interface MedicalComplaint {
@@ -84,7 +88,9 @@ export interface TimelineEvent {
     category: 'PHYSIO' | 'CONSULT' | 'LAB' | 'MEDICATION' | 'SURGERY' | 'NOTE';
 }
 
-export interface PatientProfile extends Patient {
+// DECISION: Changed PatientProfile to a type instead of an interface
+// because an interface cannot extend a discriminated union (Patient is now an intersection type).
+export type PatientProfile = Patient & {
     bloodType: string;
     insurerName: string;
     alerts: PatientAlert[];
