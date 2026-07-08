@@ -30,7 +30,8 @@ const SearchInput = ({ input, isFocused, handleInputChange, handleKeyNavigation 
                     "w-4 h-4 text-zinc-400 dark:text-zinc-500"  // style
                 )} />
                 <input
-                    autoFocus
+                    // TODO: Uncomment when moving to production
+                    // autoFocus
                     value={input}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyNavigation}

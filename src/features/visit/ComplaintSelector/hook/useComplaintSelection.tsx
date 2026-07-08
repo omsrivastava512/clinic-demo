@@ -36,9 +36,17 @@ export function useComplaintSelection(available: MedicalComplaint[]) {
     setCustomComplaints([]);
   };
 
-  const remove = (i: string) => {
-    setCustomComplaints(c => c.filter(c => c.id !== i))
-  }
+  const remove = (id: string) => {
+    // Avoid variable shadowing: using distinct names for the state array (prev) and the mapped elements (item)
+    // to prevent lexical scope collision and satisfy the TS compiler/linter.
+    setCustomComplaints(prev => prev.filter(item => item.id !== id));
+    setSelectedIds(prev => {
+      if (!prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
 
   return {
     allComplaints,

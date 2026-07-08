@@ -1,0 +1,276 @@
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
+import { cn } from "@/lib";
+import { COMPLAINT_CATALOG, CATALOG_REGIONS, type CatalogRegion } from "@/data/complaints_catalog";
+import type { MedicalComplaint } from "@/types";
+
+interface CatalogSearchPopoverProps {
+  /** The input element to anchor the popover under. */
+  anchorRef: React.RefObject<HTMLElement | null>;
+  /** Current text in the search input — used to filter catalog entries. */
+  query: string;
+  /** Whether the popover should be visible. */
+  isOpen: boolean;
+  /** Called when the user picks an item from the catalog.
+   *  The parent will turn this into a real active complaint. */
+  onSelect: (complaint: MedicalComplaint) => void;
+  /** Called when we decide the popover should close (click-outside, Escape). */
+  onClose: () => void;
+  /** IDs that are already active on the patient — we grey these out. */
+  existingIds: Set<string>;
+
+  // accessibility properties lifted to the parent component for unified React event handling:
+  focusedIndex: number;
+  listboxId: string;
+  onFilteredItemsChange: (items: MedicalComplaint[]) => void;
+
+  // Lifted region state and callback to handle keyboard nav in index.tsx
+  selectedRegion: CatalogRegion;
+  onRegionChange: (region: CatalogRegion) => void;
+}
+
+export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
+  anchorRef,
+  query,
+  isOpen,
+  onSelect,
+  onClose,
+  existingIds,
+  focusedIndex,
+  listboxId,
+  onFilteredItemsChange,
+  selectedRegion,
+  onRegionChange,
+}) => {
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  // ── Position popover directly below the anchor ──────────────────────────────
+  const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
+
+  const updateCoords = useCallback(() => {
+    if (!anchorRef.current) return;
+    const rect = anchorRef.current.getBoundingClientRect();
+    setCoords({
+      // position:fixed is viewport-relative — getBoundingClientRect() is already
+      // in viewport coords, so we must NOT add scrollY/scrollX here.
+      top: rect.bottom + 6, // 6px gap below the input
+      left: rect.left,
+      width: rect.width,
+    });
+    // Empty dependency array was technically correct because the ref object's reference is stable and
+    // ref.current is accessed at execution-time. However, since anchorRef is passed as a prop, ESLint 
+    // and the React Compiler cannot guarantee its stability statically, so we list it in dependencies to satisfy them.
+  }, [anchorRef]);
+
+  // Recalculate on open and on scroll/resize so the popover tracks the input.
+  useEffect(() => {
+    if (!isOpen) return;
+    updateCoords();
+    window.addEventListener("resize", updateCoords);
+    window.addEventListener("scroll", updateCoords, true);
+    return () => {
+      window.removeEventListener("resize", updateCoords);
+      window.removeEventListener("scroll", updateCoords, true);
+    };
+  }, [isOpen, updateCoords]);
+
+  // ── Click-outside detection ──────────────────────────────────────────────────
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      const insidePopover = popoverRef.current?.contains(target);
+      const insideAnchor = anchorRef.current?.contains(target);
+      if (!insidePopover && !insideAnchor) {
+        onClose();
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [isOpen, anchorRef, onClose]);
+
+
+
+  // ── Filter & Sort logic ──────────────────────────────────────────────────────
+  const filteredItems = useMemo(() => {
+    const items = COMPLAINT_CATALOG.filter((c) => {
+      const matchesRegion = selectedRegion === "All" || c.region === selectedRegion;
+      const matchesQuery = !query || c.title.toLowerCase().includes(query.toLowerCase());
+      return matchesRegion && matchesQuery;
+    });
+
+    // Sort already-selected items to the end of the list so they don't clutter the popover.
+    // We sort already-added elements lower than available ones so that selectable items group at the top.
+    // We copy the filtered array first to prevent mutating the shared/cache array ref in React state.
+    return [...items].sort((a, b) => {
+      const aAdded = existingIds.has(a.id);
+      const bAdded = existingIds.has(b.id);
+      if (aAdded === bAdded) return 0;
+      return aAdded ? 1 : -1;
+    });
+  }, [query, selectedRegion, existingIds]);
+
+  // Decides whether to show a helper suggestion when a search term has no matches
+  // in the currently selected region, but matches exist in other regions.
+  // We use useMemo to avoid re-running this search on every render when dependencies are stable.
+  const hasMatchesInOtherRegions = useMemo(() => {
+    if (selectedRegion === "All" || !query) return false;
+    return COMPLAINT_CATALOG.some(
+      (c) => c.region !== selectedRegion && c.title.toLowerCase().includes(query.toLowerCase())
+    );
+  }, [query, selectedRegion]);
+
+  // Notify parent component when the filtered list of items changes.
+  // We use a ref to track the last structural state of the list and perform an ID-based comparison.
+  // This is a trade-off that prevents triggering parent state updates on every render cycle caused by
+  // referential instability of props (like existingIds which is recreated as a new Set on each parent render).
+  // Without this guard, parent state updates would run on every keystroke/arrow keydown and reset focusedIndex back to 0.
+  const lastFilteredItemsRef = useRef<MedicalComplaint[]>([]);
+  useEffect(() => {
+    const hasChanged =
+      filteredItems.length !== lastFilteredItemsRef.current.length ||
+      filteredItems.some((item, idx) => item.id !== lastFilteredItemsRef.current[idx]?.id);
+
+    if (hasChanged) {
+      lastFilteredItemsRef.current = filteredItems;
+      onFilteredItemsChange(filteredItems);
+    }
+  }, [filteredItems, onFilteredItemsChange]);
+
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div
+      ref={popoverRef}
+      // Positioned fixed so it escapes any overflow:hidden parents.
+      // z-50 puts it above modals/drawers at z-40.
+      style={{
+        position: "fixed",
+        top: coords.top,
+        left: coords.left,
+        width: coords.width,
+        zIndex: 50,
+      }}
+      className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-2xl overflow-hidden"
+    >
+      {/* ── Region chips ─────────────────────────────────────────────────── */}
+      {/* Scrollable horizontal strip — no scrollbar visible (hide-scrollbar util) */}
+      <div className="flex gap-1.5 overflow-x-auto px-3 pt-3 pb-2 hide-scrollbar">
+        {CATALOG_REGIONS.map((region) => (
+          <button
+            key={region}
+            type="button"
+            // Prevent the mousedown from bubbling up and triggering onClose
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => onRegionChange(region)}
+            className={cn(
+              "shrink-0 px-3 py-1 rounded-full text-xs font-semibold border transition-all",
+              selectedRegion === region
+                ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border-transparent"
+                : "bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:border-zinc-400 dark:hover:border-zinc-500"
+            )}
+          >
+            {region}
+          </button>
+        ))}
+      </div>
+
+      {/* Thin divider between chips and list */}
+      <div className="h-px bg-zinc-100 dark:bg-zinc-800 mx-3" />
+
+      {/* ── Filtered results list ────────────────────────────────────────── */}
+      {/* ~2.5 cards tall; each row is ~44px, so ~2.5 * 44 ≈ 110px.
+          max-h-28 ≈ 112px — close enough without a magic number. */}
+      <div
+        id={listboxId}
+        role="listbox"
+        className="max-h-28 overflow-y-auto"
+      >
+        {filteredItems.length === 0 ? (
+          <p className="px-4 py-3 text-xs text-zinc-400 dark:text-zinc-500">
+            {hasMatchesInOtherRegions ? (
+              <span>
+                No matches in <span className="font-semibold text-zinc-600 dark:text-zinc-400">{selectedRegion}</span>. Try switching to "All" regions.
+              </span>
+            ) : (
+              "No matches found"
+            )}
+          </p>
+        ) : (
+          filteredItems.map((item, idx) => {
+            const alreadyAdded = existingIds.has(item.id);
+            const isFocused = idx === focusedIndex;
+            return (
+              <CatalogItem
+                key={item.id}
+                item={item}
+                isFocused={isFocused}
+                alreadyAdded={alreadyAdded}
+                onSelect={onSelect}
+                listboxId={listboxId}
+                index={idx}
+              />
+            );
+          })
+        )}
+      </div>
+    </div>,
+    document.body
+  );
+};
+
+interface CatalogItemProps {
+  item: MedicalComplaint;
+  isFocused: boolean;
+  alreadyAdded: boolean;
+  onSelect: (item: MedicalComplaint) => void;
+  listboxId: string;
+  index: number;
+}
+
+const CatalogItem: React.FC<CatalogItemProps> = ({
+  item,
+  isFocused,
+  alreadyAdded,
+  onSelect,
+  listboxId,
+  index,
+}) => {
+  const itemRef = useRef<HTMLButtonElement>(null);
+
+  // Align with the Daily Ledger Search suggestion list.
+  // We scroll the item into view using smooth scrolling and nearest alignment when it gets focused via keyboard.
+  useEffect(() => {
+    if (isFocused && itemRef.current) {
+      itemRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [isFocused]);
+
+  return (
+    <button
+      ref={itemRef}
+      id={`${listboxId}-option-${index}`}
+      role="option"
+      aria-selected={isFocused}
+      aria-disabled={alreadyAdded ? "true" : undefined}
+      type="button"
+      // Prevent focus transfer from input to button during clicking
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={() => !alreadyAdded && onSelect(item)}
+      className={cn(
+        "w-full text-left px-4 py-2.5 flex items-center justify-between transition-colors",
+        alreadyAdded ? "opacity-40 cursor-not-allowed" : "cursor-pointer",
+        isFocused ? "bg-zinc-50 dark:bg-zinc-800" : "hover:bg-zinc-50 dark:hover:bg-zinc-800"
+      )}
+    >
+      <span className="text-sm font-medium text-zinc-800 dark:text-zinc-100 leading-tight">
+        {item.title}
+      </span>
+      {item.region && (
+        <span className="ml-2 shrink-0 text-[10px] text-zinc-400 dark:text-zinc-500 font-medium uppercase tracking-wide">
+          {item.region}
+        </span>
+      )}
+    </button>
+  );
+};
