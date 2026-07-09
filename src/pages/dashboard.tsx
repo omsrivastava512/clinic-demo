@@ -7,10 +7,7 @@ import PatientCard from './PatientCard';
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  // DECISION: Using high-performance pre-computation lookup maps (Hash Map Indexing)
-  // to avoid O(P * (V + I)) nested filtering in the render loop.
-  // This uses direct object mutation in a single pass to avoid memory allocation/garbage collection overhead,
-  // following the guidelines in `.workboard/sketchbook.md`.
+  // Ref: ADR-PP-20 — HashMap indexing to reduce render-loop complexity from O(P×(V+I)) to O(1) per card.
   const visitsCountLookup = useMemo(() => {
     const lookup: Record<string, number> = {};
     MOCK_VISITS_V2.forEach((visit) => {
@@ -31,10 +28,8 @@ export default function Dashboard() {
     return lookup;
   }, []);
 
-  // Stats computed inside component, not at module scope
-  // This ensures stats update when data changes (e.g., after real API integration)
-  // Removed useMemo — computation is trivial and doesn't benefit from memoization
-  // DECISION: Re-introduced useMemo wrapping stats calculation as requested by senior review to prevent redundant array allocations and filter/reduce calculations on every component render.
+  // Stats computed inside component (not at module scope) to stay migration-ready for a reactive API.
+  // Ref: ADR-PP-21 — useMemo on stats re-introduced after senior review; prevents redundant filter/reduce on every render.
   const stats = useMemo(() => {
     const totalPatients = MOCK_PATIENT_PROFILES.length;
     const totalVisits = MOCK_VISITS_V2.length; // Using Visit model instead of VisitRecord
@@ -83,8 +78,7 @@ export default function Dashboard() {
             const visitsCount = visitsCountLookup[patient.id] ?? 0;
             const unpaidInvoicesCount = unpaidInvoicesCountLookup[patient.id] ?? 0;
 
-            // DECISION: Render extracted PatientCard with O(1) stats lookup from the pre-indexed maps,
-            // passing visitsCount and unpaidInvoicesCount directly as memoizable primitive props.
+            // Ref: ADR-PP-22 — PatientCard receives O(1) lookup values as memoizable primitive props.
             return (
               <PatientCard
                 key={patient.id}

@@ -81,7 +81,7 @@ export function filterTimelineByCategory(
   timeline: TimelineEvent[],
   category: TimelineEvent["category"]
 ): TimelineEvent[] {
-  // DECISION: Refactored the manual for loop to use standard Array.prototype.filter. This aligns with modern, clean code standards, and the performance overhead is completely negligible for small timeline event list sizes.
+  // Ref: ADR-PP-24 — Array.prototype.filter over manual for loop; negligible overhead for small lists.
   return timeline.filter((event) => event.category === category);
 }
 

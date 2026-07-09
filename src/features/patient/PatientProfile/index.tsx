@@ -25,7 +25,7 @@ type FetchResult =
 function fetchPatientProfile(id: string): Promise<FetchResult> {
   return new Promise((resolve) => {
     setTimeout(() => {
-      // DECISION: Randomly simulate a network error 20% of the time to test UI error boundaries and states.
+      // Ref: ADR-PP-11 — 20% error simulation for UI error boundary testing in dev.
       if (Math.random() < 0.2) {
         resolve({ kind: 'error', message: 'Simulated network error. Please try again.' });
         return;
@@ -47,8 +47,8 @@ export function PatientProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [activePanel, setActivePanel] = useState<ActivePanel>('profile');
 
-  // Memoized to avoid recreating on every render — used in effect and retry button
-  // DECISION: Made controller optional to prevent TS errors and runtime crashes when the Retry button invokes it. Added a check for controller?.signal.aborted in the finally block to prevent calling setLoading(false) on an unmounted component.
+  // Memoized to avoid recreating on every render — used in effect and retry button.
+  // Ref: ADR-PP-08 — optional AbortController prevents crashes when Retry invokes loadProfile directly.
   const loadProfile = useCallback((controller?: AbortController) => {
     // Explicit check for undefined id prevents rendering literal "undefined" in UI
     if (!id) {
@@ -77,8 +77,8 @@ export function PatientProfilePage() {
     });
   }, [id]);
 
-  // Effect only depends on loadProfile, which is stable (memoized on id)
-  // DECISION: We chose not to implement manual AbortController/ignore flag cleanup here. Since we plan to adopt a data-fetching library (like React Query or SWR) with Supabase in the next phase, implementing temporary async cleanup boilerplate now is redundant, as those libraries handle component lifecycle and race condition cleanup natively.
+  // Effect only depends on loadProfile, which is stable (memoized on id).
+  // Ref: ADR-PP-09 — deferred full cleanup; React Query/SWR adoption planned for Supabase phase.
   useEffect(() => {
     const controller = new AbortController();
     loadProfile(controller);
@@ -86,7 +86,7 @@ export function PatientProfilePage() {
     return () => { controller.abort() };
   }, [loadProfile]);
 
-  // DECISION: Added fallback to handleBack. If a user lands here directly (e.g. from a new tab), window.history.state.idx will be 0 or undefined, so we fallback to '/ledger' instead of ejecting them from the app with navigate(-1).
+  // Ref: ADR-PP-10 — safe navigation fallback for direct-link / fresh-tab entry.
   const handleBack = useCallback(() => {
     if (window.history.state && window.history.state.idx > 0) {
       navigate(-1);

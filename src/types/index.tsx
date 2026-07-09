@@ -7,9 +7,7 @@ import type { ClinicalNote } from '@/features/patient/types';
 
 
 
-// DECISION: Using an intersection with a discriminated union for Patient type
-// to enforce that referralDoctorInfo is only present and required when referralMode is 'DOCTOR',
-// matching the strict typing used in the NewPatientIntake FormData.
+// Ref: ADR-PP-01 — Patient is a discriminated intersection type to enforce referralDoctorInfo constraints.
 export type Patient = {
   id: string;
   mrn: string;
@@ -93,8 +91,7 @@ export interface TimelineEvent {
     category: 'PHYSIO' | 'CONSULT' | 'LAB' | 'MEDICATION' | 'SURGERY' | 'NOTE';
 }
 
-// DECISION: Changed PatientProfile to a type instead of an interface
-// because an interface cannot extend a discriminated union (Patient is now an intersection type).
+// Ref: ADR-PP-02 — type alias required; interfaces cannot extend discriminated union types.
 export type PatientProfile = Patient & {
     bloodType: string;
     insurerName: string;

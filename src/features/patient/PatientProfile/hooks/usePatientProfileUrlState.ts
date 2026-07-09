@@ -37,8 +37,7 @@ export function usePatientProfileUrlState() {
     setSearchParams(prev => {
       const next = new URLSearchParams(prev);
       next.set('tab', value);
-      // Removed auto-clear logic — preserving user's filter state is less destructive
-      // Users can explicitly call clearVisitFilters() if they want to reset
+      // Ref: ADR-PP-15 — filter state preserved on tab switch; explicit clear via clearVisitFilters().
       return next;
     }, { replace: true });
   }
