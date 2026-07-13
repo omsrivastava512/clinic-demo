@@ -14,6 +14,11 @@ export function getAge(dateOfBirth: string): string {
 
 
 export function getLastVisit(date: string) {
-    return formatDistanceToNow(parseISO(date), { addSuffix: true })
+    if (!date) return 'Never';
+    try {
+        return formatDistanceToNow(parseISO(date), { addSuffix: true });
+    } catch {
+        return 'Never';
+    }
 }
 

@@ -1,5 +1,6 @@
 import type { VitalSign } from '@/types';
 import { calculateVitalStatus } from '@/lib';
+import { HeartPulse } from 'lucide-react';
 
 export interface VitalsGridProps {
   vitals: VitalSign[];
@@ -14,7 +15,16 @@ const VITAL_LABELS: Record<VitalSign['type'], string> = {
 
 export function VitalsGrid({ vitals }: VitalsGridProps) {
   if (vitals.length === 0) {
-    return <p className="text-sm text-zinc-500 italic py-4">No vitals recorded.</p>;
+    // DECISION: Upgraded the empty state to high fidelity for consistency across all profile components.
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-900/20 mb-8">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 mb-4">
+          <HeartPulse className="w-6 h-6 text-zinc-400 dark:text-zinc-500 animate-pulse" />
+        </div>
+        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">No Vitals Recorded</h3>
+        <p className="text-sm text-zinc-500 mt-1 max-w-xs">No clinical vitals have been logged for this patient yet.</p>
+      </div>
+    );
   }
 
   return (
