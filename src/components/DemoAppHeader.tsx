@@ -27,7 +27,7 @@ function TabsLine() {
     const location = useLocation()
 
     return (
-        <Tabs defaultValue={location.pathname}>
+        <Tabs defaultValue="visit" value={location.pathname}>
             <TabsList variant="line">
                 <NavLink to="/">
                     <TabsTrigger value="/">Visit Workflow</TabsTrigger>
