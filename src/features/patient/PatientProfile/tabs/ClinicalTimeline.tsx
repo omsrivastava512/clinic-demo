@@ -1,13 +1,18 @@
 import type { ComplaintCourse } from '@/types';
 import { StatusBadge } from '@/components/common/status-badge';
 import { usePatientProfileUrlState } from '../hooks/usePatientProfileUrlState';
+import { Activity } from 'lucide-react';
 
 export interface ClinicalTimelineProps {
   courses: ComplaintCourse[];
 }
 
+// DECISION: Make date formatting safe. If a date string is empty or invalid, it returns a fallback rather than crashing the component or displaying 'Invalid Date'.
 function fmt(d: string) {
-  return new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  if (!d) return 'N/A';
+  const date = new Date(d);
+  if (isNaN(date.getTime())) return 'Invalid Date';
+  return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export function ClinicalTimeline({ courses }: ClinicalTimelineProps) {
@@ -15,7 +20,16 @@ export function ClinicalTimeline({ courses }: ClinicalTimelineProps) {
   const { goToVisits } = usePatientProfileUrlState();
 
   if (courses.length === 0) {
-    return <p className="text-sm text-zinc-500 italic">No complaint history recorded.</p>;
+    // DECISION: Use a high-fidelity empty state to maintain visual consistency with the rest of the application and provide a premium feel, replacing the plain text.
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-900/20 mt-4">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 mb-4">
+          <Activity className="w-6 h-6 text-zinc-400 dark:text-zinc-500" />
+        </div>
+        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">No History Recorded</h3>
+        <p className="text-sm text-zinc-500 mt-1 max-w-xs">There are no active or completed complaints for this patient yet.</p>
+      </div>
+    );
   }
 
   const sorted = [...courses].sort((a, b) => {
@@ -25,13 +39,22 @@ export function ClinicalTimeline({ courses }: ClinicalTimelineProps) {
   });
 
   return (
-    <div className="relative pl-4 pr-1 border-l border-zinc-200 dark:border-zinc-800 space-y-8">
+    // DECISION: Removed the border-l from the parent container and instead render an absolute line on each timeline node.
+    // This solves the visual bug where the timeline line would hang past the final item into empty space.
+    <div className="relative pl-4 pr-1 space-y-8">
       {sorted.map((course, idx) => {
         const isActive = course.status === 'Active';
         const isFirst = idx === 0;
+        const isLast = idx === sorted.length - 1;
 
         return (
           <div key={course.id} className="relative">
+            {/* The vertical connecting line (hidden on the last item to prevent hanging) */}
+            {!isLast && (
+              <div className="absolute -left-4 top-4 bottom-[-2rem] w-px bg-zinc-200 dark:bg-zinc-800" />
+            )}
+
+            {/* The timeline dot */}
             <div className={`absolute -left-[21px] top-2 h-2.5 w-2.5 rounded-full border-2 border-white dark:border-black ${
               isActive
                 ? 'bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]'

@@ -3,13 +3,13 @@ import { useSearchParams } from 'react-router-dom';
 // Centralized, typed URL state management for patient profile
 // Replaces inline useSearchParams calls spread across 3 components
 
-type TabValue = 'overview' | 'visits' | 'purchases' | 'billings';
+type TabValue = 'overview' | 'visits' | 'packages' | 'billings';
 type VisitType = 'CONSULTATION' | 'MACHINE_ONLY' | '';
 
 // Type guard functions for runtime validation of URL parameters
 // Prevents unsafe type assertions and provides fallback for invalid values
 function isValidTab(value: string | null): value is TabValue {
-  return value === 'overview' || value === 'visits' || value === 'purchases' || value === 'billings';
+  return value === 'overview' || value === 'visits' || value === 'packages' || value === 'billings';
 }
 
 function isValidVisitType(value: string | null): value is VisitType {

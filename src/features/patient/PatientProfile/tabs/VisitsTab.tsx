@@ -1,6 +1,7 @@
 import type { ComplaintCourse, Visit } from '@/types';
 import { StatusBadge } from '@/components/common/status-badge';
 import { ServiceTag } from '../components/ServiceTag';
+import { FolderOpen } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -92,7 +93,14 @@ export function VisitsTab({ visits, courses }: VisitsTabProps) {
 
       {/* ── Table ── */}
       {sorted.length === 0 ? (
-        <p className="text-sm text-zinc-500 italic py-4">No visits match the current filters.</p>
+        // DECISION: Added a high-fidelity empty state to the Visits Tab to maintain visual consistency across all tabs. 
+        <div className="flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-900/20 mt-2">
+          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 mb-4">
+            <FolderOpen className="w-6 h-6 text-zinc-400 dark:text-zinc-500" />
+          </div>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">No Visits Found</h3>
+          <p className="text-sm text-zinc-500 mt-1 max-w-xs">There are no visits matching your current filters.</p>
+        </div>
       ) : (
         <div className="flex flex-col min-h-0 flex-1 bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden shadow-sm dark:shadow-none">
           {/* Sticky header */}

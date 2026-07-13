@@ -2,7 +2,7 @@ import type { ComplaintCourse, InvoiceRecord, PurchaseRecord, Visit } from '@/ty
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OverviewTab } from './tabs/OverviewTab';
 import { VisitsTab } from './tabs/VisitsTab';
-import { PurchasesTab } from './tabs/PurchasesTab';
+import { PackagesTab } from './tabs/PackagesTab';
 import { BillingsTab } from './tabs/BillingsTab';
 import type { VitalSign } from '@/types';
 import { usePatientProfileUrlState } from './hooks/usePatientProfileUrlState';
@@ -18,7 +18,7 @@ export interface ClinicalHistoryPanelProps {
 const TABS = [
   { value: 'overview',  label: 'Overview'  },
   { value: 'visits',    label: 'Visits'    },
-  { value: 'purchases', label: 'Purchases' },
+  { value: 'packages',  label: 'Packages'  },
   { value: 'billings',  label: 'Billings'  },
 ] as const;
 
@@ -49,8 +49,8 @@ export function ClinicalHistoryPanel({ vitals, visits, courses, purchases, invoi
           <TabsContent value="visits" className="flex-1 min-h-0 flex flex-col p-8 pb-0">
             <VisitsTab visits={visits} courses={courses} />
           </TabsContent>
-          <TabsContent value="purchases" className="flex-1 min-h-0 flex flex-col p-8 pb-0">
-            <PurchasesTab purchases={purchases} />
+          <TabsContent value="packages" className="flex-1 min-h-0 flex flex-col p-8 pb-0">
+            <PackagesTab purchases={purchases} />
           </TabsContent>
           <TabsContent value="billings" className="flex-1 min-h-0 flex flex-col p-8 pb-0">
             <BillingsTab invoices={invoices} />
