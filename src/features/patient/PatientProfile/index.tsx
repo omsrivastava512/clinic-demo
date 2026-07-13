@@ -91,7 +91,7 @@ export function PatientProfilePage() {
     if (window.history.state && window.history.state.idx > 0) {
       navigate(-1);
     } else {
-      navigate('/ledger');
+      navigate('/');
     }
   }, [navigate]);
 
