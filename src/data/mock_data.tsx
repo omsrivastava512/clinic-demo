@@ -593,6 +593,27 @@ export const MOCK_PATIENT_PROFILES: PatientProfile[] = [
       },
     ],
   },
+  // Aarav Mehta (uuid-p04) - A completely new patient with zero records for testing empty state fallbacks
+  {
+    id: 'uuid-p04',
+    mrn: 'MED-004',
+    fullName: 'Aarav Mehta',
+    dateOfBirth: '1995-07-24',
+    // DECISION: Set lastVisitAt to an empty string instead of null to satisfy the TypeScript string signature, safely parsed by getLastVisit().
+    lastVisitAt: '',
+    phone: '9000000004',
+    address: 'Sector 15, Vashi, Navi Mumbai',
+    gender: 'male',
+    referralMode: 'WALKIN',
+    isActive: true,
+    createdAt: '2026-07-13T10:00:00Z',
+    updatedAt: '2026-07-13T10:00:00Z',
+    bloodType: 'O+',
+    insurerName: 'Star Health Insurance',
+    alerts: [],
+    vitals: [],
+    timeline: [],
+  },
 ];
 
 // ==========================================
@@ -711,6 +732,8 @@ export const MOCK_COMPLAINT_COURSES: ComplaintCourse[] = [
 ];
 
 export const MOCK_PURCHASES: PurchaseRecord[] = [
+  // DECISION: Added a 20-session package for Priya Kapoor (uuid-p01) to test the continuous gradient progress bar render (> 12 sessions) in the UI.
+  { id: 'PKG-006', patientId: 'uuid-p01', name: 'Chronic Back Pain Package (20 sessions)', sessionsUsed: 14, sessionsTotal: 20, status: 'Active' },
   { id: 'PKG-001', patientId: 'uuid-p01', name: 'Ankle Rehab Package (10 sessions)', sessionsUsed: 6, sessionsTotal: 10, status: 'Active' },
   { id: 'PKG-002', patientId: 'uuid-p01', name: 'IFT Therapy Package (5 sessions)', sessionsUsed: 5, sessionsTotal: 5, status: 'Completed' },
   { id: 'PKG-003', patientId: 'uuid-p02', name: 'Frozen Shoulder Package (12 sessions)', sessionsUsed: 8, sessionsTotal: 12, status: 'Active' },
