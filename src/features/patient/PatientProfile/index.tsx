@@ -5,7 +5,7 @@ import {
   MOCK_PATIENT_PROFILES,
   MOCK_VISITS_V2,
   MOCK_COMPLAINT_COURSES,
-  MOCK_PURCHASES,
+  MOCK_PACKAGES,
   MOCK_INVOICES,
 } from '@/data/mock_data';
 import { PassportPanel } from './PassportPanel';
@@ -98,7 +98,7 @@ export function PatientProfilePage() {
   // Memoized derived data — avoid refiltering on every render (e.g., activePanel toggle)
   const visits = useMemo(() => MOCK_VISITS_V2.filter((v) => v.patientId === id), [id]);
   const courses = useMemo(() => MOCK_COMPLAINT_COURSES.filter((c) => c.patientId === id), [id]);
-  const purchases = useMemo(() => MOCK_PURCHASES.filter((p) => p.patientId === id), [id]);
+  const packages = useMemo(() => MOCK_PACKAGES.filter((p) => p.patientId === id), [id]);
   const invoices = useMemo(() => MOCK_INVOICES.filter((i) => i.patientId === id), [id]);
 
   if (loading) return <ProfileLoading />;
@@ -139,7 +139,7 @@ export function PatientProfilePage() {
             vitals={profile.vitals}
             visits={visits}
             courses={courses}
-            purchases={purchases}
+            packages={packages}
             invoices={invoices}
           />
         </div>

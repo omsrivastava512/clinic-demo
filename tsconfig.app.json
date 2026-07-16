@@ -28,6 +28,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", ".agents/.kiro/extras/PackageCard1.tsx", ".agents/.kiro/extras/PackageCard3.tsx", ".agents/.kiro/extras/PackageCard4.tsx"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"]
 }
