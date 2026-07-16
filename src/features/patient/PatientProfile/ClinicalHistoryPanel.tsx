@@ -1,4 +1,4 @@
-import type { ComplaintCourse, InvoiceRecord, PurchaseRecord, Visit } from '@/types';
+import type { ComplaintCourse, InvoiceRecord, PackageRecord, Visit } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OverviewTab } from './tabs/OverviewTab';
 import { VisitsTab } from './tabs/VisitsTab';
@@ -11,7 +11,7 @@ export interface ClinicalHistoryPanelProps {
   vitals: VitalSign[];
   visits: Visit[];
   courses: ComplaintCourse[];
-  purchases: PurchaseRecord[];
+  packages: PackageRecord[];
   invoices: InvoiceRecord[];
 }
 
@@ -22,7 +22,7 @@ const TABS = [
   { value: 'billings',  label: 'Billings'  },
 ] as const;
 
-export function ClinicalHistoryPanel({ vitals, visits, courses, purchases, invoices }: ClinicalHistoryPanelProps) {
+export function ClinicalHistoryPanel({ vitals, visits, courses, packages, invoices }: ClinicalHistoryPanelProps) {
   // Using centralized URL state hook instead of inline useSearchParams
   const { tab, setTab } = usePatientProfileUrlState();
 
@@ -50,7 +50,7 @@ export function ClinicalHistoryPanel({ vitals, visits, courses, purchases, invoi
             <VisitsTab visits={visits} courses={courses} />
           </TabsContent>
           <TabsContent value="packages" className="flex-1 min-h-0 flex flex-col p-8 pb-0">
-            <PackagesTab purchases={purchases} />
+            <PackagesTab packages={packages} />
           </TabsContent>
           <TabsContent value="billings" className="flex-1 min-h-0 flex flex-col p-8 pb-0">
             <BillingsTab invoices={invoices} />

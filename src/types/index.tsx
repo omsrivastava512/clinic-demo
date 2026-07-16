@@ -168,13 +168,28 @@ export interface ComplaintCourse {
     status: 'Active' | 'Completed';
 }
 
-export interface PurchaseRecord {
+// DECISION: dayLog stores per-day attendance status for the full package duration.
+// Max 30 elements (clinic's max package length). This lets the UI show *which* specific
+// days were missed (not just how many), enabling streak-style visualization.
+// attendedDays / missedDays are kept as denormalised aggregates for cheap filtering/display.
+export type DayStatus = 'attended' | 'missed' | 'upcoming';
+
+export interface PackageRecord {
     id: string;
     patientId: string;
-    name: string;
-    sessionsUsed: number;
-    sessionsTotal: number;
+    linkedComplaintId: string;
+    linkedComplaintName: string;
+    packageName: string;
+    purchaseDate: string;
+    durationDays: number;
+    expiryDate: string;
+    excludeSundays: boolean;
+    attendedDays: number;
+    missedDays: number;
+    amountPaid: number;
     status: 'Active' | 'Completed' | 'Expired';
+    // Per-day log — length === durationDays, index 0 = day 1 of package
+    dayLog: DayStatus[];
 }
 
 export interface InvoiceRecord {

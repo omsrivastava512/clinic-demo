@@ -6,7 +6,7 @@ import type {
   Patient,
   PatientProfile,
   Procedure,
-  PurchaseRecord,
+  PackageRecord,
   Service,
   Visit,
   VisitRecord,
@@ -731,15 +731,112 @@ export const MOCK_COMPLAINT_COURSES: ComplaintCourse[] = [
   { id: 'CC-p03-05', patientId: 'uuid-p03', complaintName: 'Wrist Sprain',          startDate: '2021-06-20', lastDate: '2021-07-10', totalSessions: 5,  status: 'Completed' },
 ];
 
-export const MOCK_PURCHASES: PurchaseRecord[] = [
-  // DECISION: Added a 20-session package for Priya Kapoor (uuid-p01) to test the continuous gradient progress bar render (> 12 sessions) in the UI.
-  { id: 'PKG-006', patientId: 'uuid-p01', name: 'Chronic Back Pain Package (20 sessions)', sessionsUsed: 14, sessionsTotal: 20, status: 'Active' },
-  { id: 'PKG-001', patientId: 'uuid-p01', name: 'Ankle Rehab Package (10 sessions)', sessionsUsed: 6, sessionsTotal: 10, status: 'Active' },
-  { id: 'PKG-002', patientId: 'uuid-p01', name: 'IFT Therapy Package (5 sessions)', sessionsUsed: 5, sessionsTotal: 5, status: 'Completed' },
-  { id: 'PKG-003', patientId: 'uuid-p02', name: 'Frozen Shoulder Package (12 sessions)', sessionsUsed: 8, sessionsTotal: 12, status: 'Active' },
-  { id: 'PKG-004', patientId: 'uuid-p02', name: 'US Therapy Package (6 sessions)', sessionsUsed: 6, sessionsTotal: 6, status: 'Completed' },
-  { id: 'PKG-005', patientId: 'uuid-p03', name: 'Shoulder Impingement Package (8 sessions)', sessionsUsed: 3, sessionsTotal: 8, status: 'Active' },
+export const MOCK_PACKAGES: PackageRecord[] = [
+  // DECISION: Converted session-based packages to time-based packages with complaint linking and Sunday toggles.
+  {
+    id: 'PKG-001',
+    patientId: 'uuid-p01', // Priya Kapoor
+    linkedComplaintId: 'CC-p01-01',
+    linkedComplaintName: 'Chronic Back Pain',
+    packageName: 'Chronic Back Pain — 20 Day Package',
+    // DECISION: Updated dates to 2026 to align with app state and current timeline rules.
+    purchaseDate: '2026-07-01',
+    durationDays: 20,
+    expiryDate: '2026-07-20',
+    excludeSundays: true,
+    attendedDays: 12,
+    missedDays: 2, // Total 14 days elapsed
+    amountPaid: 8000,
+    status: 'Active',
+    // Days 4 and 9 were missed (mid-sequence, not at the end) — proves positional tracking value
+    dayLog: ['attended','attended','attended','missed','attended','attended','attended','attended','missed','attended','attended','attended','attended','attended','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming'],
+  },
+  {
+    id: 'PKG-002',
+    patientId: 'uuid-p01',
+    linkedComplaintId: 'CC-p01-02',
+    linkedComplaintName: 'Ankle Rehab',
+    packageName: 'Ankle Rehab — 10 Day Package',
+    purchaseDate: '2023-11-01',
+    durationDays: 10,
+    expiryDate: '2023-11-10',
+    excludeSundays: false,
+    attendedDays: 10,
+    missedDays: 0,
+    amountPaid: 4500,
+    status: 'Completed',
+    dayLog: ['attended','attended','attended','attended','attended','attended','attended','attended','attended','attended'],
+  },
+  {
+    // Restored: this was present in original mock data as a 5-session IFT package, converted to time-based
+    id: 'PKG-006',
+    patientId: 'uuid-p01',
+    linkedComplaintId: 'CC-p01-01',
+    linkedComplaintName: 'Chronic Back Pain',
+    packageName: 'IFT Therapy — 5 Day Package',
+    purchaseDate: '2023-07-15',
+    durationDays: 5,
+    expiryDate: '2023-07-19',
+    excludeSundays: false,
+    attendedDays: 5,
+    missedDays: 0,
+    amountPaid: 2200,
+    status: 'Completed',
+    dayLog: ['attended','attended','attended','attended','attended'],
+  },
+  {
+    id: 'PKG-003',
+    patientId: 'uuid-p02', // Rahul Gupta
+    linkedComplaintId: 'CC-p02-01',
+    linkedComplaintName: 'Frozen Shoulder',
+    packageName: 'Frozen Shoulder — 30 Day Package',
+    // DECISION: Updated dates to 2026 to align with active status.
+    purchaseDate: '2026-07-06',
+    durationDays: 30,
+    expiryDate: '2026-08-04',
+    excludeSundays: true,
+    attendedDays: 7,
+    missedDays: 1, // 8 days elapsed — missed day 5
+    amountPaid: 12000,
+    status: 'Active',
+    dayLog: ['attended','attended','attended','attended','missed','attended','attended','attended','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming'],
+  },
+  {
+    id: 'PKG-004',
+    patientId: 'uuid-p02',
+    linkedComplaintId: 'CC-p02-02',
+    linkedComplaintName: 'US Therapy',
+    packageName: 'US Therapy — 15 Day Package',
+    purchaseDate: '2023-08-01',
+    durationDays: 15,
+    expiryDate: '2023-08-15',
+    excludeSundays: false,
+    attendedDays: 13,
+    missedDays: 2,
+    amountPaid: 6000,
+    status: 'Expired',
+    // Missed day 6 and day 11 — scattered through the course
+    dayLog: ['attended','attended','attended','attended','attended','missed','attended','attended','attended','attended','missed','attended','attended','attended','attended'],
+  },
+  {
+    id: 'PKG-005',
+    patientId: 'uuid-p03', // Anita Desai
+    linkedComplaintId: 'CC-p03-01',
+    linkedComplaintName: 'Shoulder Impingement',
+    packageName: 'Shoulder Impingement — 10 Day Package',
+    // DECISION: Updated dates to 2026 to align with active status.
+    purchaseDate: '2026-07-12', // Just yesterday relative to current time in July 2026
+    durationDays: 10,
+    expiryDate: '2026-07-21',
+    excludeSundays: true,
+    attendedDays: 1,
+    missedDays: 0, // 1 day elapsed
+    amountPaid: 5000,
+    status: 'Active',
+    dayLog: ['attended','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming','upcoming'],
+  },
 ];
+
 
 export const MOCK_INVOICES: InvoiceRecord[] = [
   { id: 'INV-001', patientId: 'uuid-p01', amount: 2500, date: '2024-02-11', paymentStatus: 'Paid' },
