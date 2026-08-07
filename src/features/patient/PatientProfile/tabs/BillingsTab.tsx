@@ -48,7 +48,7 @@ export function BillingsTab({ invoices }: BillingsTabProps) {
             </StatusBadge>
           </div>
         ))}
-      </div>
+      </ScrollArea>
     </div>
   );
 }
