@@ -1,7 +1,8 @@
 import type { WidgetProps } from '../types';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
-export function ClinicHealthWidget({ config }: WidgetProps) {
+// Decision: Prefixed `_config` with underscore to resolve TS6133 unused parameter error during production build.
+export function ClinicHealthWidget({ config: _config }: WidgetProps) {
   /*
     Assumption: We didn't specify actual active treatment plan data in the mock data,
     so I'm hardcoding these values for now. 

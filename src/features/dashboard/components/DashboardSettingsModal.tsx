@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// Decision: Removed unused `React` import to resolve TS6133 compiler error in React 19 JSX transform context.
+import { useState } from 'react';
 import type { WidgetConfig, MetricId } from '../types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";

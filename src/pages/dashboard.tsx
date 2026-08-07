@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// Decision: Removed unused `React` import to resolve TS6133 compiler error in React 19 JSX transform context.
+import { useState } from 'react';
 import { Search, UserPlus, Settings } from 'lucide-react';
 import { DashboardSettingsModal } from '../features/dashboard/components/DashboardSettingsModal';
 import type { WidgetConfig } from '../features/dashboard/types';

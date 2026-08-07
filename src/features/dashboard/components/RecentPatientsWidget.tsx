@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
-export function RecentPatientsWidget({ config }: WidgetProps) {
+// Decision: Prefixed `_config` with underscore to resolve TS6133 unused parameter compiler error.
+export function RecentPatientsWidget({ config: _config }: WidgetProps) {
   const navigate = useNavigate();
   // Simply grabbing the first 5 for demo purposes as "recent"
   const recentPatients = MOCK_PATIENT_PROFILES.slice(0, 5);

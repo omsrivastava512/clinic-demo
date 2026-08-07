@@ -2,7 +2,8 @@ import type { WidgetProps } from '../types';
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
-export function ReferralSourcesWidget({ config }: WidgetProps) {
+// Decision: Prefixed `_config` with underscore to resolve TS6133 unused parameter compiler error.
+export function ReferralSourcesWidget({ config: _config }: WidgetProps) {
   /*
     Decision: I chose a simple flex list over a Pie Chart.
     Reason: A pie chart requires a third-party library or complex SVG logic, which violates 
