@@ -928,13 +928,12 @@ export const MOCK_SERVICES: Service[] = [
 const _S = Object.fromEntries(MOCK_SERVICES.map(s => [s.name, s])) as Record<string, Service>;
 
 function _vs(visitId: string, vsId: string, svc: Service) {
-  // Decision: Store standalonePrice (catalogue data) on VisitService instead of pre-computing isCharged/chargedAmount.
-  // Derived charges are calculated at read time via patientUtils functions.
+  // Ref: ADR-PP-27 — Store standalonePrice only; derived billing computed on read.
   return { id: vsId, visitId, serviceId: svc.id, serviceName: svc.name, serviceCategory: svc.category, standalonePrice: svc.standalonePrice };
 }
 
 function _mv(id: string, patientId: string, date: string, complaint: string, complaintId: string, vt: 'CONSULTATION' | 'MACHINE_ONLY', ct: 'FIRST' | 'SUBSEQUENT' | undefined, names: string[]): Visit {
-  // Decision: consultationFee, servicesTotal, and grandTotal are no longer stored on Visit; computed on read in UI.
+  // Ref: ADR-PP-27 — Visit totals derived at read time; not stored.
   const services = names.map((n, i) => _vs(id, `${id}-s${i + 1}`, _S[n]));
   return { id, patientId, date, complaint, complaintId, visitType: vt, consultationType: ct, services };
 }

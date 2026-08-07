@@ -9,9 +9,7 @@ export interface ScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-// Decision: forwardRef is used here because scroll containers like TableBody pass a ref to this element
-// for direct DOM scroll manipulation (e.g. scrollTop, scrollIntoView). Without forwardRef,
-// passing a ref would silently fail on a standard functional wrapper.
+// Ref: ADR-PP-25 — forwardRef passes DOM ref to underlying scroll container.
 const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
   ({ className, children, ...props }, ref) => {
     return (

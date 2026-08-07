@@ -9,8 +9,7 @@ interface ServiceTagProps {
 }
 
 export function ServiceTag({ serviceName, serviceCategory, standalonePrice, visitType }: ServiceTagProps) {
-  // Decision: Derive isCharged and chargedAmount at component render time from raw catalogue price
-  // and visit type to ensure consistency with the global billing engine.
+  // Ref: ADR-PP-28 — isCharged and chargedAmount derived at render time.
   const isCharged = shouldChargeService(serviceCategory, visitType);
   const chargedAmount = calculateServiceCharge(standalonePrice, serviceCategory, visitType);
 

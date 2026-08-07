@@ -18,7 +18,7 @@ export function OverviewTab({ vitals, courses }: OverviewTabProps) {
         <Activity className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
         Complaint History
       </h3>
-      {/* Decision: ScrollArea is used here to enforce scrollbar hiding consistency across browsers */}
+      {/* Ref: ADR-PP-26 — ScrollArea wrapper ensures consistent scrollbar hiding. */}
       <ScrollArea className="overflow-y-auto max-h-[420px] px-1 pr-2">
         <ClinicalTimeline courses={courses} />
       </ScrollArea>

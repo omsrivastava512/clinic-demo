@@ -44,8 +44,7 @@ export function ClinicalHistoryPanel({ vitals, visits, courses, packages, invoic
         </div>
 
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          {/* Decision: TabsContent cannot reliably handle overflow-y-auto across browsers when hidden internally (display:none), 
-              so we wrap child contents inside ScrollArea rather than placing overflow on TabsContent directly. */}
+          {/* Ref: ADR-PP-26 — TabsContent inner content wrapped in ScrollArea for stable cross-browser scroll. */}
           <TabsContent value="overview" className="flex-1">
             <ScrollArea className="overflow-y-auto p-8">
               <OverviewTab vitals={vitals} courses={courses} />

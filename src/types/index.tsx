@@ -120,9 +120,7 @@ export interface VisitService {
     serviceId: string;
     serviceName: string;                 // denormalised for display
     serviceCategory: 'STANDARD' | 'PREMIUM';
-    // Decision: Storing catalogue standalonePrice on VisitService is source data, not a derived calculation.
-    // Derived values (isCharged, chargedAmount) are computed dynamically at read time via patientUtils
-    // to prevent data drift if billing business rules change.
+    // Ref: ADR-PP-27 — VisitService stores source catalogue price; billing charges derived dynamically.
     standalonePrice: number;             // raw catalogue price; used to derive chargedAmount on read
 }
 
@@ -137,8 +135,7 @@ export interface Visit {
     // Only for CONSULTATION:
     consultationType?: 'FIRST' | 'SUBSEQUENT';
     services: VisitService[];            // all services used this session
-    // Decision: Consultation fees, services totals, and grand total are derived at read time
-    // via calculateConsultationFee() and calculateServiceCharge() in patientUtils.
+    // Ref: ADR-PP-27 — Consultation fees and totals derived at read time via patientUtils.
 }
 
 // ── Legacy VisitRecord kept for backward compat during transition ──────────────

@@ -158,8 +158,7 @@ export function VisitsTab({ visits, courses }: VisitsTabProps) {
                     </td>
 
                     <td className="px-4 py-3 font-mono text-sm text-right whitespace-nowrap">
-                      {/* Decision: Computing visit totals inline at render time using calculateConsultationFee and calculateServiceCharge
-                          runs once per visible row and ensures billing logic changes immediately reflect across all historical views. */}
+                      {/* Ref: ADR-PP-28 — Visit totals computed inline at render time. */}
                       {(() => {
                         const fee = calculateConsultationFee(visit.visitType, visit.consultationType);
                         const svcTotal = visit.services.reduce(
