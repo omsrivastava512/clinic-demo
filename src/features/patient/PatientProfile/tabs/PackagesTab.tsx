@@ -1,6 +1,6 @@
 import type { PackageRecord } from '@/types';
 import { PackageCard } from '../components/PackageCard';
-
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { PackageOpen } from 'lucide-react';
 
 export interface PackagesTabProps {
@@ -24,13 +24,13 @@ export function PackagesTab({ packages }: PackagesTabProps) {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto pb-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <ScrollArea className="flex-1 overflow-y-auto pb-8">
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         {packages.map((pkg) => (
           <PackageCard key={pkg.id} pkg={pkg} />
         ))}
       </div>
-    </div>
+    </ScrollArea>
   );
 }
 

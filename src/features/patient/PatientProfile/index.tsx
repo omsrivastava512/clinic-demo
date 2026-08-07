@@ -14,6 +14,8 @@ import { ProfileLoading } from './ProfileLoading';
 import { ProfileError } from './ProfileError';
 import { ProfileNotFound } from './ProfileNotFound';
 
+import { ScrollArea } from '@/components/ui/scroll-area';
+
 type ActivePanel = 'profile' | 'history';
 
 // Discriminated union — treating "not found" as a valid outcome, not an exception
@@ -129,10 +131,10 @@ export function PatientProfilePage() {
       </div>
 
       <div className="flex flex-col lg:flex-row flex-1 min-h-0">
-        <div className={['overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]',
+        <ScrollArea className={['overflow-y-auto',
           activePanel === 'profile' ? 'block lg:block' : 'hidden lg:block'].join(' ')}>
           <PassportPanel patient={profile} onBack={handleBack} />
-        </div>
+        </ScrollArea>
         <div className={['flex-1 min-w-0 min-h-0 flex flex-col',
           activePanel === 'history' ? 'block lg:flex' : 'hidden lg:flex'].join(' ')}>
           <ClinicalHistoryPanel

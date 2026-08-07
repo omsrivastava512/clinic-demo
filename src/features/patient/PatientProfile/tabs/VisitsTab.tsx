@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { usePatientProfileUrlState } from '../hooks/usePatientProfileUrlState';
+import { calculateConsultationFee, calculateServiceCharge } from '@/lib/patientUtils';
 
 export interface VisitsTabProps {
   visits: Visit[];
@@ -147,9 +148,9 @@ export function VisitsTab({ visits, courses }: VisitsTabProps) {
                             <ServiceTag
                               key={svc.id}
                               serviceName={svc.serviceName}
-                              isCharged={svc.isCharged}
-                              chargedAmount={svc.chargedAmount}
                               serviceCategory={svc.serviceCategory}
+                              standalonePrice={svc.standalonePrice}
+                              visitType={visit.visitType}
                             />
                           ))}
                         </div>
@@ -157,10 +158,18 @@ export function VisitsTab({ visits, courses }: VisitsTabProps) {
                     </td>
 
                     <td className="px-4 py-3 font-mono text-sm text-right whitespace-nowrap">
-                      {visit.grandTotal === 0
-                        ? <span className="text-zinc-400">₹0</span>
-                        : <span className="text-zinc-900 dark:text-zinc-200">₹{visit.grandTotal.toLocaleString('en-IN')}</span>
-                      }
+                      {/* Decision: Computing visit totals inline at render time using calculateConsultationFee and calculateServiceCharge
+                          runs once per visible row and ensures billing logic changes immediately reflect across all historical views. */}
+                      {(() => {
+                        const fee = calculateConsultationFee(visit.visitType, visit.consultationType);
+                        const svcTotal = visit.services.reduce(
+                          (sum, svc) => sum + calculateServiceCharge(svc.standalonePrice, svc.serviceCategory, visit.visitType), 0
+                        );
+                        const total = fee + svcTotal;
+                        return total === 0
+                          ? <span className="text-zinc-400">₹0</span>
+                          : <span className="text-zinc-900 dark:text-zinc-200">₹{total.toLocaleString('en-IN')}</span>;
+                      })()}
                     </td>
                   </tr>
                 ))}
