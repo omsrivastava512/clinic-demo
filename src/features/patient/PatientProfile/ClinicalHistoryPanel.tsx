@@ -1,5 +1,6 @@
 import type { ComplaintCourse, InvoiceRecord, PackageRecord, Visit } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { OverviewTab } from './tabs/OverviewTab';
 import { VisitsTab } from './tabs/VisitsTab';
 import { PackagesTab } from './tabs/PackagesTab';
@@ -43,8 +44,11 @@ export function ClinicalHistoryPanel({ vitals, visits, courses, packages, invoic
         </div>
 
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <TabsContent value="overview" className="flex-1 overflow-y-auto p-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <OverviewTab vitals={vitals} courses={courses} />
+          {/* Ref: ADR-PP-26 — TabsContent inner content wrapped in ScrollArea for stable cross-browser scroll. */}
+          <TabsContent value="overview" className="flex-1">
+            <ScrollArea className="overflow-y-auto p-8">
+              <OverviewTab vitals={vitals} courses={courses} />
+            </ScrollArea>
           </TabsContent>
           <TabsContent value="visits" className="flex-1 min-h-0 flex flex-col p-8 pb-0">
             <VisitsTab visits={visits} courses={courses} />

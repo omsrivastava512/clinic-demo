@@ -927,16 +927,15 @@ export const MOCK_SERVICES: Service[] = [
 
 const _S = Object.fromEntries(MOCK_SERVICES.map(s => [s.name, s])) as Record<string, Service>;
 
-function _vs(visitId: string, vsId: string, svc: Service, vt: 'CONSULTATION' | 'MACHINE_ONLY') {
-  const isCharged = vt === 'MACHINE_ONLY' || svc.category === 'PREMIUM';
-  return { id: vsId, visitId, serviceId: svc.id, serviceName: svc.name, serviceCategory: svc.category, isCharged, chargedAmount: isCharged ? svc.standalonePrice : 0 };
+function _vs(visitId: string, vsId: string, svc: Service) {
+  // Ref: ADR-PP-27 — Store standalonePrice only; derived billing computed on read.
+  return { id: vsId, visitId, serviceId: svc.id, serviceName: svc.name, serviceCategory: svc.category, standalonePrice: svc.standalonePrice };
 }
 
 function _mv(id: string, patientId: string, date: string, complaint: string, complaintId: string, vt: 'CONSULTATION' | 'MACHINE_ONLY', ct: 'FIRST' | 'SUBSEQUENT' | undefined, names: string[]): Visit {
-  const consultationFee = vt === 'CONSULTATION' ? (ct === 'FIRST' ? 300 : 200) : 0;
-  const services = names.map((n, i) => _vs(id, `${id}-s${i + 1}`, _S[n], vt));
-  const servicesTotal = services.reduce((sum, s) => sum + s.chargedAmount, 0);
-  return { id, patientId, date, complaint, complaintId, visitType: vt, consultationType: ct, consultationFee, services, servicesTotal, grandTotal: consultationFee + servicesTotal };
+  // Ref: ADR-PP-27 — Visit totals derived at read time; not stored.
+  const services = names.map((n, i) => _vs(id, `${id}-s${i + 1}`, _S[n]));
+  return { id, patientId, date, complaint, complaintId, visitType: vt, consultationType: ct, services };
 }
 
 export const MOCK_VISITS_V2: Visit[] = [

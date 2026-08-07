@@ -1,13 +1,18 @@
 import { cn } from '@/lib/utils';
+import { shouldChargeService, calculateServiceCharge } from '@/lib/patientUtils';
 
 interface ServiceTagProps {
   serviceName: string;
-  isCharged: boolean;
-  chargedAmount: number;
   serviceCategory: 'STANDARD' | 'PREMIUM';
+  standalonePrice: number;
+  visitType: 'CONSULTATION' | 'MACHINE_ONLY';
 }
 
-export function ServiceTag({ serviceName, isCharged, chargedAmount, serviceCategory }: ServiceTagProps) {
+export function ServiceTag({ serviceName, serviceCategory, standalonePrice, visitType }: ServiceTagProps) {
+  // Ref: ADR-PP-28 — isCharged and chargedAmount derived at render time.
+  const isCharged = shouldChargeService(serviceCategory, visitType);
+  const chargedAmount = calculateServiceCharge(standalonePrice, serviceCategory, visitType);
+
   return (
     <span
       title={isCharged ? `₹${chargedAmount}` : 'Included in consult'}

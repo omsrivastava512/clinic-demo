@@ -120,10 +120,8 @@ export interface VisitService {
     serviceId: string;
     serviceName: string;                 // denormalised for display
     serviceCategory: 'STANDARD' | 'PREMIUM';
-    // DEBT: isCharged and chargedAmount should be derived at read time, not stored
-    // Use shouldChargeService() and calculateServiceCharge() from patientUtils instead
-    isCharged: boolean;                  // derived: true if MACHINE_ONLY or PREMIUM
-    chargedAmount: number;               // 0 if not charged
+    // Ref: ADR-PP-27 — VisitService stores source catalogue price; billing charges derived dynamically.
+    standalonePrice: number;             // raw catalogue price; used to derive chargedAmount on read
 }
 
 // A visit — one per complaint per session
@@ -136,12 +134,8 @@ export interface Visit {
     visitType: 'CONSULTATION' | 'MACHINE_ONLY';
     // Only for CONSULTATION:
     consultationType?: 'FIRST' | 'SUBSEQUENT';
-    // DEBT: These billing fields should be derived at read time, not stored
-    // Use calculateConsultationFee() from patientUtils instead
-    consultationFee: number;             // 300 (FIRST) | 200 (SUBSEQUENT) | 0 (MACHINE_ONLY)
     services: VisitService[];            // all services used this session
-    servicesTotal: number;               // sum of charged VisitServices
-    grandTotal: number;                  // consultationFee + servicesTotal
+    // Ref: ADR-PP-27 — Consultation fees and totals derived at read time via patientUtils.
 }
 
 // ── Legacy VisitRecord kept for backward compat during transition ──────────────

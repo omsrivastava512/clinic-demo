@@ -591,3 +591,118 @@ Replaced with `return timeline.filter(event => event.category === category);`.
   (the Timeline was migrated to render `ComplaintCourse[]` instead of `TimelineEvent[]`).
   It should be removed or marked `@deprecated` when the `PatientProfile.timeline` field is
   cleaned up. See ADR-PP-04 (stored vs derived fields).
+
+---
+
+## Group 7 — Dynamic Billing & Scroll Abstraction
+
+### [ADR-PP-25] `ScrollArea` component uses `React.forwardRef` for imperative scroll manipulation
+
+**File:** `src/components/ui/scroll-area.tsx`
+
+**Context / Problem**
+Scrollable containers like `TableBody` pass DOM refs to manipulate scrolling imperatively
+(e.g., `scrollTop`, `scrollIntoView`). Plain functional component wrappers drop `ref` props
+silently in React.
+
+**Decision**
+Declared `ScrollArea` using `React.forwardRef<HTMLDivElement, ScrollAreaProps>` so passed
+refs land directly on the underlying scroll container `<div>`. Centralizes scrollbar-hiding
+classes (`[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]`).
+
+```tsx
+const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
+  ({ className, children, ...props }, ref) => (
+    <div ref={ref} className={cn(HIDE_SCROLLBAR, className)} {...props}>{children}</div>
+  )
+);
+```
+
+**Trade-offs / Assumptions**
+- Requires `forwardRef` boilerplate instead of a plain functional wrapper, but guarantees
+  compatibility with callers needing imperative DOM scroll control.
+
+---
+
+### [ADR-PP-26] `ScrollArea` wraps inner tab contents rather than `TabsContent` directly
+
+**File:** `src/features/patient/PatientProfile/ClinicalHistoryPanel.tsx`
+
+**Context / Problem**
+`TabsContent` uses internal `display: none` when tabs are inactive. Applying `overflow-y-auto`
+directly onto `TabsContent` causes inconsistent scrollbar and height calculations across
+browsers when tab visibility toggles.
+
+**Decision**
+Wrapped child tab contents inside `<ScrollArea className="overflow-y-auto">` within `TabsContent`
+rather than placing overflow styles directly on `TabsContent`.
+
+```tsx
+<TabsContent value="overview" className="flex-1">
+  <ScrollArea className="overflow-y-auto p-8">
+    <OverviewTab vitals={vitals} courses={courses} />
+  </ScrollArea>
+</TabsContent>
+```
+
+**Trade-offs / Assumptions**
+- Adds one extra wrapper element in DOM hierarchy per tab, but ensures stable cross-browser
+  scroll behavior.
+
+---
+
+### [ADR-PP-27] `VisitService` stores source catalogue price (`standalonePrice`); billing fields derived dynamically
+
+**File:** `src/types/index.tsx`, `src/data/mock_data.tsx`
+
+**Context / Problem**
+Previously `isCharged`, `chargedAmount`, `consultationFee`, `servicesTotal`, and `grandTotal`
+were stored directly on `VisitService` and `Visit` types and mock data objects, creating a risk
+of data drift if billing rules changed. (Resolves acknowledged debt in ADR-PP-04).
+
+**Decision**
+Removed stored billing fields from types and mock data generators. `VisitService` now stores
+`standalonePrice: number` (raw catalogue price), and `Visit` stores raw services list.
+
+```ts
+export interface VisitService {
+  id: string;
+  visitId: string;
+  serviceId: string;
+  serviceName: string;
+  serviceCategory: 'STANDARD' | 'PREMIUM';
+  standalonePrice: number;
+}
+```
+
+**Trade-offs / Assumptions**
+- Read-time calculations must be performed by UI components, but data drift risk is eliminated.
+
+---
+
+### [ADR-PP-28] Inline read-time calculation of visit totals and tag charges in `VisitsTab` and `ServiceTag`
+
+**File:** `src/features/patient/PatientProfile/tabs/VisitsTab.tsx`, `src/features/patient/PatientProfile/components/ServiceTag.tsx`
+
+**Context / Problem**
+With stored billing fields removed from `Visit` and `VisitService`, UI rendering components
+needed a clean, performant way to display fees and charges.
+
+**Decision**
+`ServiceTag` derives `isCharged` and `chargedAmount` at render time from `standalonePrice` and
+`visitType` via `shouldChargeService` and `calculateServiceCharge`. `VisitsTab` computes row
+grand totals inline using `calculateConsultationFee` and `calculateServiceCharge`. Promotes
+ADR-PP-23 functions out of experimental status.
+
+```tsx
+const fee = calculateConsultationFee(visit.visitType, visit.consultationType);
+const svcTotal = visit.services.reduce(
+  (sum, svc) => sum + calculateServiceCharge(svc.standalonePrice, svc.serviceCategory, visit.visitType), 0
+);
+const total = fee + svcTotal;
+```
+
+**Trade-offs / Assumptions**
+- Runs once per visible row in the filtered visits table, giving instant reflection of any
+  global pricing/rule updates.
+
