@@ -3,6 +3,7 @@ import { Input, ToggleButton } from "./primitives"
 import { cn, formatPhone } from "@/lib"
 import type { FormData } from '../../types'
 import type { ChangeEvent } from "react"
+import { FieldError } from "@/components/FieldError"
 
 const sexes = ['M', 'F', 'X'] as const
 
@@ -12,8 +13,9 @@ type DemographicsSectionProps = Pick<FormData, 'age' | 'phone' | 'sex'> & {
     changePhone(v: FormData['phone']): void;
     changeAge(v: FormData['age']): void;
     changeSex(v: FormData['sex']): void;
+    errors?: { age?: string; phone?: string; sex?: string };
 }
-const DemographicsSection = ({ phone, age, sex, changePhone, changeAge, changeSex }: DemographicsSectionProps) => {
+const DemographicsSection = ({ phone, age, sex, changePhone, changeAge, changeSex, errors }: DemographicsSectionProps) => {
     return (
         <section className="grid grid-cols-1 sm:grid-cols-12 gap-4">
 
@@ -38,6 +40,7 @@ const DemographicsSection = ({ phone, age, sex, changePhone, changeAge, changeSe
                         className='font-mono pl-10'
                     />
                 </div>
+                <FieldError message={errors?.phone} />
             </div>
 
             {/* Age */}
@@ -53,6 +56,7 @@ const DemographicsSection = ({ phone, age, sex, changePhone, changeAge, changeSe
                     placeholder="00"
                     className="text-center"
                 />
+                <FieldError message={errors?.age} />
             </div>
 
             {/* sex */}
@@ -78,6 +82,7 @@ const DemographicsSection = ({ phone, age, sex, changePhone, changeAge, changeSe
                         </ToggleButton>
                     ))}
                 </div>
+                <FieldError message={errors?.sex} />
             </div>
         </section >
     )

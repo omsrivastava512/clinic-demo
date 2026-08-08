@@ -8,16 +8,21 @@ import PaymentSelector from "./components/PaymentSelector";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
+export interface InvoicePaymentPayload {
+    paymentMode: PaymentMode;
+    paymentStatus: string;
+    totalInPaise?: number;
+}
 
-interface InvoiceBuilderProps {
+export interface InvoiceBuilderProps {
     items: InvoiceItem[];
     patientName: string;
     invoiceNumber: string; // Caller owns ID generation — component shouldn't hardcode this
     onClose: () => void;
+    onConfirm?: (payload: InvoicePaymentPayload) => void;
 }
 
-
-const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, invoiceNumber, onClose }) => {
+const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, invoiceNumber, onClose, onConfirm }) => {
     const [paymentMode, setPaymentMode] = useState<PaymentMode>('UPI');
 
     const total = items.reduce((sum, i) => sum + i.cost, 0);
@@ -42,7 +47,12 @@ const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, inv
                 <PaymentSelector paymentMode={paymentMode} setPaymentMode={setPaymentMode}/>
 
                 {/* Actions */}
-                <FooterActions onClose={onClose} isEmpty={isEmpty} />
+                <FooterActions 
+                    onClose={onClose} 
+                    isEmpty={isEmpty} 
+                    paymentMode={paymentMode}
+                    onConfirm={onConfirm}
+                />
 
             </div>
         </div >
