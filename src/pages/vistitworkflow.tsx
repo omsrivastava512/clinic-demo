@@ -150,6 +150,7 @@ const VisitWorkflow = () => {
                     ].slice(0)}
                     patientName="Amitabh Bachchan"
                     onClose={() => alert('Visit Closed')}
+                    onConfirm={(payload) => { console.log('Payment confirmed:', payload); alert(`Payment confirmed via ${payload.paymentMode}`); }}
                 />
             </PresentationSection>
         </>
