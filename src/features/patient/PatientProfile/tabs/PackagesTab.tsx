@@ -7,9 +7,8 @@ export interface PackagesTabProps {
   packages: PackageRecord[];
 }
 
-// DECISION: Switched to PackageCard4 at user request. PC4 combines the clean Shadcn card 
-// layout of PC3 with the permanent tiny dot grid tracking from PC1, providing a dense but 
-// minimal view without requiring collapsible wrappers.
+// DECISION [TRIGGER: CODE_REVIEW] [ORIGIN: USER_DIRECTIVE]:
+// Switched to PackageCard4 (PC4) per user directive, combining clean Shadcn card styling with permanent dot grid tracking.
 export function PackagesTab({ packages }: PackagesTabProps) {
   if (packages.length === 0) {
     return (

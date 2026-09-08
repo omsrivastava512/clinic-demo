@@ -7,10 +7,8 @@ export interface PackageCardProps {
   pkg: PackageRecord;
 }
 
-// DECISION: Variant 4 — "Shadcn Card with Permanent Dot Grid". Combines the clean, standard
-// Shadcn layout of PC3 with the tiny dot grid tracking from PC1. Because the dots are
-// iconless and small, they don't take up much vertical space, allowing us to remove
-// the collapsible `<details>` wrapper and just show the information permanently.
+// DECISION [TRIGGER: CODE_REVIEW] [ORIGIN: AI_PROPOSAL_APPROVED]:
+// Variant 4 — "Shadcn Card with Permanent Dot Grid". Combines clean Shadcn layout with tiny dot grid tracking, removing collapsible wrapper.
 
 const STATUS_BADGE_VARIANT: Record<PackageRecord['status'], 'default' | 'secondary' | 'outline' | 'destructive'> = {
   Active: 'default',
@@ -18,20 +16,29 @@ const STATUS_BADGE_VARIANT: Record<PackageRecord['status'], 'default' | 'seconda
   Expired: 'destructive',
 };
 
-// DECISION: Added a subtle left border to replace the heavy gradient panel from PC1.
-// Gives a clear visual anchor for status without overwhelming the minimal design.
+// DECISION [ORIGIN: AI_AUTONOMOUS]: Added subtle left border for status visual anchor without heavy gradients.
 const STATUS_BORDER: Record<PackageRecord['status'], string> = {
   Active: 'border-l-blue-500 dark:border-l-blue-500',
   Completed: 'border-l-zinc-300 dark:border-l-zinc-600',
   Expired: 'border-l-rose-500 dark:border-l-rose-600',
 };
 
-function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+function parseSafeDate(dateStr: string): Date {
+  // DECISION [TRIGGER: RUNTIME_BUG] [ORIGIN: AI_AUTONOMOUS]: Manually parse YYYY-MM-DD to construct local Date, preventing UTC midnight timezone shift bugs.
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+  return new Date(dateStr);
+}
+
+function formatDate(dateInput: string | Date): string {
+  const date = typeof dateInput === 'string' ? parseSafeDate(dateInput) : dateInput;
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 function getDayDate(startDateStr: string, dayIndex: number, excludeSundays: boolean): Date {
-  const date = new Date(startDateStr);
+  const date = parseSafeDate(startDateStr);
   let daysAdded = 0;
   while (daysAdded < dayIndex) {
     date.setDate(date.getDate() + 1);
@@ -92,8 +99,8 @@ export function PackageCard({ pkg }: PackageCardProps) {
                 {isActive ? 'Days Left' : 'Days Total'}
               </span>
             </div>
-            {/* DECISION: Replaced single date string with explicit Start/Expires labels (user request).
-                Used a compact inline layout with a tiny divider to keep it clean and icon-free. */}
+            {/* DECISION [TRIGGER: CODE_REVIEW] [ORIGIN: USER_DIRECTIVE]:
+                Replaced single date string with explicit Start/Expires labels per user request in compact inline layout. */}
             <div className="flex items-center gap-3 mt-1.5">
               <div>
                 <p className="text-[9px] uppercase tracking-wider text-zinc-400 font-semibold mb-0.5">Start</p>
@@ -113,17 +120,15 @@ export function PackageCard({ pkg }: PackageCardProps) {
           </div>
         </div>
 
-        {/* DECISION: Replaced the collapsible section with a permanent, subtle attendance
-            summary using the tiny dot grid approach. It's space-efficient and informative. */}
+        {/* DECISION [ORIGIN: AI_AUTONOMOUS]: Replaced collapsible section with permanent dot grid attendance summary. */}
         <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800/60">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
               {elapsedDays} of {durationDays} Days Elapsed
             </span>
             <div className="flex gap-3 text-[10px] font-medium">
-              {/* DECISION: Changed attended color from emerald to blue. Blue and red are on 
-                  opposite ends of the spectrum, making it significantly easier to distinguish 
-                  for users with red-green color blindness (the most common type). */}
+              {/* DECISION [TRIGGER: PRODUCT_SPEC] [ORIGIN: AI_AUTONOMOUS]:
+                  Changed attended color from emerald to blue for red-green color blindness accessibility. */}
               <span className="text-blue-600 dark:text-blue-500">{attendedDays} Attended</span>
               {missedDays > 0 && (
                 <span className="text-rose-600 dark:text-rose-500">{missedDays} Missed</span>
@@ -131,27 +136,26 @@ export function PackageCard({ pkg }: PackageCardProps) {
             </div>
           </div>
 
-          {/* DECISION: Added sr-only text for screen readers and aria-hidden on the dot grid 
-              to fix accessibility issues where title attributes fail on touch devices or read poorly. */}
+          {/* DECISION [TRIGGER: CODE_REVIEW] [ORIGIN: AI_AUTONOMOUS]:
+              Added sr-only text for screen readers and aria-hidden on dot grid for accessible attendance reading. */}
           <span className="sr-only">
             Attendance summary: {attendedDays} attended, {missedDays} missed out of {durationDays} total days.
           </span>
           <div className="flex flex-wrap gap-1.5" aria-hidden="true">
             {dayLog.map((dayStatus, idx) => {
               const actualDate = getDayDate(purchaseDate, idx, excludeSundays);
-              const dateStr = formatDate(actualDate.toISOString());
+              const dateStr = formatDate(actualDate);
 
               return (
-                <Popover key={idx}>
+                <Popover key={`${(pkg as any).id}-day-${idx}`}>
                   <PopoverTrigger
-                    openOnHover
                     className={`w-2 h-2 rounded-full transition-transform hover:scale-150 cursor-pointer p-0 border-0 shrink-0 ${dayStatus === 'attended' ? 'bg-blue-500' :
                       dayStatus === 'missed' ? 'bg-rose-500' :
                         'bg-zinc-200 dark:bg-zinc-800'
                       }`}
                   />
                   <PopoverContent side="top" align="center" className="w-auto px-2 py-1 text-xs font-medium bg-zinc-900 text-zinc-50 border-zinc-800 dark:bg-zinc-50 dark:text-zinc-900">
-                    {dateStr} — {dayStatus.charAt(0).toUpperCase() + dayStatus.slice(1)}
+                    {dateStr} | {dayStatus.charAt(0).toUpperCase() + dayStatus.slice(1)}
                   </PopoverContent>
                 </Popover>
               );

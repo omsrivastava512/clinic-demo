@@ -18,16 +18,17 @@ interface PatientCardProps {
   onClick: () => void;
 }
 
-// DECISION: Extracting patient card into a memoized component to prevent re-renders when parent dashboard state changes,
-// matching the senior review request.
+// DECISION [TRIGGER: CODE_REVIEW] [ORIGIN: USER_OVERRULED_AI]:
+// AI inlined card JSX inside dashboard map loop. User refuted: causes O(N) re-renders across cards on dashboard state changes.
+// Solution: Extracted PatientCard into a React.memo component receiving primitive props.
+// Invariant: Props must remain primitive/memoizable values (no inline object creation in parent).
 const PatientCard = React.memo(function PatientCard({
   patient,
   visitsCount,
   unpaidInvoicesCount,
   onClick,
 }: PatientCardProps) {
-  // DECISION: Deriving age and initials inside the card to keep the dashboard mapping loop clean
-  // and encapsulate the derivation logic in the presentation layer.
+  // DECISION [ORIGIN: AI_AUTONOMOUS]: Deriving age and initials inside the card to keep the dashboard mapping loop clean.
   const age = calculateAge(patient.dateOfBirth);
   const initials = getInitials(patient.fullName);
 
@@ -35,7 +36,7 @@ const PatientCard = React.memo(function PatientCard({
     <button
       type="button"
       onClick={onClick}
-      // DECISION: Added detailed aria-label for accessibility as requested (Issue 5)
+      // DECISION [TRIGGER: CODE_REVIEW] [ORIGIN: USER_DIRECTIVE]: Added detailed aria-label for accessibility per review (Issue 5).
       aria-label={`Open ${patient.fullName}'s clinical record`}
       className="text-left bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm p-5 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 transition-all active:scale-[0.99] cursor-pointer"
     >
@@ -62,7 +63,9 @@ const PatientCard = React.memo(function PatientCard({
       {patient.alerts.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-4">
           {patient.alerts.map((alert) => (
-            // DECISION: Using a composite natural key to fix key index issues (Issue 6) as requested.
+            // DECISION [TRIGGER: CODE_REVIEW] [ORIGIN: USER_OVERRULED_AI]:
+            // AI used array indices as keys. User refuted (Issue 6): causes DOM reuse bugs on alert mutation.
+            // Solution: Using composite natural key `${alert.type}-${alert.label}` for stable reconciliation.
             <StatusBadge key={`${alert.type}-${alert.label}`} variant={ALERT_VARIANT[alert.type]}>
               {alert.label}
             </StatusBadge>

@@ -15,7 +15,7 @@ const VITAL_LABELS: Record<VitalSign['type'], string> = {
 
 export function VitalsGrid({ vitals }: VitalsGridProps) {
   if (vitals.length === 0) {
-    // DECISION: Upgraded the empty state to high fidelity for consistency across all profile components.
+    // DECISION [ORIGIN: AI_AUTONOMOUS]: Upgraded empty state to high fidelity for consistency across all profile components.
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-900/20 mb-8">
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 mb-4">

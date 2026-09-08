@@ -7,7 +7,7 @@ export interface ClinicalTimelineProps {
   courses: ComplaintCourse[];
 }
 
-// DECISION: Make date formatting safe. If a date string is empty or invalid, it returns a fallback rather than crashing the component or displaying 'Invalid Date'.
+// DECISION [ORIGIN: AI_AUTONOMOUS]: Safe date formatting fallback returning 'N/A' for empty strings to prevent render crashes.
 function fmt(d: string) {
   if (!d) return 'N/A';
   const date = new Date(d);
@@ -20,7 +20,7 @@ export function ClinicalTimeline({ courses }: ClinicalTimelineProps) {
   const { goToVisits } = usePatientProfileUrlState();
 
   if (courses.length === 0) {
-    // DECISION: Use a high-fidelity empty state to maintain visual consistency with the rest of the application and provide a premium feel, replacing the plain text.
+    // DECISION [ORIGIN: AI_AUTONOMOUS]: High-fidelity empty state matching design-system consistency across tabs.
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-900/20 mt-4">
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 mb-4">
@@ -39,8 +39,8 @@ export function ClinicalTimeline({ courses }: ClinicalTimelineProps) {
   });
 
   return (
-    // DECISION: Removed the border-l from the parent container and instead render an absolute line on each timeline node.
-    // This solves the visual bug where the timeline line would hang past the final item into empty space.
+    // DECISION [TRIGGER: RUNTIME_BUG] [ORIGIN: AI_AUTONOMOUS]:
+    // Render absolute line on each node instead of parent border-l to prevent line hanging past the last node.
     <div className="relative pl-4 pr-1 space-y-8">
       {sorted.map((course, idx) => {
         const isActive = course.status === 'Active';

@@ -168,10 +168,10 @@ export interface ComplaintCourse {
     status: 'Active' | 'Completed';
 }
 
-// DECISION: dayLog stores per-day attendance status for the full package duration.
-// Max 30 elements (clinic's max package length). This lets the UI show *which* specific
-// days were missed (not just how many), enabling streak-style visualization.
-// attendedDays / missedDays are kept as denormalised aggregates for cheap filtering/display.
+// DECISION [TRIGGER: PRODUCT_SPEC] [ORIGIN: USER_DIRECTIVE]:
+// dayLog stores per-day attendance status for the full package duration (max 30 days).
+// Enables positional/streak tracking of which specific days were missed.
+// attendedDays / missedDays are retained as denormalized aggregates for O(1) filtering.
 export type DayStatus = 'attended' | 'missed' | 'upcoming';
 
 export interface PackageRecord {

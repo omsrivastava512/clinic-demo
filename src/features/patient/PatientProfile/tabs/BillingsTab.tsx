@@ -15,7 +15,7 @@ const STATUS_VARIANT: Record<InvoiceRecord['paymentStatus'], StatusBadgeVariant>
 
 export function BillingsTab({ invoices }: BillingsTabProps) {
   if (invoices.length === 0) {
-    // DECISION: Upgraded the empty state to high fidelity for consistency across all profile tabs.
+    // DECISION [ORIGIN: AI_AUTONOMOUS]: Upgraded empty state to high fidelity for design consistency across profile tabs.
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-900/20 mt-2">
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 mb-4">

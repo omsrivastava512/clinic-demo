@@ -2,9 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { CircleQuestionMarkIcon, ArrowLeftIcon, HomeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// DECISION: We decided to implement Option A (separate, decoupled NotFound and ServerError pages) as per user alignment.
-// This reduces routing logic complexity compared to a unified error boundary hook, making debugging simpler for a solo dev.
-// The NotFound component handles invalid routing states (404s) and is styled to match the dark/light clinic theme.
+// DECISION [TRIGGER: PRODUCT_SPEC] [ORIGIN: AI_PROPOSAL_APPROVED]:
+// AI proposed Option A (separate, decoupled NotFound and ServerError pages) vs Option B (unified catch-all hook).
+// User approved Option A: reduces routing complexity and isolates 404 client navigation states from 500 runtime crashes.
 const NotFound = () => {
     const navigate = useNavigate();
 

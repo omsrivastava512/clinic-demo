@@ -10,7 +10,7 @@ export function ProfileError({ error, onRetry, onBack }: ProfileErrorProps) {
       <div className="flex flex-col items-center gap-4 max-w-sm text-center">
         <p className="text-zinc-700 dark:text-zinc-300 font-medium">{error}</p>
         <div className="flex gap-3">
-          {/* DECISION: Exposed onRetry to prevent passing the MouseEvent to the caller */}
+          {/* DECISION [TRIGGER: TYPE_CONSTRAINT] [ORIGIN: AI_AUTONOMOUS]: Explicit onRetry invocation prevents leaking React MouseEvent to async caller. */}
           <button type="button" onClick={onRetry}
             className="px-4 py-2 rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-sm font-medium hover:bg-zinc-700 dark:hover:bg-zinc-300 transition-colors">
             Retry

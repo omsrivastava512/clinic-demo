@@ -11,9 +11,9 @@ const STAGE_PROGRESS: Partial<Record<StageId, number>> = {
     V0: 5, // first 4 items done in the current stage
 };
 
-// DECISION: We keep errorElement: <ServerError /> at the child route level rather than only on the root route.
-// This ensures that if a specific page/tab crashes, the main layout shell (App) remains intact and responsive,
-// allowing the user to simply click on another section to continue working without a full app lock-up.
+// DECISION [TRIGGER: PRODUCT_SPEC] [ORIGIN: USER_DIRECTIVE]:
+// User directed keeping errorElement: <ServerError /> at child route level rather than only root route.
+// Rationale: If a specific child tab crashes, the layout shell (App) remains intact and interactive, preventing total app lock-out.
 export const router = createBrowserRouter([
     {
         path: "/",
