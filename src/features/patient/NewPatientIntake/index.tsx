@@ -1,28 +1,19 @@
 import { useState, useReducer } from 'react';
 import ClinicalNotesBuilder from '../ClinicalNotesBuilder';
 import { type ClinicalNote } from '../types';
-import { capitalizeEachWord, deepTrimStrings, filterAge, filterAlphabetsAndSpaces, filterPhoneNumber, normalizeAddress, validateAddress, } from '@/lib';
+import { capitalizeEachWord, deepTrimStrings, filterAge, filterAlphabetsAndSpaces, filterPhoneNumber, normalizeAddress } from '@/lib';
 import { Input, IntakeLayout, TextArea, } from './components/primitives';
 import FormHeader from './components/FormHeader';
 import ReferralSection from './components/ReferralSection';
 import DemographicsSection from './components/DemographicsSection';
 import FormFooter from './components/FormFooter';
 import type { FormData } from '../types';
+import { validatePatientIntake } from './validation';
+import { FieldError } from '@/components/FieldError';
 
 const validateAndCapitalizeName = (val: string) => capitalizeEachWord(filterAlphabetsAndSpaces(val))
 
-const validateFormData = (data: FormData): string[] => {
-    const errors = []
-    if (data.name.length < 5) errors.push('Name is too short');
-    if (data.phone.length < 10) errors.push('Phone is required');
-    if (isNaN(+data.age)|| +data.age < 0 || +data.age > 99) errors.push('Enter valid age');
-    if (!validateAddress(data.address)) errors.push('Address is invalid or too short');
-    if (data.address.length > 50) errors.push('Address is too long');
-    if (data.referral === 'DOCTOR' && !validateAddress(data.doctorInfo)) {
-        errors.push('Doctor information is required for doctor referrals');
-    }
-    return errors; // Valid if empty
-}
+
 
 interface IntakeProps {
     initialName?: string;
@@ -112,9 +103,11 @@ export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onCl
     const [formData, dispatch] = useReducer(formReducer, initialFormData, initializeName);
 
     const [showClinicalNotes, setShowClinicalNotes] = useState(false)
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
     const handleCancel = ()=>{
         dispatch({ type: 'RESET' })
+        setFieldErrors({})
         onClose()
     }
     
@@ -122,12 +115,16 @@ export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onCl
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const errors = validateFormData(formData);
-        if (errors.length > 0) return alert(errors.join('\n'))
+        const result = validatePatientIntake(formData);
+        if (!result.success) {
+            setFieldErrors(result.fieldErrors!);
+            return;
+        }
 
         const trimmedForm = deepTrimStrings(formData) as FormData
         alert(`Creating Profile for: ${trimmedForm.name}\nMobile: ${trimmedForm.phone}\nGender: ${trimmedForm.sex}\nAddress: ${trimmedForm.address}`);
         dispatch({ type: 'RESET' })
+        setFieldErrors({})
         onSubmit(trimmedForm);
     };
 
@@ -141,7 +138,11 @@ export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onCl
                 {/* ROW 1: NAME */}
                 <NameInput
                     patientName={formData.name}
-                    changeName={(value) => dispatch({ type: 'CHANGE_NAME', value })}
+                    changeName={(value) => {
+                        setFieldErrors(prev => ({ ...prev, name: '' }));
+                        dispatch({ type: 'CHANGE_NAME', value });
+                    }}
+                    error={fieldErrors.name}
                 />
 
                 {/* ROW 2: VITAL DEMOGRAPHICS  */}
@@ -149,22 +150,43 @@ export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onCl
                     age={formData.age}
                     phone={formData.phone}
                     sex={formData.sex}
-                    changeAge={(value) => dispatch({ type: 'CHANGE_AGE', value })}
-                    changePhone={(value) => dispatch({ type: 'CHANGE_PHONE', value })}
-                    changeSex={(value) => dispatch({ type: 'CHANGE_SEX', value })}
+                    changeAge={(value) => {
+                        setFieldErrors(prev => ({ ...prev, age: '' }));
+                        dispatch({ type: 'CHANGE_AGE', value });
+                    }}
+                    changePhone={(value) => {
+                        setFieldErrors(prev => ({ ...prev, phone: '' }));
+                        dispatch({ type: 'CHANGE_PHONE', value });
+                    }}
+                    changeSex={(value) => {
+                        setFieldErrors(prev => ({ ...prev, sex: '' }));
+                        dispatch({ type: 'CHANGE_SEX', value });
+                    }}
+                    errors={{ age: fieldErrors.age, phone: fieldErrors.phone, sex: fieldErrors.sex }}
                 />
 
                 <AddressArea
                     address={formData.address}
-                    changeAddress={(value) => dispatch({ type: 'CHANGE_ADDRESS', value })}
+                    changeAddress={(value) => {
+                        setFieldErrors(prev => ({ ...prev, address: '' }));
+                        dispatch({ type: 'CHANGE_ADDRESS', value });
+                    }}
+                    error={fieldErrors.address}
                 />
 
                 {/* ROW 3: REFERRAL */}
                 <ReferralSection
                     doctorInfo={formData.doctorInfo}
                     selectedReferral={formData.referral}
-                    changeReferral={(value: FormData['referral']) => dispatch({ type: 'CHANGE_REFERRAL', value })}
-                    changeDoctorInfo={(value) => dispatch({ type: "CHANGE_DOCTOR_INFO", value })}
+                    changeReferral={(value: FormData['referral']) => {
+                        setFieldErrors(prev => ({ ...prev, referral: '' }));
+                        dispatch({ type: 'CHANGE_REFERRAL', value });
+                    }}
+                    changeDoctorInfo={(value) => {
+                        setFieldErrors(prev => ({ ...prev, doctorInfo: '' }));
+                        dispatch({ type: "CHANGE_DOCTOR_INFO", value });
+                    }}
+                    errors={{ referral: fieldErrors.referral, doctorInfo: fieldErrors.doctorInfo }}
                 />
 
                 {/* FOOTER ACTIONS */}
@@ -194,9 +216,10 @@ export default NewPatientIntake;
 
 type NameInputProps = {
     patientName: FormData['name'],
-    changeName(v: FormData['name']): void
+    changeName(v: FormData['name']): void,
+    error?: string
 }
-const NameInput = ({ patientName, changeName }: NameInputProps) => (
+const NameInput = ({ patientName, changeName, error }: NameInputProps) => (
     <div>
         <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 block">Full Legal Name</label>
         <Input
@@ -208,13 +231,15 @@ const NameInput = ({ patientName, changeName }: NameInputProps) => (
             className="text-xl font-medium"
             autoFocus
         />
+        <FieldError message={error} />
     </div>
 )
 type AddressAreaProps = {
     address: string;
     changeAddress(v: string): void;
+    error?: string;
 }
-const AddressArea = ({ address, changeAddress }: AddressAreaProps) => (
+const AddressArea = ({ address, changeAddress, error }: AddressAreaProps) => (
     <section>
         <label htmlFor="address" className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest my-3 block">Address</label>
 
@@ -227,6 +252,7 @@ const AddressArea = ({ address, changeAddress }: AddressAreaProps) => (
             value={address}
             onChange={(e) => changeAddress(e.currentTarget.value)}
         />
+        <FieldError message={error} />
     </section>
 )
 

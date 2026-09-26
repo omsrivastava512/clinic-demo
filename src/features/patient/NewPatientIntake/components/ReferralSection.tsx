@@ -2,6 +2,7 @@ import { FootprintsIcon, MapPinIcon, StethoscopeIcon } from "lucide-react";
 import { ReferralButton, TextAreaWithRef } from "./primitives";
 import { useEffect, useRef } from "react";
 import type { FormData } from '../../types';
+import { FieldError } from "@/components/FieldError";
 
 // ASSUME: REFERRAL_OPTIONS is have only these options
 const REFERRAL_OPTIONS = [
@@ -16,8 +17,9 @@ type ReferralSectionProps = {
     changeReferral(val: ReferralId): void;
     doctorInfo: FormData['doctorInfo'];
     changeDoctorInfo(v: string): void;
+    errors?: { referral?: string; doctorInfo?: string };
 }
-const ReferralSection = ({ selectedReferral, changeReferral, doctorInfo, changeDoctorInfo }: ReferralSectionProps) => {
+const ReferralSection = ({ selectedReferral, changeReferral, doctorInfo, changeDoctorInfo, errors }: ReferralSectionProps) => {
 
     const referralRef = useRef<HTMLTextAreaElement>(null);
     useEffect(() => {
@@ -43,6 +45,7 @@ const ReferralSection = ({ selectedReferral, changeReferral, doctorInfo, changeD
                     </ReferralButton>
                 ))}
             </div>
+            <FieldError message={errors?.referral} />
             {(selectedReferral === 'DOCTOR') &&
                 <div>
                     <label htmlFor="referral_info" className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest my-3 block">Doctor's Info</label>
@@ -56,6 +59,7 @@ const ReferralSection = ({ selectedReferral, changeReferral, doctorInfo, changeD
                         required
                         placeholder="Enter referring doctor's information like name, number, address, etc., here..."
                     />
+                    <FieldError message={errors?.doctorInfo} />
                 </div>}
 
         </section>
