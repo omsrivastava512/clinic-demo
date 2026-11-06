@@ -3,37 +3,33 @@ import { useState, type ChangeEvent } from "react";
 import type { ClinicalNote } from "..";
 import { cn, filterAlphabetsAndNormalizeSpaces, filterAlphaNumeric } from "@/lib";
 
-
-const initialNote:ClinicalNote = {
+const initialNote: ClinicalNote = {
     category: '',
     observation: '',
     isCritical: false,
-}
+};
 
 export const CNBInput = ({ insertNote }: { insertNote(n: ClinicalNote): Promise<boolean> }) => {
     const [newNote, setNewNote] = useState(initialNote);
 
     const handleNewKey = (e: ChangeEvent<HTMLInputElement>) => {
         const raw = e.currentTarget.value;
-        setNewNote(n => ({ ...n, category: filterAlphabetsAndNormalizeSpaces(raw) }))
-    }
+        setNewNote(n => ({ ...n, category: filterAlphabetsAndNormalizeSpaces(raw) }));
+    };
     const handleNewValue = (e: ChangeEvent<HTMLInputElement>) => {
         const raw = e.currentTarget.value;
-        setNewNote(n => ({ ...n, observation: filterAlphaNumeric(raw) }))
-    }
-
+        setNewNote(n => ({ ...n, observation: filterAlphaNumeric(raw) }));
+    };
 
     const handleAddNote = async () => {
         if (!newNote.category.trim() || !newNote.observation.trim()) return;
-
-        const success = await insertNote(newNote)
-
-        if (success) setNewNote(initialNote)
+        const success = await insertNote(newNote);
+        if (success) setNewNote(initialNote);
     };
 
     return (
-        <div className="flex gap-2 mb-6 items-end">
-            <div className="">
+        <div className="flex gap-2.5 mb-6 items-end">
+            <div className="w-1/2">
                 <label className={labelStyles}>
                     Category
                 </label>
@@ -41,8 +37,8 @@ export const CNBInput = ({ insertNote }: { insertNote(n: ClinicalNote): Promise<
                     type="text"
                     value={newNote.category}
                     onChange={handleNewKey}
-                    placeholder="e.g. Diabetes, Weight, Thyroid, Allergy"
-                    title="e.g. Diabetes, Weight, Thyroid, Allergy"
+                    placeholder="e.g. Diabetes, Allergy"
+                    title="e.g. Diabetes, Allergy"
                     className={inputStyles}
                 />
             </div>
@@ -64,11 +60,13 @@ export const CNBInput = ({ insertNote }: { insertNote(n: ClinicalNote): Promise<
 
             {/* Critical Toggle Button */}
             <button
+                type="button"
                 onClick={() => setNewNote(n => ({ ...n, isCritical: !n.isCritical }))}
                 title="Mark as Critical Issue"
-                className={cn("p-2 rounded-lg border mb-px",
+                className={cn(
+                    "p-2.5 rounded-xl border mb-px transition-all cursor-pointer",
                     newNote.isCritical
-                        ? 'bg-red-500 border-red-600 text-white shadow-sm'
+                        ? 'bg-rose-500 border-rose-600 text-white shadow-xs'
                         : notCriticalStyles
                 )}
             >
@@ -76,44 +74,38 @@ export const CNBInput = ({ insertNote }: { insertNote(n: ClinicalNote): Promise<
             </button>
 
             <button
-                type="button" title="Add"
+                type="button"
+                title="Add"
                 onClick={handleAddNote}
                 disabled={!newNote.category || !newNote.observation}
                 className={cn(
-                    "p-2 mb-px bg-zinc-900 dark:bg-white",
-                    "text-white dark:text-black rounded-lg",
-                    "hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed",
-                    "active:bg-zinc-700 dark:active:bg-zinc-300"
+                    "p-2.5 mb-px rounded-xl transition-all cursor-pointer",
+                    "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-xs",
+                    "hover:bg-zinc-800 dark:hover:bg-zinc-100",
+                    "disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
                 )}
             >
                 <PlusIcon className="w-4 h-4" />
             </button>
         </div>
-    )
-}
-
-
+    );
+};
 
 const inputStyles = cn(
-    "w-full bg-zinc-50 dark:bg-zinc-900/50",    // bg
-    "border border-zinc-200 dark:border-zinc-800 rounded-lg",   // border
-    "px-3 py-2 text-sm text-zinc-900 dark:text-white",    // pad, text
-    "focus:border-zinc-400 dark:focus:border-zinc-600",   // focus:border
-    "focus:bg-white dark:focus:bg-zinc-900",    // focus:bg
-    "placeholder-zinc-400 dark:placeholder-zinc-600"  // placeholder
-)
+    "w-full bg-zinc-50 dark:bg-zinc-900/60",
+    "border border-zinc-200 dark:border-zinc-800 rounded-xl",
+    "px-3.5 py-2.5 text-sm text-zinc-900 dark:text-white font-medium",
+    "focus:border-zinc-400 dark:focus:border-zinc-500 focus:bg-white dark:focus:bg-zinc-900",
+    "placeholder:text-zinc-400 dark:placeholder:text-zinc-600 outline-none transition-colors"
+);
 
 const labelStyles = cn(
-    "text-xs font-bold",
-    "text-zinc-500 dark:text-zinc-400",
-    "uppercase tracking-widest mb-1.5 block"
-)
+    "text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5 block"
+);
 
 const notCriticalStyles = cn(
-    "bg-zinc-50 dark:bg-zinc-900",    // bg
-    "border-zinc-200 dark:border-zinc-800",   // border
-    "text-zinc-400 dark:text-zinc-500",   // text
-    "hover:border-zinc-400 dark:hover:border-zinc-600"  // hover
-)
-
-
+    "bg-zinc-50 dark:bg-zinc-900",
+    "border-zinc-200 dark:border-zinc-800",
+    "text-zinc-400 dark:text-zinc-500",
+    "hover:border-zinc-400 dark:hover:border-zinc-600"
+);
