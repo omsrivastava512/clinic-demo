@@ -1,32 +1,29 @@
-import {cn} from "@/lib";
+import { cn } from "@/lib";
 import type { ReactNode } from "react";
 
 /** Wrapper Components */
 export const DropdownContainer = ({ children }: { children: ReactNode; }) => (
     <div className={cn(
-        "absolute bottom-full left-0 right-0 mx-4 mb-2",  // position
-        "bg-zinc-200 dark:bg-zinc-900",  // bg
-        "outline outline-zinc-600 dark:outline-zinc-400 rounded-lg",  // outline
-        "max-h-75 flex flex-col", // flex
-        "shadow-lg shadow-gray-700/50 dark:shadow-gray-400/50"  // shadow
+        "absolute bottom-full left-0 right-0 mx-3 mb-2",
+        "bg-popover text-popover-foreground",
+        "border border-border rounded-xl",
+        "max-h-80 flex flex-col overflow-hidden",
+        "shadow-xl dark:shadow-2xl z-40 backdrop-blur-md"
     )}>
         {children}
     </div>
 );
 
-
 export const DropdownHeader = ({ count }: { count: number }) => (
     <div className={cn(
-        "px-4 py-2 w-full",  // box
-        "bg-gray-100 dark:bg-zinc-950",  // bg
-        "border-b border-zinc-200 dark:border-zinc-800",  // border
-        "text-[10px] font-bold text-zinc-500 uppercase tracking-widest"  // text
+        "px-4 py-2 w-full",
+        "bg-muted/40",
+        "border-b border-border/80",
+        "text-[10px] font-semibold text-muted-foreground uppercase tracking-wider"
     )}>
-        Search Results ({count})
+        Patient Matches ({count})
     </div>
 );
-
-
 
 type ListItemButtonProps = {
     children: ReactNode;
@@ -34,19 +31,20 @@ type ListItemButtonProps = {
     onSelect(): void;
     variant: "normal" | "add";
 };
-export const ListItemButton = ({ children, isSelected, onSelect, variant, }: ListItemButtonProps) => {
-    const clss = {
-        base: 'w-full text-left px-4 py-3 hover:bg-zinc-300 dark:hover:bg-zinc-700 border-zinc-100 dark:border-zinc-800 flex items-center transition-colors cursor-pointer',
-        selected: '!bg-zinc-300 dark:!bg-zinc-700 !text-black dark:!text-white',
-        normal: "border-b hover:text-black dark:hover:text-white justify-between",
-        add: "border-t text-black dark:text-white gap-3 bg-gray-50 dark:bg-zinc-950"
-    };
 
+export const ListItemButton = ({ children, isSelected, onSelect, variant }: ListItemButtonProps) => {
     return (
         <button
+            type="button"
             onClick={onSelect}
-            // use group-data-[selected=true]:_class_here_ to generate styles in children
-            className={`${clss.base} ${clss[variant]} ${isSelected && clss.selected} group`}
+            className={cn(
+                "w-full text-left px-4 py-2.5 flex items-center transition-colors duration-150 cursor-pointer outline-none select-none",
+                variant === "normal" && "border-b border-border/40 justify-between",
+                variant === "add" && "border-t border-border/80 bg-muted/20 gap-3",
+                isSelected
+                    ? "bg-muted text-foreground"
+                    : "hover:bg-muted/60 text-foreground/90"
+            )}
         >
             {children}
         </button>
