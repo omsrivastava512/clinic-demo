@@ -14,27 +14,27 @@ const PAYMENT_METHODS: { mode: PaymentMode; label: string; Icon: React.FC<{ clas
 type PaymentSelectorProps = {
     paymentMode: PaymentMode;
     setPaymentMode: Dispatch<React.SetStateAction<PaymentMode>>;
-}
+};
 
 const PaymentSelector = ({ paymentMode, setPaymentMode }: PaymentSelectorProps) => {
     return (
-        <div className="mb-8">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wide block mb-3">
+        <div className="mb-6">
+            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-2.5">
                 Payment Mode (भुगतान का प्रकार)
             </label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2.5">
                 {PAYMENT_METHODS.map(({ mode, label, Icon }) => (
                     <PaymentButton
                         key={mode}
                         label={label}
                         Icon={Icon}
                         selected={paymentMode === mode}
-                        onSelect={()=>setPaymentMode(mode)}
+                        onSelect={() => setPaymentMode(mode)}
                     />
                 ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default PaymentSelector
+export default PaymentSelector;

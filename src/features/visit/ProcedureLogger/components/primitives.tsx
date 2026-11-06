@@ -12,101 +12,108 @@ interface ProcedureCardProps {
     selected: boolean;
     onToggle: () => void;
 }
+
 export const ProcedureCard: React.FC<ProcedureCardProps> = ({ proc, selected, onToggle }) => (
     <button
+        type="button"
         onClick={onToggle}
         className={cn(
-            // Base styles shared between both states
-            "text-left p-3 rounded-md border transition-all flex justify-between items-start",
+            "text-left p-3.5 rounded-xl border transition-all duration-150 flex justify-between items-start cursor-pointer active:scale-[0.985]",
             selected
-                // Active state: high-contrast border + subtle shadow to "lift" the card
-                ? "bg-zinc-100 border-zinc-900 text-zinc-900 dark:bg-zinc-900 dark:border-white dark:text-white shadow-sm dark:shadow-white/5"
-                // Idle state: muted with a hover affordance so the grid feels interactive
-                : "bg-white border-zinc-200 text-zinc-500 hover:border-zinc-400 dark:bg-black dark:border-zinc-800 dark:text-zinc-500 dark:hover:border-zinc-600 dark:hover:bg-zinc-900/50"
+                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 border-zinc-900 dark:border-white shadow-md"
+                : "bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900"
         )}
     >
-        <div>
-            <div className="font-medium text-sm">{proc.name}</div>
+        <div className="min-w-0 pr-2">
+            <div className="font-semibold text-sm leading-snug">{proc.name}</div>
             {/* Monospace keeps rupee amounts visually aligned across cards */}
-            <div className="text-[10px] font-mono mt-1 opacity-60">₹{proc.cost}</div>
+            <div className={cn(
+                "text-xs font-mono tabular-nums mt-1.5 font-medium",
+                selected ? "text-zinc-300 dark:text-zinc-600" : "text-zinc-400 dark:text-zinc-500"
+            )}>
+                ₹{proc.cost}
+            </div>
         </div>
-        {/* Only render the icon in the DOM when selected to avoid invisible layout space */}
-        {selected && <CheckIcon className="w-4 h-4 shrink-0 text-zinc-900 dark:text-white" />}
+        <div className={cn(
+            "w-5 h-5 rounded-md flex items-center justify-center shrink-0 border transition-colors",
+            selected
+                ? "bg-emerald-500 text-white border-emerald-500"
+                : "border-zinc-300 dark:border-zinc-700 text-transparent"
+        )}>
+            <CheckIcon className="w-3.5 h-3.5" />
+        </div>
     </button>
 );
-
-
 
 // ─── ReceiptItem ───────────────────────────────────────────────────────────────
 // A single line in the live receipt panel. 
 interface ReceiptItemProps {
     item: InvoiceItem;
 }
+
 export const ReceiptItem: React.FC<ReceiptItemProps> = ({ item }) => (
-    <div className="flex justify-between text-sm py-1 border-b border-zinc-200 dark:border-zinc-800 last:border-0">
-        {/* truncate prevents long procedure names from breaking the fixed-width panel */}
-        <span className="text-zinc-700 dark:text-zinc-300 truncate pr-2">{item.name}</span>
-        <span className="font-mono text-zinc-500">₹{item.cost}</span>
+    <div className="flex justify-between items-center text-xs py-2 border-b border-zinc-200/60 dark:border-zinc-800/60 last:border-0">
+        <span className="text-zinc-700 dark:text-zinc-300 font-medium truncate pr-2">{item.name}</span>
+        <span className="font-mono tabular-nums text-zinc-500 dark:text-zinc-400 shrink-0 font-medium">₹{item.cost}</span>
     </div>
 );
 
-
 // ─── StickySectionHeader ───────────────────────────────────────────────────────────────
-// When there are many contexts, the user needs to know which
-// context they're currently scrolling through without losing their position.
 type StickySectionHeaderProps = {
     index: number;
     title: string;
-}
-export const StickySectionHeader = ({ index, title }: StickySectionHeaderProps) => (<div className="flex items-center gap-3 mb-4 sticky top-0 bg-zinc-50/95 dark:bg-black/95 backdrop-blur py-2 z-10 border-b border-zinc-200 dark:border-zinc-900">
-    {/* Numbered badge so the user can cross-reference this section with the receipt */}
-    <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-900 dark:text-white border border-zinc-300 dark:border-zinc-700">
-        {index + 1}
-    </div>
-    <div>
-        <h3 className="text-zinc-900 dark:text-white font-bold">{title}</h3>
-        <p className="text-xs text-zinc-500">Select procedures for this specific area</p>
-    </div>
-</div>);
+};
 
+export const StickySectionHeader = ({ index, title }: StickySectionHeaderProps) => (
+    <div className="flex items-center gap-3 mb-4 sticky top-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md py-3 z-10 border-b border-zinc-200 dark:border-zinc-800">
+        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white flex items-center justify-center text-xs font-bold font-mono border border-zinc-200 dark:border-zinc-700 shrink-0">
+            {index + 1}
+        </div>
+        <div>
+            <h3 className="text-base font-bold text-zinc-900 dark:text-white tracking-tight">{title}</h3>
+            <p className="text-xs text-zinc-500">Select procedures for this specific area</p>
+        </div>
+    </div>
+);
 
 // ─── SearchMoreProcedures ───────────────────────────────────────────────────────────────
 export const SearchMoreProcedures = () => (
     <div className={cn(
-        "sm:col-span-2  my-2 p-3 ",
+        "sm:col-span-2 my-1 px-3.5 py-2.5",
         "text-left flex justify-between items-center",
-        "border border-zinc-300 dark:border-zinc-800 rounded",
-        "text-sm dark:text-white bg-zinc-100/50 dark:bg-zinc-900/50",
-        "hover:border-zinc-600 dark:hover:border-zinc-400",
-        "hover:bg-zinc-100 dark:hover:bg-zinc-800/50",
-        "focus-within:border-zinc-600 dark:focus-within:border-zinc-400"
+        "border border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl",
+        "text-xs bg-zinc-50 dark:bg-zinc-900/40 text-zinc-500 dark:text-zinc-400",
+        "hover:border-zinc-400 dark:hover:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800/50",
+        "focus-within:border-zinc-500 focus-within:ring-2 focus-within:ring-zinc-400/10",
+        "transition-all duration-150"
     )}>
         <input
             type="text"
             placeholder="Search less common procedures..."
-            className="flex-1 bg-transparent border-none w-full placeholder-zinc-400 dark:placeholder-zinc-600  outline-none"
+            className="flex-1 bg-transparent border-none w-full placeholder:text-zinc-400 text-zinc-900 dark:text-white outline-none text-xs font-medium"
             title="Search Database: Use this to find rare procedures (e.g., 'Cupping', 'Needling', 'Lazer') not listed in the quick select grid."
         />
-        <SearchIcon className=" w-5 h-4 text-zinc-600" />
+        <SearchIcon className="w-4 h-4 text-zinc-400 shrink-0 ml-2" />
     </div>
-)
+);
 
 type LayoutProps = {
-    children: ReactNode
-}
+    children: ReactNode;
+};
+
 export const RightLayout = ({ children }: LayoutProps) => (
-    <div 
-    className={cn(
-    "w-full md:w-80",
-    "flex flex-col",
-    "bg-zinc-50 dark:bg-zinc-900/30",
-    "border border-zinc-200 dark:border-zinc-800 rounded-xl",
-    "p-6"
-)}
->
+    <div
+        className={cn(
+            "w-full md:w-80",
+            "flex flex-col",
+            "bg-zinc-50/80 dark:bg-zinc-900/50",
+            "border border-zinc-200 dark:border-zinc-800 rounded-2xl",
+            "p-6 shadow-sm shrink-0 backdrop-blur-sm"
+        )}
+    >
         {children}
     </div>
-)
+);
 
 export const ProcedureBodyLayout = ({ children }: LayoutProps) => (
     <div
@@ -115,9 +122,9 @@ export const ProcedureBodyLayout = ({ children }: LayoutProps) => (
             "md:flex md:flex-row",
             "gap-6",
             "overflow-y-auto",
-            "transition-colors duration-300"
+            "transition-colors duration-150"
         )}
-    >{children}
+    >
+        {children}
     </div>
-)
-
+);

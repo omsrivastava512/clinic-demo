@@ -89,8 +89,6 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
     return () => document.removeEventListener("mousedown", handler);
   }, [isOpen, anchorRef, onClose]);
 
-
-
   // ── Filter & Sort logic ──────────────────────────────────────────────────────
   const filteredItems = useMemo(() => {
     const items = COMPLAINT_CATALOG.filter((c) => {
@@ -151,7 +149,7 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
         width: coords.width,
         zIndex: 50,
       }}
-      className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-2xl overflow-hidden"
+      className="bg-popover text-popover-foreground border border-border rounded-xl shadow-xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150"
     >
       {/* ── Region chips ─────────────────────────────────────────────────── */}
       {/* Scrollable horizontal strip — no scrollbar visible (hide-scrollbar util) */}
@@ -164,10 +162,10 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => onRegionChange(region)}
             className={cn(
-              "shrink-0 px-3 py-1 rounded-full text-xs font-semibold border transition-all",
+              "shrink-0 px-2.5 py-1 rounded-full text-xs font-medium border transition-colors duration-150 active:scale-[0.98]",
               selectedRegion === region
-                ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border-transparent"
-                : "bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:border-zinc-400 dark:hover:border-zinc-500"
+                ? "bg-primary text-primary-foreground border-transparent shadow-xs"
+                : "bg-muted/40 border-border text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
             {region}
@@ -176,7 +174,7 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
       </div>
 
       {/* Thin divider between chips and list */}
-      <div className="h-px bg-zinc-100 dark:bg-zinc-800 mx-3" />
+      <div className="h-px bg-border mx-3" />
 
       {/* ── Filtered results list ────────────────────────────────────────── */}
       {/* ~2.5 cards tall; each row is ~44px, so ~2.5 * 44 ≈ 110px.
@@ -184,13 +182,13 @@ export const CatalogSearchPopover: React.FC<CatalogSearchPopoverProps> = ({
       <div
         id={listboxId}
         role="listbox"
-        className="max-h-28 overflow-y-auto"
+        className="max-h-36 overflow-y-auto divide-y divide-border/40"
       >
         {filteredItems.length === 0 ? (
-          <p className="px-4 py-3 text-xs text-zinc-400 dark:text-zinc-500">
+          <p className="px-4 py-3 text-xs text-muted-foreground">
             {hasMatchesInOtherRegions ? (
               <span>
-                No matches in <span className="font-semibold text-zinc-600 dark:text-zinc-400">{selectedRegion}</span>. Try switching to "All" regions.
+                No matches in <span className="font-semibold text-foreground">{selectedRegion}</span>. Try switching to "All" regions.
               </span>
             ) : (
               "No matches found"
@@ -258,16 +256,16 @@ const CatalogItem: React.FC<CatalogItemProps> = ({
       onMouseDown={(e) => e.preventDefault()}
       onClick={() => !alreadyAdded && onSelect(item)}
       className={cn(
-        "w-full text-left px-4 py-2.5 flex items-center justify-between transition-colors",
-        alreadyAdded ? "opacity-40 cursor-not-allowed" : "cursor-pointer",
-        isFocused ? "bg-zinc-50 dark:bg-zinc-800" : "hover:bg-zinc-50 dark:hover:bg-zinc-800"
+        "w-full text-left px-3.5 py-2.5 flex items-center justify-between text-sm transition-colors duration-150",
+        alreadyAdded ? "opacity-40 cursor-not-allowed bg-transparent" : "cursor-pointer",
+        isFocused ? "bg-accent text-accent-foreground" : "hover:bg-accent/60 text-foreground"
       )}
     >
-      <span className="text-sm font-medium text-zinc-800 dark:text-zinc-100 leading-tight">
+      <span className="font-medium leading-tight">
         {item.title}
       </span>
       {item.region && (
-        <span className="ml-2 shrink-0 text-[10px] text-zinc-400 dark:text-zinc-500 font-medium uppercase tracking-wide">
+        <span className="ml-2 shrink-0 text-[10px] text-muted-foreground font-mono font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-muted/60 border border-border/50">
           {item.region}
         </span>
       )}
