@@ -8,14 +8,12 @@ import PaymentSelector from "./components/PaymentSelector";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-
 interface InvoiceBuilderProps {
     items: InvoiceItem[];
     patientName: string;
     invoiceNumber: string; // Caller owns ID generation — component shouldn't hardcode this
     onClose: () => void;
 }
-
 
 const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, invoiceNumber, onClose }) => {
     const [paymentMode, setPaymentMode] = useState<PaymentMode>('UPI');
@@ -24,8 +22,7 @@ const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, inv
     const isEmpty = items.length === 0;
 
     return (
-        <div className="w-full max-w-lg bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-2xl mx-auto transition-colors duration-300">
-
+        <div className="w-full max-w-lg bg-card text-card-foreground border border-border rounded-xl overflow-hidden shadow-xl mx-auto transition-colors duration-150">
             {/* Header — invoice identity + amount at a glance */}
             <InvoiceHeader
                 patientName={patientName}
@@ -33,21 +30,18 @@ const InvoiceBuilder: React.FC<InvoiceBuilderProps> = ({ items, patientName, inv
                 total={total}
             />
 
-            <div className="p-6">
-
+            <div className="p-5 sm:p-6">
                 {/* Itemised procedure list */}
-                <ItemTable items={items} isEmpty={isEmpty}/>
+                <ItemTable items={items} isEmpty={isEmpty} />
 
                 {/* Payment mode selector — Indian context: UPI is the dominant default */}
-                <PaymentSelector paymentMode={paymentMode} setPaymentMode={setPaymentMode}/>
+                <PaymentSelector paymentMode={paymentMode} setPaymentMode={setPaymentMode} />
 
                 {/* Actions */}
                 <FooterActions onClose={onClose} isEmpty={isEmpty} />
-
             </div>
-        </div >
+        </div>
     );
 };
 
 export default InvoiceBuilder;
-

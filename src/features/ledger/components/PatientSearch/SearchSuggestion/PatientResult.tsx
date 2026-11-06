@@ -1,25 +1,24 @@
 import type { Patient } from "@/types";
-import { ArrowUpRightIcon, MapPinHouseIcon, SmartphoneIcon, UserIcon } from "lucide-react";
+import { ArrowUpRight, MapPin, Phone, User } from "lucide-react";
 import { ListItemButton } from "./primitives";
-import { cn } from "@/lib"
+import { cn } from "@/lib";
 import { isMinInputLength } from "../utils";
 import { useEffect, useRef } from "react";
 
-
 type PatientListProps = {
-    filteredPatients: Patient[],
+    filteredPatients: Patient[];
     handleSelect(i: number): void;
-    focusedIndex: number,
-    input: string
-}
+    focusedIndex: number;
+    input: string;
+};
 
 const PatientResult = ({ filteredPatients, handleSelect, focusedIndex, input }: PatientListProps) => {
-
     return (
-        <div className="overflow-y-auto max-h-50">
+        <div className="overflow-y-auto max-h-56">
             {isMinInputLength(input) &&
                 filteredPatients.map((p, i) => (
                     <PatientListItem
+                        key={p.id}
                         onSelect={() => handleSelect(i)}
                         isSelected={i === focusedIndex}
                         patient={p}
@@ -28,24 +27,20 @@ const PatientResult = ({ filteredPatients, handleSelect, focusedIndex, input }: 
             }
 
             {/* No Results */}
-            {
-                !isMinInputLength(input) ? (
-                    <div className="px-4 py-6 text-center text-zinc-500 text-sm tracking-widest italic cursor-not-allowed ">
-                        Keep Typing....
-                    </div>
-                )
-                    : filteredPatients.length === 0 && (
-                        <div className="px-4 py-6 text-center text-zinc-500 text-sm tracking-widest italic cursor-not-allowed ">
-                            No existing patients found for "{input}"
-                        </div>
-                    )
-            }
+            {!isMinInputLength(input) ? (
+                <div className="px-4 py-5 text-center text-muted-foreground text-xs font-mono">
+                    Type at least 3 characters to search…
+                </div>
+            ) : filteredPatients.length === 0 && (
+                <div className="px-4 py-5 text-center text-muted-foreground text-xs">
+                    No registered patients matching <span className="font-semibold text-foreground">"{input}"</span>
+                </div>
+            )}
         </div>
-    )
-}
+    );
+};
 
-export default PatientResult
-
+export default PatientResult;
 
 type PatientListItemProps = {
     patient: Patient;
@@ -53,55 +48,54 @@ type PatientListItemProps = {
     isSelected: boolean;
 };
 
-
 const PatientListItem = ({ patient, onSelect, isSelected }: PatientListItemProps) => {
-    const itemRef = useRef<HTMLDivElement>(null)
+    const itemRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
-        if(itemRef.current && isSelected){
-            itemRef.current.scrollIntoView({ behavior: "smooth", block: "nearest"})
+        if (itemRef.current && isSelected) {
+            itemRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
-    }, [isSelected])
+    }, [isSelected]);
 
     return (
         <ListItemButton
-            key={patient.id}
             onSelect={onSelect}
             variant="normal"
             isSelected={isSelected}
         >
             <div className="flex items-center gap-3" ref={itemRef}>
-                {/* ICON */}
+                {/* Avatar Icon */}
                 <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center",
-                    "bg-gray-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-500",
-                    "group-hover:border-zinc-400 dark:group-hover:border-zinc-600",
-                    "group-data-[selected=true]:border-zinc-400 dark:group-data-[selected=true]:border-zinc-600"
+                    "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                    "bg-muted/80 border border-border text-muted-foreground"
                 )}>
-                    <UserIcon className="w-4 h-4" />
+                    <User className="w-4 h-4" />
                 </div>
 
-                {/* PATIENT DETAILS */}
+                {/* Patient Details */}
                 <div>
-                    <div className={cn(
-                        "font-medium text-zinc-700 dark:text-zinc-300",
-                        "group-hover:text-black dark:group-hover:text-white",
-                        "group-data-[selected=true]:text-black group-data-[selected=true]:dark:text-white text-sm"
-                    )}>
+                    <div className="font-semibold text-foreground text-xs">
                         {patient.fullName}
                     </div>
-                    <div className={cn(
-                        "text-[10px] text-zinc-500 font-mono flex items-center gap-2", "group-hover:text-zinc-700 dark:group-hover:text-zinc-300", "group-data-[selected=true]:text-zinc-700 group-data-[selected=true]:dark:text-zinc-300"
-                    )}>
-                        <span>{patient.mrn}</span>
-                        <span>•</span>
-                        <SmartphoneIcon className="w-3 h-3" /> {patient.phone}
-                        <MapPinHouseIcon className="w-3 h-3" /> {patient.address}
+                    <div className="text-[11px] text-muted-foreground font-mono flex items-center gap-2 mt-0.5">
+                        <span className="font-semibold text-foreground/80">{patient.mrn}</span>
+                        <span>·</span>
+                        <span className="flex items-center gap-1">
+                            <Phone className="w-3 h-3 text-muted-foreground/70" />
+                            {patient.phone}
+                        </span>
+                        <span>·</span>
+                        <span className="flex items-center gap-1 truncate max-w-[140px]">
+                            <MapPin className="w-3 h-3 text-muted-foreground/70" />
+                            {patient.address}
+                        </span>
                     </div>
                 </div>
             </div>
 
-            <ArrowUpRightIcon className="w-4 h-4 text-black dark:text-white opacity-0  group-data-[selected=true]:opacity-100 transition-opacity" />
-
+            <ArrowUpRight className={cn(
+                "w-4 h-4 text-primary shrink-0 transition-opacity",
+                isSelected ? "opacity-100" : "opacity-0"
+            )} />
         </ListItemButton>
-    )
-}
+    );
+};

@@ -1,34 +1,33 @@
 import { useState, useReducer } from 'react';
 import ClinicalNotesBuilder from '../ClinicalNotesBuilder';
 import { type ClinicalNote } from '../types';
-import { capitalizeEachWord, deepTrimStrings, filterAge, filterAlphabetsAndSpaces, filterPhoneNumber, normalizeAddress, validateAddress, } from '@/lib';
-import { Input, IntakeLayout, TextArea, } from './components/primitives';
+import { capitalizeEachWord, deepTrimStrings, filterAge, filterAlphabetsAndSpaces, filterPhoneNumber, normalizeAddress, validateAddress } from '@/lib';
+import { Input, IntakeLayout, TextArea } from './components/primitives';
 import FormHeader from './components/FormHeader';
 import ReferralSection from './components/ReferralSection';
 import DemographicsSection from './components/DemographicsSection';
 import FormFooter from './components/FormFooter';
 import type { FormData } from '../types';
 
-const validateAndCapitalizeName = (val: string) => capitalizeEachWord(filterAlphabetsAndSpaces(val))
+const validateAndCapitalizeName = (val: string) => capitalizeEachWord(filterAlphabetsAndSpaces(val));
 
 const validateFormData = (data: FormData): string[] => {
-    const errors = []
-    if (data.name.length < 5) errors.push('Name is too short');
-    if (data.phone.length < 10) errors.push('Phone is required');
-    if (isNaN(+data.age)|| +data.age < 0 || +data.age > 99) errors.push('Enter valid age');
+    const errors = [];
+    if (data.name.length < 5) errors.push('Name must be at least 5 characters');
+    if (data.phone.length < 10) errors.push('Valid 10-digit mobile number is required');
+    if (isNaN(+data.age) || +data.age < 0 || +data.age > 99) errors.push('Enter valid age between 0 and 99');
     if (!validateAddress(data.address)) errors.push('Address is invalid or too short');
-    if (data.address.length > 50) errors.push('Address is too long');
+    if (data.address.length > 50) errors.push('Address is too long (max 50 chars)');
     if (data.referral === 'DOCTOR' && !validateAddress(data.doctorInfo)) {
         errors.push('Doctor information is required for doctor referrals');
     }
-    return errors; // Valid if empty
-}
+    return errors;
+};
 
 interface IntakeProps {
     initialName?: string;
     onClose: () => void;
     onSubmit: (v: FormData) => void;
-
 }
 
 type Action =
@@ -51,50 +50,49 @@ const formReducer = (state: FormData, action: Action): FormData => {
         case 'CHANGE_AGE':
             return {
                 ...state, age: filterAge(action.value)
-            }
+            };
         case 'CHANGE_PHONE':
             return {
                 ...state, phone: filterPhoneNumber(action.value)
-            }
+            };
         case 'CHANGE_SEX':
             return {
                 ...state, sex: action.value
-            }
+            };
         case 'CHANGE_ADDRESS':
             return {
                 ...state, address: normalizeAddress(action.value)
-            }
+            };
         case 'CHANGE_REFERRAL': {
             if (action.value === 'DOCTOR') {
                 return {
                     ...state,
                     referral: action.value,
                     doctorInfo: ''
-                }
+                };
             } else {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { doctorInfo, ...rest } = state;
                 return {
                     ...rest,
                     referral: action.value
-                }
+                };
             }
         }
         case 'CHANGE_DOCTOR_INFO': {
-            // ensure it only happens when referral is DOCTOR
             if (state.referral === 'DOCTOR') return {
                 ...state,
                 doctorInfo: normalizeAddress(action.value)
-            }
+            };
             return state;
         }
         case 'ADD_CLINICAL_NOTES': return {
             ...state, clinicalNotes: action.value
-        }
+        };
         case 'RESET': return initialFormData;
         default: return state;
     }
-}
+};
 
 const initialFormData: FormData = {
     name: '',
@@ -103,31 +101,27 @@ const initialFormData: FormData = {
     age: '',
     referral: 'WALKIN',
     address: "",
-}
+};
 
 export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose, onSubmit }) => {
-
-    const initializeName = (f: FormData) => ({ ...f, name: validateAndCapitalizeName(initialName) })
+    const initializeName = (f: FormData) => ({ ...f, name: validateAndCapitalizeName(initialName) });
 
     const [formData, dispatch] = useReducer(formReducer, initialFormData, initializeName);
+    const [showClinicalNotes, setShowClinicalNotes] = useState(false);
 
-    const [showClinicalNotes, setShowClinicalNotes] = useState(false)
-
-    const handleCancel = ()=>{
-        dispatch({ type: 'RESET' })
-        onClose()
-    }
-    
-
+    const handleCancel = () => {
+        dispatch({ type: 'RESET' });
+        onClose();
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const errors = validateFormData(formData);
-        if (errors.length > 0) return alert(errors.join('\n'))
+        if (errors.length > 0) return alert(errors.join('\n'));
 
-        const trimmedForm = deepTrimStrings(formData) as FormData
+        const trimmedForm = deepTrimStrings(formData) as FormData;
         alert(`Creating Profile for: ${trimmedForm.name}\nMobile: ${trimmedForm.phone}\nGender: ${trimmedForm.sex}\nAddress: ${trimmedForm.address}`);
-        dispatch({ type: 'RESET' })
+        dispatch({ type: 'RESET' });
         onSubmit(trimmedForm);
     };
 
@@ -136,8 +130,7 @@ export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onCl
             {/* Header */}
             <FormHeader onClose={onClose} />
 
-            <form onSubmit={handleSubmit} className="overflow-y-auto p-6 flex flex-col gap-6 bg-white dark:bg-black transition-colors">
-
+            <form onSubmit={handleSubmit} className="overflow-y-auto p-5 sm:p-6 flex flex-col gap-5 bg-card transition-colors">
                 {/* ROW 1: NAME */}
                 <NameInput
                     patientName={formData.name}
@@ -169,66 +162,65 @@ export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onCl
 
                 {/* FOOTER ACTIONS */}
                 <FormFooter onClose={handleCancel} openClinicNotes={() => setShowClinicalNotes(true)} />
-
             </form>
 
-            {/** HACK: Do not change the `formData.clinicalNotes` while ClinicalNotesBuilder is mounted. */}
-            {showClinicalNotes && <ClinicalNotesBuilder
-                initialNotes={formData.clinicalNotes}
-                onSave={(value) => {
-                    dispatch({ type: 'ADD_CLINICAL_NOTES', value })
-                    setShowClinicalNotes(false)
-                }}
-                onClose={() => setShowClinicalNotes(false)}
-            />}
-
+            {/** Modal notes builder */}
+            {showClinicalNotes && (
+                <ClinicalNotesBuilder
+                    initialNotes={formData.clinicalNotes}
+                    onSave={(value) => {
+                        dispatch({ type: 'ADD_CLINICAL_NOTES', value });
+                        setShowClinicalNotes(false);
+                    }}
+                    onClose={() => setShowClinicalNotes(false)}
+                />
+            )}
         </IntakeLayout>
-
     );
-
 };
-
 
 export default NewPatientIntake;
 
-
 type NameInputProps = {
-    patientName: FormData['name'],
-    changeName(v: FormData['name']): void
-}
+    patientName: FormData['name'];
+    changeName(v: FormData['name']): void;
+};
+
 const NameInput = ({ patientName, changeName }: NameInputProps) => (
     <div>
-        <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 block">Full Legal Name</label>
+        <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 block">
+            Full Legal Name
+        </label>
         <Input
             type="text"
             value={patientName}
             required
             onChange={(e) => changeName(e.currentTarget.value)}
             placeholder="e.g. Ramesh Gupta"
-            className="text-xl font-medium"
+            className="text-base font-semibold"
             autoFocus
         />
     </div>
-)
+);
+
 type AddressAreaProps = {
     address: string;
     changeAddress(v: string): void;
-}
+};
+
 const AddressArea = ({ address, changeAddress }: AddressAreaProps) => (
     <section>
-        <label htmlFor="address" className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest my-3 block">Address</label>
-
+        <label htmlFor="address" className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 block">
+            Residential Address
+        </label>
         <TextArea
             name="address"
             id="address"
             required
-            placeholder="Enter patient's address here..."
-            className='h-14'
+            placeholder="House/flat number, street, locality, city..."
+            className="h-16 text-xs"
             value={address}
             onChange={(e) => changeAddress(e.currentTarget.value)}
         />
     </section>
-)
-
-
-
+);

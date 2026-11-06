@@ -27,15 +27,17 @@ export function ClinicalHistoryPanel({ vitals, visits, courses, packages, invoic
   const { tab, setTab } = usePatientProfileUrlState();
 
   return (
-    <div className="flex-1 min-h-0 bg-white dark:bg-black flex flex-col overflow-hidden">
+    <div className="flex-1 min-h-0 bg-white dark:bg-zinc-950 flex flex-col overflow-hidden">
       <Tabs value={tab} onValueChange={setTab} className="flex flex-col flex-1 overflow-hidden">
-
         {/* Tab bar — uses variant="line" from the existing tabs component */}
-        <div className="px-6 bg-white dark:bg-black shrink-0">
-          <TabsList variant="line" className="gap-6 h-14">
+        <div className="px-6 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shrink-0">
+          <TabsList variant="line" className="gap-8 h-14">
             {TABS.map(({ value, label }) => (
-              <TabsTrigger key={value} value={value}
-                className="text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300 data-active:text-zinc-900 dark:data-active:text-white px-0">
+              <TabsTrigger
+                key={value}
+                value={value}
+                className="text-sm font-semibold text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 data-active:text-zinc-900 dark:data-active:text-white px-0 cursor-pointer transition-colors"
+              >
                 {label}
               </TabsTrigger>
             ))}
@@ -43,16 +45,16 @@ export function ClinicalHistoryPanel({ vitals, visits, courses, packages, invoic
         </div>
 
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <TabsContent value="overview" className="flex-1 overflow-y-auto p-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <TabsContent value="overview" className="flex-1 overflow-y-auto p-6 lg:p-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <OverviewTab vitals={vitals} courses={courses} />
           </TabsContent>
-          <TabsContent value="visits" className="flex-1 min-h-0 flex flex-col p-8 pb-0">
+          <TabsContent value="visits" className="flex-1 min-h-0 flex flex-col p-6 lg:p-8 pb-0">
             <VisitsTab visits={visits} courses={courses} />
           </TabsContent>
-          <TabsContent value="packages" className="flex-1 min-h-0 flex flex-col p-8 pb-0">
+          <TabsContent value="packages" className="flex-1 min-h-0 flex flex-col p-6 lg:p-8 pb-0">
             <PackagesTab packages={packages} />
           </TabsContent>
-          <TabsContent value="billings" className="flex-1 min-h-0 flex flex-col p-8 pb-0">
+          <TabsContent value="billings" className="flex-1 min-h-0 flex flex-col p-6 lg:p-8 pb-0">
             <BillingsTab invoices={invoices} />
           </TabsContent>
         </div>

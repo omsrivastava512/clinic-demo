@@ -33,7 +33,6 @@ function fetchPatientProfile(id: string): Promise<FetchResult> {
       const patient = MOCK_PATIENT_PROFILES.find((p) => p.id === id);
       if (patient) resolve({ kind: 'ok', data: patient });
       else resolve({ kind: 'not-found' });
-      // Future: network errors will resolve with { kind: 'error', message: '...' }
     }, 100);
   });
 }
@@ -50,7 +49,6 @@ export function PatientProfilePage() {
   // Memoized to avoid recreating on every render — used in effect and retry button.
   // Ref: ADR-PP-08 — optional AbortController prevents crashes when Retry invokes loadProfile directly.
   const loadProfile = useCallback((controller?: AbortController) => {
-    // Explicit check for undefined id prevents rendering literal "undefined" in UI
     if (!id) {
       setLoading(false);
       setError('Invalid patient ID in URL');
@@ -108,33 +106,48 @@ export function PatientProfilePage() {
   if (!profile) return <ProfileNotFound id={id} onBack={handleBack} />;
 
   return (
-    <div className="h-dvh flex flex-col rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black shadow-sm dark:shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_20px_40px_-15px_rgba(0,0,0,1)]">
-
+    <div className="h-dvh flex flex-col rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-2xl dark:shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_24px_48px_-12px_rgba(0,0,0,0.9)]">
       {/* Mobile panel switcher */}
-      <div className="flex lg:hidden border-b border-zinc-200 dark:border-zinc-800 shrink-0 items-center bg-white dark:bg-black">
-        <button type="button" onClick={handleBack}
-          className="px-4 py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors border-r border-zinc-200 dark:border-zinc-800 shrink-0">
+      <div className="flex lg:hidden border-b border-zinc-200 dark:border-zinc-800 shrink-0 items-center bg-white dark:bg-zinc-950">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="px-4 py-3 text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors border-r border-zinc-200 dark:border-zinc-800 shrink-0 cursor-pointer"
+        >
           ← Back
         </button>
         {(['profile', 'history'] as const).map((panel) => (
-          <button key={panel} type="button" onClick={() => setActivePanel(panel)}
-            className={['flex-1 py-2.5 text-sm font-medium transition-colors capitalize',
+          <button
+            key={panel}
+            type="button"
+            onClick={() => setActivePanel(panel)}
+            className={[
+              'flex-1 py-3 text-xs font-semibold transition-colors capitalize cursor-pointer',
               activePanel === panel
-                ? 'text-zinc-900 dark:text-zinc-100 border-b-2 border-zinc-900 dark:border-zinc-100'
-                : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300',
-            ].join(' ')}>
+                ? 'text-zinc-900 dark:text-zinc-100 border-b-2 border-zinc-900 dark:border-zinc-100 font-bold'
+                : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300',
+            ].join(' ')}
+          >
             {panel}
           </button>
         ))}
       </div>
 
       <div className="flex flex-col lg:flex-row flex-1 min-h-0">
-        <div className={['overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]',
-          activePanel === 'profile' ? 'block lg:block' : 'hidden lg:block'].join(' ')}>
+        <div
+          className={[
+            'overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]',
+            activePanel === 'profile' ? 'block lg:block' : 'hidden lg:block',
+          ].join(' ')}
+        >
           <PassportPanel patient={profile} onBack={handleBack} />
         </div>
-        <div className={['flex-1 min-w-0 min-h-0 flex flex-col',
-          activePanel === 'history' ? 'block lg:flex' : 'hidden lg:flex'].join(' ')}>
+        <div
+          className={[
+            'flex-1 min-w-0 min-h-0 flex flex-col',
+            activePanel === 'history' ? 'block lg:flex' : 'hidden lg:flex',
+          ].join(' ')}
+        >
           <ClinicalHistoryPanel
             vitals={profile.vitals}
             visits={visits}

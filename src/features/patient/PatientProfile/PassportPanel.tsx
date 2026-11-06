@@ -19,9 +19,9 @@ const ALERT_VARIANT: Record<PatientProfile['alerts'][number]['type'], StatusBadg
 // ── Local sub-component ───────────────────────────────────────────────────────
 function InfoRow({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="flex justify-between py-2 border-b border-zinc-100 dark:border-zinc-800">
-      <span className="text-zinc-500">{label}</span>
-      <span className={`text-zinc-900 dark:text-zinc-300 font-medium ${mono ? 'font-mono' : ''}`}>{value}</span>
+    <div className="flex justify-between py-2.5 border-b border-zinc-100 dark:border-zinc-800/80 text-xs">
+      <span className="text-zinc-500 font-medium">{label}</span>
+      <span className={`text-zinc-900 dark:text-zinc-200 font-semibold ${mono ? 'font-mono' : ''}`}>{value}</span>
     </div>
   );
 }
@@ -31,30 +31,41 @@ export function PassportPanel({ patient, onBack }: PassportPanelProps) {
   const initials = getInitials(patient.fullName);
 
   return (
-    <div className="w-full lg:w-72 shrink-0 border-b lg:border-b-0 lg:border-r border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/30 flex flex-col p-6 gap-6">
-
-      <button type="button" onClick={onBack}
-        className="hidden lg:block text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors w-fit">
+    <div className="w-full lg:w-72 shrink-0 border-b lg:border-b-0 lg:border-r border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/30 flex flex-col p-6 gap-6">
+      <button
+        type="button"
+        onClick={onBack}
+        className="hidden lg:block text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors w-fit cursor-pointer"
+      >
         ← Back
       </button>
 
       <div className="flex flex-col items-center text-center gap-2">
         {patient.photoUrl ? (
-          <img src={patient.photoUrl} alt={patient.fullName}
-            className="w-24 h-24 rounded-full object-cover border border-zinc-200 dark:border-zinc-700" />
+          <img
+            src={patient.photoUrl}
+            alt={patient.fullName}
+            className="w-24 h-24 rounded-full object-cover border-2 border-zinc-200 dark:border-zinc-700 shadow-md"
+          />
         ) : (
-          <div className="w-24 h-24 rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-2xl font-semibold text-zinc-500 dark:text-zinc-400 select-none">
+          <div className="w-24 h-24 rounded-full border-2 border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-2xl font-bold text-zinc-600 dark:text-zinc-300 select-none shadow-md">
             {initials}
           </div>
         )}
-        <h2 className="text-xl font-bold text-zinc-900 dark:text-white leading-tight">{patient.fullName}</h2>
-        <p className="text-sm text-zinc-500 capitalize">{age} yrs · {patient.gender}</p>
+        <h2 className="text-xl font-bold text-zinc-900 dark:text-white leading-tight mt-1 tracking-tight">
+          {patient.fullName}
+        </h2>
+        <p className="text-xs text-zinc-500 capitalize font-medium">
+          {age} yrs · {patient.gender}
+        </p>
       </div>
 
       {patient.alerts.length > 0 && (
-        <div className="p-3 bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm dark:shadow-none">
-          <div className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 mb-2 tracking-wider uppercase">Critical Alerts</div>
-          <div className="flex flex-wrap gap-2">
+        <div className="p-3.5 bg-white dark:bg-zinc-900/60 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-xs">
+          <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2">
+            Critical Alerts
+          </div>
+          <div className="flex flex-wrap gap-1.5">
             {patient.alerts.map((alert) => (
               // Ref: ADR-PP-19 — composite natural key for stable alert list rendering.
               <StatusBadge key={`${alert.type}-${alert.label}`} variant={ALERT_VARIANT[alert.type]}>
@@ -65,10 +76,10 @@ export function PassportPanel({ patient, onBack }: PassportPanelProps) {
         </div>
       )}
 
-      <div className="space-y-3 text-sm">
-        <InfoRow label="MRN"        value={patient.mrn}         mono />
+      <div className="space-y-1 text-xs">
+        <InfoRow label="MRN" value={patient.mrn} mono />
         <InfoRow label="Blood Type" value={patient.bloodType} />
-        <InfoRow label="Insurer"    value={patient.insurerName} />
+        <InfoRow label="Insurer" value={patient.insurerName} />
       </div>
     </div>
   );

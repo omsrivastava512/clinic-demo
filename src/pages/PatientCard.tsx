@@ -38,48 +38,52 @@ const PatientCard = React.memo(function PatientCard({
       onClick={onClick}
       // DECISION [TRIGGER: CODE_REVIEW] [ORIGIN: USER_DIRECTIVE]: Added detailed aria-label for accessibility per review (Issue 5).
       aria-label={`Open ${patient.fullName}'s clinical record`}
-      className="text-left bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm p-5 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 transition-all active:scale-[0.99] cursor-pointer"
+      className="text-left bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xs p-5 hover:shadow-lg hover:border-zinc-300 dark:hover:border-zinc-700 transition-all active:scale-[0.99] cursor-pointer flex flex-col justify-between backdrop-blur-sm group"
     >
-      <div className="flex items-center gap-3 mb-4">
-        {patient.photoUrl ? (
-          <img
-            src={patient.photoUrl}
-            alt={patient.fullName}
-            className="w-10 h-10 rounded-full object-cover border border-zinc-200 dark:border-zinc-700"
-          />
-        ) : (
-          <div className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-sm font-semibold text-zinc-500 dark:text-zinc-400 shrink-0">
-            {initials}
+      <div>
+        <div className="flex items-center gap-3.5 mb-4">
+          {patient.photoUrl ? (
+            <img
+              src={patient.photoUrl}
+              alt={patient.fullName}
+              className="w-11 h-11 rounded-full object-cover border border-zinc-200 dark:border-zinc-700"
+            />
+          ) : (
+            <div className="w-11 h-11 rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-sm font-bold text-zinc-600 dark:text-zinc-300 shrink-0">
+              {initials}
+            </div>
+          )}
+          <div className="min-w-0">
+            <p className="font-bold text-base text-zinc-900 dark:text-white truncate tracking-tight group-hover:text-primary transition-colors">
+              {patient.fullName}
+            </p>
+            <p className="text-xs text-zinc-500 capitalize mt-0.5 font-medium">
+              {age} yrs · {patient.gender} · {patient.bloodType}
+            </p>
+          </div>
+        </div>
+
+        {patient.alerts.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {patient.alerts.map((alert) => (
+              // DECISION [TRIGGER: CODE_REVIEW] [ORIGIN: USER_OVERRULED_AI]:
+              // AI used array indices as keys. User refuted (Issue 6): causes DOM reuse bugs on alert mutation.
+              // Solution: Using composite natural key `${alert.type}-${alert.label}` for stable reconciliation.
+              <StatusBadge key={`${alert.type}-${alert.label}`} variant={ALERT_VARIANT[alert.type]}>
+                {alert.label}
+              </StatusBadge>
+            ))}
           </div>
         )}
-        <div className="min-w-0">
-          <p className="font-semibold text-zinc-900 dark:text-white truncate">{patient.fullName}</p>
-          <p className="text-xs text-zinc-500 capitalize mt-0.5">
-            {age} yrs · {patient.gender} · {patient.bloodType}
-          </p>
-        </div>
       </div>
 
-      {patient.alerts.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {patient.alerts.map((alert) => (
-            // DECISION [TRIGGER: CODE_REVIEW] [ORIGIN: USER_OVERRULED_AI]:
-            // AI used array indices as keys. User refuted (Issue 6): causes DOM reuse bugs on alert mutation.
-            // Solution: Using composite natural key `${alert.type}-${alert.label}` for stable reconciliation.
-            <StatusBadge key={`${alert.type}-${alert.label}`} variant={ALERT_VARIANT[alert.type]}>
-              {alert.label}
-            </StatusBadge>
-          ))}
-        </div>
-      )}
-
-      <div className="flex gap-4 text-xs text-zinc-500 border-t border-zinc-100 dark:border-zinc-800 pt-3">
-        <span>
+      <div className="flex items-center gap-3 text-xs text-zinc-500 border-t border-zinc-100 dark:border-zinc-800/80 pt-3.5 mt-auto">
+        <span className="font-medium text-zinc-600 dark:text-zinc-400">
           {visitsCount} visit{visitsCount !== 1 ? 's' : ''}
         </span>
-        <span className="font-mono">{patient.mrn}</span>
+        <span className="font-mono text-zinc-400 dark:text-zinc-500">{patient.mrn}</span>
         {unpaidInvoicesCount > 0 && (
-          <span className="text-amber-600 dark:text-amber-400 font-medium ml-auto">
+          <span className="text-amber-600 dark:text-amber-400 font-semibold ml-auto font-mono">
             {unpaidInvoicesCount} unpaid
           </span>
         )}

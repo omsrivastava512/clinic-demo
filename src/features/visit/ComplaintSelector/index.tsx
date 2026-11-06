@@ -177,26 +177,13 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
 
   // Picking an item from the catalog popover — we treat it like a free-text add
   // but using the catalog item's title, then mark it auto-selected.
-  // TODO: Future optimization (Option 2): If catalog search results performance degrades,
-  // we can wrap this in a useCallback (requires wrapping the custom hook's `add` in useCallback first)
-  // and wrap CatalogSearchPopover in React.memo to prevent unnecessary re-renders.
   const handleCatalogSelect = (item: MedicalComplaint) => {
     add(item.title);
-    // Clear the query so the popover returns to the default "all" view,
-    // ready for a possible second addition without visual clutter.
     setNewComplaintInput("");
-    // We intentionally keep the popover open on item selection to support multiple selections in a row.
-    // This is a trade-off where the user has to close the popover explicitly (e.g. click outside, Escape, Cancel),
-    // but it speeds up multi-selection workflows significantly.
-    // Reset keyboard focus index on selection
     setFocusedIndex(0);
-  }
+  };
 
   // Grey-out catalog entries whose titles are already in the active list.
-  // We match by lowercased title since catalog IDs differ from complaint IDs
-  // produced by useComplaintSelection. O(n*m) but both sets are tiny (<60 items).
-  // TODO: [Backend Integration] When a backend API is added, store the catalog ID on the
-  // active complaint schema. This will allow matching by stable ID instead of title strings.
   const existingTitlesLower = new Set(allComplaints.map((c) => c.title.toLowerCase()));
   const catalogExistingIds = new Set(
     COMPLAINT_CATALOG
@@ -209,19 +196,17 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
   const safeFocusedIndex = Math.max(0, Math.min(focusedIndex, Math.max(0, filteredCatalogItems.length - 1)));
 
   return (
-    <div className="w-full max-h-[90dvh] flex flex-col max-w-2xl bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 shadow-2xl transition-colors duration-300">
+    <div className="w-full max-h-[90dvh] flex flex-col max-w-2xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-2xl transition-colors duration-150">
       <PatientHeader patient={patient} />
 
       {/* ── Active complaints checklist ─────────────────────────────────────── */}
-      {/* This is the PRIMARY workflow: the doctor checks off what they are treating
-          today from the patient's existing active complaints. */}
       <div className="mb-4 flex-1 min-h-0 flex flex-col">
         <SectionLabel text="Select Visit Complaints (Multiple Allowed)" />
 
         {/* Scrollable checklist — flex-1 so it fills available space */}
         <div
           ref={listContainerRef}
-          className="flex-1 min-h-0 space-y-3 overflow-y-auto pr-3 pb-3"
+          className="flex-1 min-h-0 space-y-2.5 overflow-y-auto pr-2 pb-2"
         >
           {allComplaints.map((complaint) => (
             <ComplaintItem
@@ -234,28 +219,22 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
           ))}
         </div>
 
-        {/* ── Add New Complaint — sits BELOW the scroll area, always visible ──
-             Moved out of the scrollable div intentionally: it acts as a sticky
-             gateway and should never scroll out of view. */}
-        <div className="mt-3">
+        {/* ── Add New Complaint — sits BELOW the scroll area, always visible ── */}
+        <div className="mt-4">
           <NewComplaintInput
             ref={inputRef}
             value={newComplaintInput}
             onChange={(val) => {
               setNewComplaintInput(val);
-              // Re-open suggestions popover if the user types or modifies text
               setPopoverOpen(true);
               setFocusedIndex(0);
             }}
             onKeyDown={handleKeyDown}
             onFocus={() => setPopoverOpen(true)}
             onClick={() => {
-              // Re-open suggestions popover on clicking the focused input text box itself,
-              // bypassing the limitation where focus events do not re-trigger on already focused elements.
               setPopoverOpen(true);
             }}
-            onBlur={() => {/* intentionally empty — popover handles close */ }}
-            // Pass down ARIA properties to bind them directly on the input element
+            onBlur={() => {}}
             inputId={inputId}
             listboxId={listboxId}
             popoverOpen={popoverOpen}
@@ -270,9 +249,6 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
         isConfirmDisabled={selectedIds.size === 0}
       />
 
-      {/* ── Catalog search popover (portal) ─────────────────────────────────
-           Rendered at document.body level to escape overflow:hidden / max-h
-           constraints of any ancestor. */}
       <CatalogSearchPopover
         anchorRef={inputRef}
         query={newComplaintInput}
@@ -280,11 +256,9 @@ export const ComplaintSelector: React.FC<ComplaintSelectorProps> = ({
         onSelect={handleCatalogSelect}
         onClose={handlePopoverClose}
         existingIds={catalogExistingIds}
-        // Pass down state and callback props to keep popover in sync with lifted navigation state
         focusedIndex={safeFocusedIndex}
         listboxId={listboxId}
         onFilteredItemsChange={setFilteredCatalogItems}
-        // Pass down lifted region state and setter callback
         selectedRegion={selectedRegion}
         onRegionChange={(region) => {
           setSelectedRegion(region);

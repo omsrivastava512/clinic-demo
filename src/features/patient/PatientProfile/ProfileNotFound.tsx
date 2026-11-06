@@ -1,3 +1,5 @@
+import { UserXIcon } from 'lucide-react';
+
 interface ProfileNotFoundProps {
   id: string | undefined;
   onBack: () => void;
@@ -5,15 +7,21 @@ interface ProfileNotFoundProps {
 
 export function ProfileNotFound({ id, onBack }: ProfileNotFoundProps) {
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="flex flex-col items-center gap-4 max-w-sm text-center">
-        <p className="text-zinc-700 dark:text-zinc-300 font-medium">Patient not found</p>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+    <div className="flex items-center justify-center min-h-[60vh] p-4">
+      <div className="flex flex-col items-center gap-3 max-w-sm text-center">
+        <div className="w-10 h-10 rounded-xl bg-muted text-muted-foreground flex items-center justify-center border border-border">
+          <UserXIcon className="w-5 h-5" />
+        </div>
+        <p className="text-foreground text-sm font-semibold">Patient record not found</p>
+        <p className="text-xs text-muted-foreground">
           {/* Safe rendering — id is guaranteed to be defined here (checked in loadProfile) */}
-          No patient record matches the ID <span className="font-mono">{id ?? 'unknown'}</span>.
+          No patient record matches identifier <span className="font-mono text-foreground font-medium">{id ?? 'unknown'}</span>.
         </p>
-        <button type="button" onClick={onBack}
-          className="px-4 py-2 rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-sm font-medium hover:bg-zinc-700 dark:hover:bg-zinc-300 transition-colors">
+        <button
+          type="button"
+          onClick={onBack}
+          className="mt-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-medium transition-colors shadow-xs cursor-pointer active:scale-[0.985]"
+        >
           Back to Ledger
         </button>
       </div>

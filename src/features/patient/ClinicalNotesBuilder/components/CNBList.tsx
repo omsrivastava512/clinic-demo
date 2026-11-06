@@ -1,72 +1,68 @@
-import { AlertTriangleIcon, Trash2Icon } from "lucide-react"
-import type { ClinicalNote } from ".."
-import { cn } from "@/lib"
-
+import { AlertTriangle, Trash2 } from "lucide-react";
+import type { ClinicalNote } from "..";
+import { cn } from "@/lib";
 
 type CNBListProps = {
-    notes: ClinicalNote[],
-    removeNote(k: string): void
-}
+    notes: ClinicalNote[];
+    removeNote(k: string): void;
+};
+
 export const CNBList = ({ notes, removeNote }: CNBListProps) => {
     return (
         <div
             className={cn(
-                "space-y-2", // vertical rhythm
-                "max-h-50 overflow-y-auto", // scroll container
-                "mb-6", // external spacing
-                "scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800" // scrollbar styling
+                "space-y-2",
+                "max-h-52 overflow-y-auto",
+                "mb-5 pr-1",
+                "no-scrollbar"
             )}
         >
-            {(notes).length === 0 && (
+            {notes.length === 0 && (
                 <div
                     className={cn(
-                        "text-center text-xs italic", // typography
-                        "text-zinc-400 dark:text-zinc-600", // text color
-                        "py-4", // internal spacing
-                        "border border-dashed rounded-lg", // container chrome
-                        "border-zinc-200 dark:border-zinc-800" // border color
+                        "text-center text-xs",
+                        "text-muted-foreground",
+                        "py-5 rounded-lg border border-dashed border-border/80 bg-muted/20"
                     )}
                 >
-                    No additional details added yet.
+                    No clinical observations or notes recorded yet.
                 </div>
             )}
-            {(notes).map(({ category, isCritical, observation }) => (
+            {notes.map(({ category, isCritical, observation }) => (
                 <div
                     key={category}
                     className={cn(
-                        "flex items-center justify-between p-3 rounded-lg border",// layout & spacing
-                        "group transition-colors",// interaction
-                        // state: critical vs normal
+                        "flex items-center justify-between px-3 py-2 rounded-lg border text-xs",
+                        "group transition-colors",
                         isCritical
-                            ? "bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/50" // critical emphasis
-                            : "bg-zinc-50 dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-800" // neutral state
+                            ? "bg-destructive/10 border-destructive/25 text-foreground"
+                            : "bg-muted/40 border-border/80 text-foreground"
                     )}
-
                 >
-                    <div className="flex items-center gap-2 text-sm">
+                    <div className="flex items-center gap-2 min-w-0">
                         {isCritical && (
-                            <AlertTriangleIcon className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0" />
+                            <AlertTriangle className="w-3.5 h-3.5 text-destructive shrink-0" />
                         )}
-                        <span className={`font-bold ${isCritical ? 'text-red-700 dark:text-red-300' : 'text-zinc-700 dark:text-zinc-300'}`}>
+                        <span className={cn(
+                            "font-semibold truncate",
+                            isCritical ? "text-destructive" : "text-foreground"
+                        )}>
                             {category}:
                         </span>
-                        <span className={`text-zinc-900 dark:text-white ${isCritical ? 'font-medium' : ''}`}>
+                        <span className="text-muted-foreground truncate">
                             {observation}
                         </span>
                     </div>
-                    <button onClick={() => removeNote(category)} title="delete" type="button"
-                        className={cn(
-                            "text-zinc-400", // base color
-                            "hover:text-red-600 dark:hover:text-red-400", // hover intent
-                            "active:text-red-600 dark:active:text-red-400", // hover intent
-                            "transition-colors", // color animation
-                            "opacity-100 lg:opacity-0 lg:group-hover:opacity-100" // responsive visibility
-                        )}
+                    <button
+                        onClick={() => removeNote(category)}
+                        title="Delete note"
+                        type="button"
+                        className="text-muted-foreground hover:text-destructive p-1 rounded transition-colors cursor-pointer shrink-0 ml-2"
                     >
-                        <Trash2Icon className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                     </button>
                 </div>
             ))}
-        </div>)
-}
-
+        </div>
+    );
+};

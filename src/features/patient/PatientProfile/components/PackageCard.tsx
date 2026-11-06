@@ -18,9 +18,9 @@ const STATUS_BADGE_VARIANT: Record<PackageRecord['status'], 'default' | 'seconda
 
 // DECISION [ORIGIN: AI_AUTONOMOUS]: Added subtle left border for status visual anchor without heavy gradients.
 const STATUS_BORDER: Record<PackageRecord['status'], string> = {
-  Active: 'border-l-blue-500 dark:border-l-blue-500',
-  Completed: 'border-l-zinc-300 dark:border-l-zinc-600',
-  Expired: 'border-l-rose-500 dark:border-l-rose-600',
+  Active: 'border-l-primary',
+  Completed: 'border-l-border',
+  Expired: 'border-l-destructive',
 };
 
 function parseSafeDate(dateStr: string): Date {
@@ -63,15 +63,15 @@ export function PackageCard({ pkg }: PackageCardProps) {
   const isActive = status === 'Active';
 
   return (
-    <Card className={`group relative transition-shadow hover:shadow-md border-l-4 ${STATUS_BORDER[status]} gap-2`}>
+    <Card className={`group relative transition-all duration-150 hover:shadow-xs border-l-[3px] ${STATUS_BORDER[status]} gap-2 bg-card text-card-foreground border-border`}>
       <CardHeader className="pb-0">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <CardTitle className="truncate text-base">{packageName}</CardTitle>
-            <CardDescription className="truncate mt-1 flex items-center gap-1.5">
+            <CardTitle className="truncate text-sm font-semibold tracking-tight">{packageName}</CardTitle>
+            <CardDescription className="truncate mt-1 flex items-center gap-1.5 text-xs">
               {linkedComplaintName}
               {excludeSundays && (
-                <span className="text-[10px] font-medium text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 px-1.5 py-0.5 rounded-full">
+                <span className="text-[10px] font-medium text-amber-700 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded-full">
                   Excl. Sundays
                 </span>
               )}
@@ -79,23 +79,22 @@ export function PackageCard({ pkg }: PackageCardProps) {
           </div>
           <Badge
             variant={STATUS_BADGE_VARIANT[status]}
-            className={`shrink-0 ${status === 'Active' ? 'bg-blue-500 hover:bg-blue-600 text-white border-transparent dark:bg-blue-600 dark:hover:bg-blue-700' : ''
-              }`}
+            className="shrink-0"
           >
             {status}
           </Badge>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 pt-2">
         {/* Primary Info Row */}
         <div className="flex justify-between items-end gap-4">
           <div>
             <div className="flex items-baseline gap-1.5">
-              <span className={`text-3xl font-bold tracking-tight ${isActive ? 'text-zinc-900 dark:text-zinc-50' : 'text-zinc-500'}`}>
+              <span className={`text-2xl font-bold font-mono tabular-nums tracking-tight ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
                 {isActive ? remainingDays : durationDays}
               </span>
-              <span className={`text-sm font-medium ${isActive ? 'text-zinc-900 dark:text-zinc-50' : 'text-zinc-500'}`}>
+              <span className={`text-xs font-medium ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
                 {isActive ? 'Days Left' : 'Days Total'}
               </span>
             </div>
@@ -103,35 +102,35 @@ export function PackageCard({ pkg }: PackageCardProps) {
                 Replaced single date string with explicit Start/Expires labels per user request in compact inline layout. */}
             <div className="flex items-center gap-3 mt-1.5">
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-zinc-400 font-semibold mb-0.5">Start</p>
-                <p className={`text-xs font-medium ${isActive ? 'text-zinc-900 dark:text-zinc-50' : 'text-zinc-500'}`}>{formatDate(purchaseDate)}</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold mb-0.5">Start</p>
+                <p className={`text-xs font-mono tabular-nums ${isActive ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>{formatDate(purchaseDate)}</p>
               </div>
-              <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800" />
+              <div className="w-px h-5 bg-border" />
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-zinc-400 font-semibold mb-0.5">Expires</p>
-                <p className={`text-xs font-medium ${isActive ? 'text-zinc-900 dark:text-zinc-50' : 'text-zinc-500'}`}>{formatDate(expiryDate)}</p>
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold mb-0.5">Expires</p>
+                <p className={`text-xs font-mono tabular-nums ${isActive ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>{formatDate(expiryDate)}</p>
               </div>
             </div>
           </div>
 
           <div className="text-right shrink-0">
-            <p className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold mb-0.5">Amount Paid</p>
-            <p className="font-semibold text-sm">₹{amountPaid.toLocaleString('en-IN')}</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-0.5">Amount Paid</p>
+            <p className="font-semibold text-xs font-mono tabular-nums text-foreground">₹{amountPaid.toLocaleString('en-IN')}</p>
           </div>
         </div>
 
         {/* DECISION [ORIGIN: AI_AUTONOMOUS]: Replaced collapsible section with permanent dot grid attendance summary. */}
-        <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800/60">
+        <div className="pt-3 border-t border-border/50">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+            <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
               {elapsedDays} of {durationDays} Days Elapsed
             </span>
-            <div className="flex gap-3 text-[10px] font-medium">
+            <div className="flex gap-2.5 text-[10px] font-medium">
               {/* DECISION [TRIGGER: PRODUCT_SPEC] [ORIGIN: AI_AUTONOMOUS]:
                   Changed attended color from emerald to blue for red-green color blindness accessibility. */}
-              <span className="text-blue-600 dark:text-blue-500">{attendedDays} Attended</span>
+              <span className="text-primary font-semibold">{attendedDays} Attended</span>
               {missedDays > 0 && (
-                <span className="text-rose-600 dark:text-rose-500">{missedDays} Missed</span>
+                <span className="text-destructive font-semibold">{missedDays} Missed</span>
               )}
             </div>
           </div>
@@ -149,12 +148,15 @@ export function PackageCard({ pkg }: PackageCardProps) {
               return (
                 <Popover key={`${(pkg as any).id}-day-${idx}`}>
                   <PopoverTrigger
-                    className={`w-2 h-2 rounded-full transition-transform hover:scale-150 cursor-pointer p-0 border-0 shrink-0 ${dayStatus === 'attended' ? 'bg-blue-500' :
-                      dayStatus === 'missed' ? 'bg-rose-500' :
-                        'bg-zinc-200 dark:bg-zinc-800'
-                      }`}
+                    className={`w-2 h-2 rounded-full transition-transform hover:scale-150 cursor-pointer p-0 border-0 shrink-0 ${
+                      dayStatus === 'attended'
+                        ? 'bg-primary'
+                        : dayStatus === 'missed'
+                        ? 'bg-destructive'
+                        : 'bg-muted-foreground/30'
+                    }`}
                   />
-                  <PopoverContent side="top" align="center" className="w-auto px-2 py-1 text-xs font-medium bg-zinc-900 text-zinc-50 border-zinc-800 dark:bg-zinc-50 dark:text-zinc-900">
+                  <PopoverContent side="top" align="center" className="w-auto px-2 py-1 text-xs font-medium bg-popover text-popover-foreground border border-border shadow-md">
                     {dateStr} | {dayStatus.charAt(0).toUpperCase() + dayStatus.slice(1)}
                   </PopoverContent>
                 </Popover>

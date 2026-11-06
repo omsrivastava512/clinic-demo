@@ -1,70 +1,47 @@
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib";
-import { CheckIcon, NotebookPenIcon } from "lucide-react"
+import { PlusIcon } from "lucide-react";
 
 type FormFooterProps = {
     onClose(): void;
     openClinicNotes(): void;
-}
+};
+
 const FormFooter = ({ onClose, openClinicNotes }: FormFooterProps) => {
     return (
-        <div
-            className={cn(
-                "pt-6 mt-2",    // spacing
-                "border-t border-zinc-100 dark:border-zinc-900",    // border
-                "flex flex-col-reverse sm:flex-row",  // layout & direction
-                "justify-end",  // alignment
-                "gap-3 sm:gap-4"    // spacing (gaps)
-            )}
-        >
-            <button type="button"
-                title="Add additional details"
-                onClick={openClinicNotes}
-                className="pr-10 py-3 outline-none"
-                tabIndex={-1}
-            >
-                <NotebookPenIcon
-                    className={cn(
-                        "sm:w-auto", // layout & sizing
-                        "font-medium", // typography
-                        "text-zinc-500", // color (base)
-                        "hover:text-zinc-900 dark:hover:text-white", // color 
-                        "transition-colors" // interaction & motion
-                    )}
-                />
-            </button>
+        <div className="flex flex-col-reverse sm:flex-row justify-between items-stretch sm:items-center gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-800">
             <button
                 type="button"
                 onClick={onClose}
-                className={cn(
-                    "w-full sm:w-auto", // layout & sizing
-                    "px-6 py-3", // spacing
-                    "text-sm font-medium", // typography
-                    "text-zinc-500", // color (base)
-                    "hover:text-zinc-900 dark:hover:text-white", // color (states)
-                    "transition-colors" // interaction & motion
-                )}
+                className="text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 text-xs font-semibold py-2 px-3 transition-colors cursor-pointer"
             >
-                Cancel (Esc)
+                Cancel
             </button>
-            <button
-                type="submit"
-                className={cn(
-                    "w-full sm:w-auto", // layout & sizing
-                    "px-8 py-3",    // spacing
-                    "bg-emerald-600 text-white",    // colors (base)
-                    "hover:bg-emerald-700 dark:hover:bg-emerald-500",   // colors (states)
-                    "font-bold",     // typography
-                    "rounded-lg shadow-md", // shape & elevation
-                    "transition-all",    // interaction & motion
-                    "flex items-center justify-center gap-2"    // flex & alignment
-                )}
 
-            >
-                <CheckIcon className="w-4 h-4" />
-                Create Profile & Proceed...
-            </button>
+            <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={openClinicNotes}
+                    className="border-dashed border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-500 text-xs font-medium cursor-pointer"
+                >
+                    <PlusIcon className="w-3.5 h-3.5" />
+                    <span>Clinical Notes</span>
+                </Button>
+
+                <button
+                    type="submit"
+                    className={cn(
+                        "py-2.5 px-6 rounded-xl font-bold text-xs cursor-pointer",
+                        "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900",
+                        "hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-all shadow-xs active:scale-[0.985]"
+                    )}
+                >
+                    Create Profile
+                </button>
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default FormFooter
+export default FormFooter;

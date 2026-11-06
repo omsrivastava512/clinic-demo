@@ -1,20 +1,17 @@
-import {cn} from "@/lib";
-import { SaveIcon } from "lucide-react";
+import { cn } from "@/lib";
 
 export const CNBFooter = ({ handleSave }: { handleSave(): void }) => (
-  <button
-    type="button"
-    onClick={handleSave}
-    className={cn(
-      "w-full py-3 bg-emerald-600",
-      "hover:bg-emerald-700 dark:hover:bg-emerald-500",   // hover
-      "text-white font-bold rounded-lg",    // font
-      "flex items-center justify-center gap-2",   // flex
-      "transition-all shadow-md active:scale-[0.98]"  // misc
-    )}
-  >
-    <SaveIcon className="w-4 h-4" />
-    Save Details
-  </button>
-)
-
+  <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
+    <button
+      type="button"
+      onClick={handleSave}
+      className={cn(
+        "px-5 py-2.5 rounded-xl font-bold text-xs cursor-pointer",
+        "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900",
+        "hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-all shadow-xs active:scale-[0.985]"
+      )}
+    >
+      Save Notes
+    </button>
+  </div>
+);

@@ -12,14 +12,14 @@ export function ServiceTag({ serviceName, isCharged, chargedAmount, serviceCateg
     <span
       title={isCharged ? `₹${chargedAmount}` : 'Included in consult'}
       className={cn(
-        'inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-medium border',
+        'inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-medium border tabular-nums',
         serviceCategory === 'PREMIUM'
-          ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-200 dark:border-amber-900/50'
-          : 'bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700'
+          ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20'
+          : 'bg-muted text-muted-foreground border-border'
       )}
     >
       {serviceName}
-      {isCharged && <span className="ml-1 opacity-60">₹{chargedAmount}</span>}
+      {isCharged && <span className="ml-1 opacity-70 font-mono">₹{chargedAmount}</span>}
     </span>
   );
 }

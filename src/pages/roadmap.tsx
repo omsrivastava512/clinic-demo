@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Check, ChevronRight, Circle, X, } from 'lucide-react';
+import { Check, ChevronRight, Circle, X } from 'lucide-react';
 import { ROADMAP_STAGES } from '@/data/roadmap_data';
 
 // ─────────────────────────────────────────────
@@ -17,7 +17,6 @@ export interface RoadmapStage {
     description: string;
     items: string[];
 }
-
 
 // ─────────────────────────────────────────────
 // Helpers
@@ -39,7 +38,7 @@ interface StageBadgeProps {
 function StageBadge({ status }: StageBadgeProps) {
     if (status === 'current') {
         return (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-zinc-600 bg-zinc-950 dark:bg-white px-2.5 py-1 text-xs font-medium text-white dark:text-zinc-950 shadow-sm shrink-0">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-zinc-700 bg-zinc-950 dark:bg-white px-3 py-1 text-xs font-semibold text-white dark:text-zinc-950 shadow-xs shrink-0">
                 <span className="h-1.5 w-1.5 rounded-full bg-white dark:bg-zinc-950" />
                 We are here
             </span>
@@ -47,14 +46,14 @@ function StageBadge({ status }: StageBadgeProps) {
     }
     if (status === 'done') {
         return (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300 shrink-0">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 shrink-0">
                 <Check className="h-3 w-3" />
                 Done
             </span>
         );
     }
     return (
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400 shrink-0">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400 shrink-0">
             <Circle className="h-3 w-3" />
             Next
         </span>
@@ -68,7 +67,7 @@ interface ChecklistItemProps {
 
 function ChecklistItem({ checked, children }: ChecklistItemProps) {
     return (
-        <li className="flex items-start gap-3 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800">
+        <li className="flex items-start gap-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/80">
             <span
                 className={
                     checked
@@ -76,7 +75,7 @@ function ChecklistItem({ checked, children }: ChecklistItemProps) {
                         : 'mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-zinc-300 dark:border-zinc-600 text-zinc-400 dark:text-zinc-500'
                 }
             >
-                {checked ? <Check className="h-3.5 w-3.5" /> : <Circle className="h-2.5 w-2.5" />}
+                {checked ? <Check className="h-3.5 w-3.5" /> : <Circle className="h-2 w-2" />}
             </span>
             <span
                 className={
@@ -110,39 +109,38 @@ function RoadmapStageCard({ stage, stageIndex, currentIndex, stageProgress }: Ro
         <section
             className={
                 isCurrent
-                    ? 'rounded-3xl ring-2 ring-zinc-300 dark:ring-zinc-600 bg-white dark:bg-zinc-950 p-5 shadow-sm'
+                    ? 'rounded-2xl border-2 border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-950 p-6 shadow-md'
                     : isDone
-                        ? 'rounded-3xl ring-4 ring-emerald-100 dark:ring-emerald-900  bg-white dark:bg-zinc-950 p-5 shadow-sm opacity-80'
-                        : 'rounded-3xl ring-2 ring-zinc-200 dark:ring-zinc-800 bg-zinc-50 dark:bg-zinc-900/50  p-5 shadow-sm'
+                    ? 'rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 shadow-sm opacity-85'
+                    : 'rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/40 p-6 shadow-xs opacity-70'
             }
         >
             {/* Header */}
             <div className="flex items-start justify-between gap-4">
                 <div>
                     <div className="mb-2 flex items-center gap-2 flex-wrap">
-                        <span className="rounded-full bg-zinc-950 dark:bg-zinc-100 px-3 py-1 text-xs font-semibold tracking-wide text-white dark:text-zinc-950">
+                        <span className="rounded-full bg-zinc-950 dark:bg-zinc-100 px-3 py-1 text-xs font-bold text-white dark:text-zinc-950 tracking-wide">
                             {stage.id}
                         </span>
-                        <span className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
                             {stage.label}
                         </span>
                     </div>
-                    <h3 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{stage.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                    <h3 className="text-xl font-bold text-zinc-950 dark:text-zinc-50 tracking-tight">{stage.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                         {stage.description}
                     </p>
                 </div>
                 <StageBadge status={status} />
             </div>
 
-
             {/* Checklist */}
             <div className="mt-5">
-                <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
+                <div className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
                     <ChevronRight className="h-4 w-4" />
                     Checklist
                 </div>
-                <ul className="grid gap-3">
+                <ul className="grid gap-2.5">
                     {stage.items.map((item, i) => (
                         <ChecklistItem key={item} checked={i < completedCount}>
                             {item}
@@ -167,13 +165,13 @@ export interface RoadmapPanelProps {
     /** Slot for a close button or any header action */
     headerAction?: React.ReactNode;
     stageProgress?: Partial<Record<StageId, number>>;
-
 }
-const INITIAL_TITLE = 'Development Roadmap'
+
+const INITIAL_TITLE = 'Development Roadmap';
 const INITIAL_SUBTITLES = [
     'Roadmap covering the phases and their features and tasks for the clinic app. You can also check the commit history above.',
     'Note: This roadmap component is primarily AI coded and can contain inconsistencies.'
-]
+];
 
 export function RoadmapPanel({
     currentStage = 'V0',
@@ -186,39 +184,37 @@ export function RoadmapPanel({
     const current = ROADMAP_STAGES[currentIndex];
 
     return (
-        <div className="flex flex-col overflow-hidden rounded-[2rem] ring-2 ring-zinc-200 dark:ring-zinc-800 bg-zinc-50 dark:bg-zinc-950 shadow-2xl w-full">
-            <header className="flex items-start justify-between gap-4 ring-b ring-2 ring-zinc-200 dark:ring-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-6 py-5">
+        <div className="flex flex-col overflow-hidden rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 shadow-2xl w-full">
+            <header className="flex items-start justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-6 py-6">
                 <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
                         Roadmap model
                     </p>
-                    <h2 className="mt-1 text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
+                    <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">
                         {title}
                     </h2>
-                    {
-                        subtitles?.map(s =>
-                            <p className="mt-2  text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                                {s}
-                            </p>
-                        )}
+                    {subtitles?.map((s, idx) => (
+                        <p key={idx} className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                            {s}
+                        </p>
+                    ))}
                 </div>
                 {headerAction}
             </header>
 
-            <div className="overflow-y-auto px-6 py-6">
-                {/* Header */}
-                <div className="mb-6 rounded-3xl ring-2 ring-zinc-200 dark:ring-zinc-800 bg-white dark:bg-zinc-950 p-5 shadow-sm">
+            <div className="overflow-y-auto px-6 py-6 space-y-6">
+                {/* Header Callout */}
+                <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 shadow-xs">
                     <div className="flex flex-wrap items-center gap-3">
-                        <span className="rounded-full bg-zinc-950 dark:bg-zinc-100 px-3 py-1 text-xs font-semibold text-white dark:text-zinc-950">
+                        <span className="rounded-full bg-zinc-950 dark:bg-zinc-100 px-3 py-1 text-xs font-bold text-white dark:text-zinc-950">
                             Current position: {current.id}
                         </span>
-                        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                        <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
                             {current.title}
                         </span>
                     </div>
-                    <p className="mt-3  text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                        The checklist is not interactive, prop-driven and for presentation only.
-                        Earlier stages read as completed. The current stage is highlighted. Later stages remain upcoming.
+                    <p className="mt-2.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                        The checklist is not interactive, prop-driven and for presentation only. Earlier stages read as completed. The current stage is highlighted. Later stages remain upcoming.
                     </p>
                 </div>
 
@@ -254,12 +250,12 @@ export function ModalOverlay({ open, onOpenChange, children }: ModalOverlayProps
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div
-                className="absolute inset-0 bg-zinc-950/55 backdrop-blur-sm"
+                className="absolute inset-0 bg-black/70 backdrop-blur-md"
                 onClick={() => onOpenChange(false)}
             />
-            <div className="relative z-10 flex max-h-[90vh] w-full max-w-5xl">
+            <div className="relative z-10 flex max-h-[90vh] w-full max-w-4xl">
                 {children}
             </div>
         </div>
@@ -296,10 +292,10 @@ export function RoadmapModal({
                     <button
                         type="button"
                         onClick={() => onOpenChange(false)}
-                        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 transition hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-zinc-950 dark:hover:text-zinc-50"
+                        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 transition hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-950 dark:hover:text-zinc-50 cursor-pointer"
                         aria-label="Close roadmap modal"
                     >
-                        <X className="h-5 w-5" />
+                        <X className="h-4 w-4" />
                     </button>
                 }
             />

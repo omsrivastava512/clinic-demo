@@ -20,24 +20,24 @@ export type StatusBadgeVariant =
   | 'pending'
   | 'overdue';
 
-// ── Color token map ───────────────────────────────────────────────────────────
+// ── Color token map (Quiet, tinted clinical palette with 1px hairlines) ─────────
 const VARIANT_CLASSES: Record<StatusBadgeVariant, string> = {
   // Alerts
-  'allergy':      'bg-rose-50 text-rose-700 border-rose-200 dark:bg-red-950/50 dark:text-red-200 dark:border-red-900/50',
-  'fall-risk':    'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-200 dark:border-amber-900/50',
-  'dnr':          'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-200 dark:border-blue-900/50',
-  'other':        'bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700',
+  'allergy':      'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/25',
+  'fall-risk':    'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/25',
+  'dnr':          'bg-sky-500/10 text-sky-800 dark:text-sky-300 border-sky-500/25',
+  'other':        'bg-muted text-muted-foreground border-border',
   // Status
-  'active':       'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-200 dark:border-emerald-900/50',
-  'completed':    'bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700',
-  'expired':      'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/50 dark:text-red-200 dark:border-red-900/50',
+  'active':       'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25',
+  'completed':    'bg-muted/80 text-muted-foreground border-border/80',
+  'expired':      'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/25',
   // Visit type
-  'consult':      'bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950/50 dark:text-violet-200 dark:border-violet-900/50',
-  'machine-only': 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-200 dark:border-blue-900/50',
+  'consult':      'bg-teal-500/10 text-teal-700 dark:text-teal-300 border-teal-500/25',
+  'machine-only': 'bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/25',
   // Payment
-  'paid':         'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-200 dark:border-emerald-900/50',
-  'pending':      'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-200 dark:border-amber-900/50',
-  'overdue':      'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/50 dark:text-red-200 dark:border-red-900/50',
+  'paid':         'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25',
+  'pending':      'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/25',
+  'overdue':      'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/25',
 };
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ variant, children, className }: StatusBadgeProps) {
   return (
-    <Badge className={cn('border', VARIANT_CLASSES[variant], className)}>
+    <Badge className={cn('border text-[11px] font-medium px-2 py-0.5 rounded-full', VARIANT_CLASSES[variant], className)}>
       {children}
     </Badge>
   );
