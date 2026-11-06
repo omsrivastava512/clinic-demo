@@ -30,10 +30,10 @@ export const TourCard = ({
   ...props
 }: TourCardProps) => {
   const positions: Record<NonNullable<TourCardProps['position']>, string> = {
-    'bottom-right': 'fixed bottom-6 right-6',
-    'bottom-left': 'fixed bottom-6 left-6',
-    'top-right': 'fixed top-6 right-6',
-    'top-left': 'fixed top-6 left-6',
+    'bottom-right': 'fixed bottom-5 right-5',
+    'bottom-left': 'fixed bottom-5 left-5',
+    'top-right': 'fixed top-5 right-5',
+    'top-left': 'fixed top-5 left-5',
     'relative': 'relative'
   };
 
@@ -42,13 +42,12 @@ export const TourCard = ({
       role="dialog"
       aria-modal="true"
       className={cn(
-        "w-[calc(100vw-3rem)] sm:w-80",
-        "rounded-xl  ring-2 ring-zinc-700",
-        "bg-zinc-100 p-4 sm:p-5 ", "backdrop-blur-lg",
-        "shadow-xl shadow-black/20 ", "isolate z-10000",
-        "animate-in fade-in slide-in-from-bottom-3 sm:slide-in-from-bottom-5 duration-300",
-        "dark:ring-zinc-700 dark:bg-zinc-950 ",
-        positions[position], className
+        "w-[calc(100vw-2.5rem)] sm:w-84",
+        "rounded-xl border border-border bg-card/95 p-4 sm:p-5",
+        "backdrop-blur-md shadow-lg dark:shadow-2xl z-50",
+        "animate-in fade-in slide-in-from-bottom-2 duration-200",
+        positions[position],
+        className
       )}
       {...props}
     >
@@ -59,22 +58,15 @@ export const TourCard = ({
 
 // --- 2. Header & Title ---
 export const TourHeader = ({ children, onClose }: TourHeaderProps) => (
-  <div className="flex items-start justify-between mb-2">
-    <div className="flex flex-col gap-1">{children}</div>
+  <div className="flex items-start justify-between gap-2 mb-2">
+    <div className="flex flex-col gap-0.5">{children}</div>
     {onClose && (
       <button
         onClick={onClose}
         type="button"
-        className=
-        {cn(
-          "rounded-sm",
-          "opacity-70 hover:opacity-100",
-          "transition-opacity",
-          "focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:ring-offset-2 ring-offset-white",
-          "dark:focus:ring-zinc-300 dark:ring-offset-zinc-950"
-        )}
+        className="rounded-md p-1 text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none focus:ring-1 focus:ring-primary/40"
       >
-        <XIcon className="h-4 w-4 text-zinc-500 dark:text-zinc-400" />
+        <XIcon className="h-3.5 w-3.5" />
         <span className="sr-only">Close</span>
       </button>
     )}
@@ -83,7 +75,7 @@ export const TourHeader = ({ children, onClose }: TourHeaderProps) => (
 
 export const TourTitle = ({ children, className = '', ...props }: TourSharedProps) => (
   <h3
-    className={`font-semibold leading-none tracking-tight text-zinc-900 dark:text-zinc-50 ${className}`}
+    className={cn("text-xs font-semibold text-foreground tracking-tight uppercase tracking-wider", className)}
     {...props}
   >
     {children}
@@ -93,7 +85,7 @@ export const TourTitle = ({ children, className = '', ...props }: TourSharedProp
 // --- 3. Description/Content ---
 export const TourDescription = ({ children, className = '', ...props }: TourSharedProps) => (
   <div
-    className={`text-sm text-zinc-600 dark:text-zinc-400 mb-4 leading-relaxed tracking-wider ${className}`}
+    className={cn("text-xs text-muted-foreground mb-4 leading-relaxed", className)}
     {...props}
   >
     {children}
@@ -103,31 +95,34 @@ export const TourDescription = ({ children, className = '', ...props }: TourShar
 // --- 4. Footer ---
 export const TourFooter = ({ children, className = '', ...props }: TourSharedProps) => (
   <div
-    className={`flex items-center justify-between mt-2 ${className}`}
+    className={cn("flex items-center justify-between pt-2 border-t border-border/50", className)}
     {...props}
   >
     {children}
   </div>
 );
 
-// --- 5. Reusable Button ---
+// --- 5. Action Buttons ---
 export const TourButton = ({
   children,
   variant = 'primary',
   className = '',
   ...props
 }: TourButtonProps) => {
-  const base = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-zinc-300 h-10 px-4 py-2";
-
-  const variants: Record<NonNullable<TourButtonProps['variant']>, string> = {
-    primary: "bg-zinc-900 text-zinc-50 hover:bg-zinc-900/90 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 shadow",
-    outline: "border border-zinc-200 bg-transparent hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
-    ghost: "hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+  const variantStyles = {
+    primary: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-2xs',
+    outline: 'border border-border bg-transparent text-foreground hover:bg-muted',
+    ghost: 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
   };
 
   return (
     <button
-      className={`${base} ${variants[variant]} ${className}`}
+      type="button"
+      className={cn(
+        "px-2.5 py-1 rounded-md text-xs font-medium transition-colors duration-150 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed",
+        variantStyles[variant],
+        className
+      )}
       {...props}
     >
       {children}
