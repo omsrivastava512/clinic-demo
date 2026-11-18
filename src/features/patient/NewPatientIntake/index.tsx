@@ -26,6 +26,7 @@ const validateFormData = (data: FormData): string[] => {
 
 interface IntakeProps {
     initialName?: string;
+    autoFocus?: boolean;
     onClose: () => void;
     onSubmit: (v: FormData) => void;
 
@@ -105,7 +106,7 @@ const initialFormData: FormData = {
     address: "",
 }
 
-export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onClose, onSubmit }) => {
+export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', autoFocus = true, onClose, onSubmit }) => {
 
     const initializeName = (f: FormData) => ({ ...f, name: validateAndCapitalizeName(initialName) })
 
@@ -142,6 +143,7 @@ export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', onCl
                 <NameInput
                     patientName={formData.name}
                     changeName={(value) => dispatch({ type: 'CHANGE_NAME', value })}
+                    autoFocus={autoFocus}
                 />
 
                 {/* ROW 2: VITAL DEMOGRAPHICS  */}
@@ -195,8 +197,9 @@ export default NewPatientIntake;
 type NameInputProps = {
     patientName: FormData['name'],
     changeName(v: FormData['name']): void
+    autoFocus: boolean
 }
-const NameInput = ({ patientName, changeName }: NameInputProps) => (
+const NameInput = ({ patientName, changeName, autoFocus }: NameInputProps) => (
     <div>
         <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 block">Full Legal Name</label>
         <Input
@@ -206,7 +209,7 @@ const NameInput = ({ patientName, changeName }: NameInputProps) => (
             onChange={(e) => changeName(e.currentTarget.value)}
             placeholder="e.g. Ramesh Gupta"
             className="text-xl font-medium"
-            autoFocus
+            autoFocus={autoFocus}
         />
     </div>
 )

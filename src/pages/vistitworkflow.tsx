@@ -7,12 +7,7 @@ import ComplaintSelector from '@/features/visit/ComplaintSelector';
 import InvoiceBuilder from '@/features/visit/InvoiceBuilder';
 import ProcedureLogger from '@/features/visit/ProcedureLogger';
 import type { InvoiceItem } from '@/types';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 const VisitWorkflow = () => {
-
-    const [isStarted, setIsStarted] = useState(false)
-    const start = () => setIsStarted(true)
 
     // Dummy Handlers for display purposes
     const handleInvoiceLog = (i: InvoiceItem[]) => {
@@ -21,19 +16,6 @@ const VisitWorkflow = () => {
         alert("Bill Generated: ₹" + totalCost)
     };
 
-    if (!isStarted) return (
-        <div className='flex flex-col items-center justify-center text-center gap-4 max-w-xs mx-auto'>
-            <Button
-                onClick={start}
-                variant="outline" size="lg"
-                className={"p-4  font-bold tracking-wide"}
-            >
-                Start Workflow
-            </Button>
-            <em className='text-sm text-zinc-500 font-semibold '>Initialize the interactive clinical workflow suite. Experience high-fidelity modular components built for rapid entry.</em>
-            <em className='text-sm text-zinc-500 '>This presentation space showcases real-time OPD tracking, dynamic patient registration, multi-context procedure logging, and invoice billing. Components are fully self-contained to ensure seamless layout loading.</em>
-        </div>
-    );
     // NOTE: Wording in these presentation sections was updated to be highly user-centric and feature-focused,
     // avoiding developer-facing jargon (like O(1) sets or dual-column mapping) in favor of clear product utility descriptions.
     return (
@@ -55,7 +37,7 @@ const VisitWorkflow = () => {
                 <DailyLedger />
             </PresentationSection>
 
-            <PresentationSection hidden title="New Patient Registration"
+            <PresentationSection title="New Patient Registration"
                 number='02' 
                 description="The initial point of entry for adding new patients to the clinic's database, capturing their personal details and primary medical notes."
                 features={[
@@ -70,7 +52,7 @@ const VisitWorkflow = () => {
                 ]}
                 className="flex gap-5 flex-wrap" tag='register'
             >
-                <NewPatientIntake onClose={() => { }} initialName="Arjun" onSubmit={() => { }} />
+                <NewPatientIntake onClose={() => { }} initialName="Arjun" autoFocus={false} onSubmit={() => { }} />
             </PresentationSection>
 
             <PresentationSection title="Complaint Selector (Diagnosis)"
