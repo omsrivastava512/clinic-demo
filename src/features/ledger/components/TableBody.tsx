@@ -3,9 +3,10 @@ import { cn, compTime } from "@/lib"
 import TableRow from "./TableRow"
 import PatientSearch from "./PatientSearch"
 import { useRef, useEffect } from "react"
+import type { LedgerEntry } from "@/types"
 
 
-const TableBody = ({ showSearch = true }: { showSearch?: boolean }) => {
+const TableBody = ({ showSearch = true, entries = MOCK_LEDGER_ENTRIES }: { showSearch?: boolean; entries?: LedgerEntry[] }) => {
     const listContainerRef = useRef<HTMLDivElement>(null);
     const END_OF_LIST_HEIGHT = 49; // Height of the bottom marker for snap-back boundary checks
     const snapBackTimer = useRef<number | undefined>(undefined);
@@ -21,7 +22,7 @@ const TableBody = ({ showSearch = true }: { showSearch?: boolean }) => {
 
     // Dynamic scroll tracking: when new entries are added, smoothly auto-scrolls the container to
     // the resting bottom (scrollTop = -49px) to keep the bottom marker hidden.
-    const entriesLength = MOCK_LEDGER_ENTRIES.length;
+    const entriesLength = entries.length;
     useEffect(() => {
         const el = listContainerRef.current;
         if (!el) return;
@@ -75,7 +76,7 @@ const TableBody = ({ showSearch = true }: { showSearch?: boolean }) => {
                     />
 
                     {/* Mapped entries in reverse order: col-reverse visualizes chronological oldest-to-newest top-to-bottom */}
-                    {MOCK_LEDGER_ENTRIES
+                    {[...entries]
                         .sort((a, b) => compTime(b.time, a.time))
                         .map((entry) => (
                             <TableRow key={entry.id} entry={entry} />

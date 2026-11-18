@@ -1,33 +1,31 @@
 import { ArrowUpRight, ChevronDown } from "lucide-react";
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MOCK_LEDGER_ENTRIES } from "@/data/mock_data";
 import { calcMin12H, cn, compTime, min12HToTime } from "@/lib";
 import type { LedgerEntry } from "@/types";
 
-const visitsByHour = new Map<number, LedgerEntry[]>();
-
-for (const entry of [...MOCK_LEDGER_ENTRIES].sort((a, b) => compTime(b.time, a.time))) {
-    const hour = Math.floor(calcMin12H(entry.time) / 60) * 60;
-    const visits = visitsByHour.get(hour);
-    if (visits) {
-        visits.push(entry);
-    } else {
-        visitsByHour.set(hour, [entry]);
-    }
-}
-
-const hourGroups = Array.from(visitsByHour, ([hour, visits]) => ({
-    id: `timeline-hour-${hour}`,
-    label: min12HToTime(hour).replace(":00", ""),
-    visits,
-    countLabel: `${visits.length} ${visits.length === 1 ? "visit" : "visits"}`,
-}));
-
-const VisitTimeline = () => {
+const VisitTimeline = ({ entries, filters }: { entries: LedgerEntry[]; filters: ReactNode }) => {
     const jumpTarget = useRef<HTMLElement | null>(null);
+    const visitsByHour = new Map<number, LedgerEntry[]>();
+
+    for (const entry of [...entries].sort((a, b) => compTime(b.time, a.time))) {
+        const hour = Math.floor(calcMin12H(entry.time) / 60) * 60;
+        const visits = visitsByHour.get(hour);
+        if (visits) {
+            visits.push(entry);
+        } else {
+            visitsByHour.set(hour, [entry]);
+        }
+    }
+
+    const hourGroups = Array.from(visitsByHour, ([hour, visits]) => ({
+        id: `timeline-hour-${hour}`,
+        label: min12HToTime(hour).replace(":00", ""),
+        visits,
+        countLabel: `${visits.length} ${visits.length === 1 ? "visit" : "visits"}`,
+    }));
 
     const finishJump = (open: boolean) => {
         if (open || !jumpTarget.current) return;
@@ -42,10 +40,10 @@ const VisitTimeline = () => {
 
     return (
         <div>
-            <div className="sticky top-2 z-20 mb-4 flex bg-zinc-100 pb-2 dark:bg-zinc-950">
+            <div className="sticky top-0 z-20 mb-3 flex items-center gap-2 bg-zinc-100 py-2 dark:bg-zinc-950">
                 <DropdownMenu modal={false} onOpenChangeComplete={finishJump}>
-                    <DropdownMenuTrigger render={<Button variant="outline" className="h-10 px-3" />}>
-                        Jump to hour
+                    <DropdownMenuTrigger aria-label="Jump to hour" disabled={entries.length === 0} render={<Button variant="outline" className="h-10 shrink-0 px-2 sm:px-3" />}>
+                        <span>Jump<span className="hidden sm:inline"> to hour</span></span>
                         <ChevronDown aria-hidden="true" className="text-zinc-500 dark:text-zinc-400" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="min-w-44">
@@ -59,7 +57,9 @@ const VisitTimeline = () => {
                         ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
+                {filters}
             </div>
+            {entries.length === 0 && <p className="text-sm text-zinc-600 dark:text-zinc-300">No visits match these filters.</p>}
             {hourGroups.map(({ id: hourId, label, visits, countLabel }) => (
                 <section key={hourId} aria-labelledby={hourId} className="not-last:mb-6 sm:grid sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-4">
                     <h2 id={hourId} tabIndex={-1} className="mb-2 scroll-mt-20 rounded-sm text-sm font-semibold text-stone-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-stone-500 sm:mb-0 sm:mt-4 sm:self-start dark:text-zinc-300">
