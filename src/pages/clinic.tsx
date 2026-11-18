@@ -8,15 +8,16 @@ import TableHeader from "@/features/ledger/components/TableHeader";
 import VisitTimeline from "@/features/ledger/components/VisitTimeline";
 import { cn } from "@/lib";
 
+const viewTabClassName = "px-3 dark:data-active:border-transparent dark:data-active:bg-zinc-700 group-data-[variant=default]/tabs-list:data-active:shadow-none";
+
 const Clinic = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const view = searchParams.get("view") === "timeline" ? "timeline" : "table";
-    const isTimeline = view === "timeline";
+    const view = searchParams.get("view") === "table" ? "table" : "timeline";
 
     const changeView = (value: string | number | null) => {
         const params = new URLSearchParams(searchParams);
-        if (value === "timeline") {
-            params.set("view", "timeline");
+        if (value === "table") {
+            params.set("view", "table");
         } else {
             params.delete("view");
         }
@@ -24,37 +25,36 @@ const Clinic = () => {
     };
 
     return (
-        <main className={cn("min-h-dvh text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50", isTimeline ? "bg-stone-100" : "bg-zinc-100")}>
+        <main className="min-h-dvh bg-zinc-100 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
             <Tabs value={view} onValueChange={changeView} className={cn(
                 "min-h-dvh gap-0",
-                !isTimeline && "mx-auto h-dvh min-h-[32rem] max-w-6xl px-4 pt-5 pb-4 sm:px-8 sm:pt-8 sm:pb-6"
+                view === "table" && "h-dvh min-h-[32rem]"
             )}>
-                <header className={cn(isTimeline && "border-b border-stone-300 bg-stone-50 dark:border-zinc-800 dark:bg-zinc-900")}>
-                    <div className={cn(isTimeline && "mx-auto max-w-6xl px-4 pt-3 pb-6 sm:px-8 sm:pb-8")}>
-                        <nav aria-label="Clinic navigation" className={cn(
-                            "flex flex-wrap items-center gap-x-4 gap-y-2 pr-14",
-                            isTimeline ? "mb-2 min-h-11 sm:mb-4" : "mb-4 sm:mb-6"
-                        )}>
-                            <Link to="/" className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-zinc-600 outline-none hover:text-zinc-950 focus-visible:ring-2 focus-visible:ring-zinc-500 dark:text-zinc-300 dark:hover:text-white">
-                                <ArrowLeft aria-hidden="true" className="size-4" />
-                                Back to catalogue
-                            </Link>
-                            <TabsList aria-label="Ledger view" className="border border-zinc-200 bg-zinc-200/60 dark:border-zinc-700 dark:bg-zinc-800">
-                                <TabsTrigger value="table" className="px-3">Table</TabsTrigger>
-                                <TabsTrigger value="timeline" className="px-3">Timeline</TabsTrigger>
-                            </TabsList>
-                        </nav>
-                        <LedgerHeader workspace={view} />
-                        <div className={cn("relative z-10 w-full", isTimeline ? "mt-5 max-w-md" : "mt-4 mb-3 sm:max-w-lg")}>
+                <header className="mx-auto w-full max-w-6xl px-4 pt-5 sm:px-8 sm:pt-8">
+                    <nav aria-label="Clinic navigation" className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2 pr-14 sm:mb-6">
+                        <Link to="/" className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-zinc-600 outline-none hover:text-zinc-950 focus-visible:ring-2 focus-visible:ring-zinc-500 dark:text-zinc-300 dark:hover:text-white">
+                            <ArrowLeft aria-hidden="true" className="size-4" />
+                            Back to catalogue
+                        </Link>
+                    </nav>
+                    <LedgerHeader workspace />
+                    <div className="relative z-10 mt-4 mb-3 flex flex-col items-end gap-3 sm:flex-row-reverse sm:items-center sm:justify-between">
+                        <TabsList aria-label="Ledger view" className="shrink-0 border border-zinc-200 bg-zinc-200/60 group-data-horizontal/tabs:h-[46px] dark:border-zinc-700 dark:bg-zinc-800">
+                            <TabsTrigger value="timeline" className={viewTabClassName}>Timeline</TabsTrigger>
+                            <TabsTrigger value="table" className={viewTabClassName}>Table</TabsTrigger>
+                        </TabsList>
+                        <div className="w-full sm:min-w-0 sm:max-w-lg sm:flex-1">
                             <PatientSearch placement="above" />
                         </div>
                     </div>
                 </header>
-                <TabsContent value="table" keepMounted className="isolate flex min-h-0 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-                    <TableHeader className="text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200" />
-                    <TableBody showSearch={false} />
+                <TabsContent value="table" keepMounted className="mx-auto flex min-h-0 w-full max-w-6xl flex-col px-4 pb-4 sm:px-8 sm:pb-6">
+                    <div className="isolate flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+                        <TableHeader className="text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200" />
+                        <TableBody showSearch={false} />
+                    </div>
                 </TabsContent>
-                <TabsContent value="timeline" keepMounted className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-8 sm:py-8">
+                <TabsContent value="timeline" keepMounted className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-8 sm:pb-6">
                     <VisitTimeline />
                 </TabsContent>
             </Tabs>
