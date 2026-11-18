@@ -2,9 +2,10 @@ import {cn} from "@/lib";
 import type { ReactNode } from "react";
 
 /** Wrapper Components */
-export const DropdownContainer = ({ children }: { children: ReactNode; }) => (
+export const DropdownContainer = ({ children, placement }: { children: ReactNode; placement: "above" | "below"; }) => (
     <div className={cn(
-        "absolute bottom-full left-0 right-0 mx-4 mb-2",  // position
+        "absolute left-0 right-0",
+        placement === "above" ? "top-full mt-2" : "bottom-full mx-4 mb-2",
         "bg-zinc-200 dark:bg-zinc-900",  // bg
         "outline outline-zinc-600 dark:outline-zinc-400 rounded-lg",  // outline
         "max-h-75 flex flex-col", // flex

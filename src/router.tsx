@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "./App";
 import VisitWorkflow from "./pages/vistitworkflow";
 import NotFound from "./components/NotFound";
@@ -6,6 +6,7 @@ import ServerError from "./components/ServerError";
 import { RoadmapPanel, type StageId } from "./pages/roadmap";
 import PatientProfilePage from "./features/patient/PatientProfile";
 import Dashboard from "./pages/dashboard";
+import Clinic from "./pages/clinic";
 
 const STAGE_PROGRESS: Partial<Record<StageId, number>> = {
     V0: 5, // first 4 items done in the current stage
@@ -15,6 +16,16 @@ const STAGE_PROGRESS: Partial<Record<StageId, number>> = {
 // User directed keeping errorElement: <ServerError /> at child route level rather than only root route.
 // Rationale: If a specific child tab crashes, the layout shell (App) remains intact and interactive, preventing total app lock-out.
 export const router = createBrowserRouter([
+    {
+        path: "/clinic",
+        element: <Clinic />,
+        errorElement: <ServerError />
+    },
+    {
+        path: "/clinic-preview",
+        element: <Navigate to="/clinic?view=timeline" replace />,
+        errorElement: <ServerError />
+    },
     {
         path: "/",
         element: <App />,            // layout route

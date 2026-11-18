@@ -10,12 +10,13 @@ interface SearchSuggestionsProps {
     handleSelect(i: number): void;
     input: string;
     focusedIndex: number
+    placement: "above" | "below"
 }
 
-const SearchSuggestions = ({ filteredPatients, handleSelect, input, focusedIndex }: SearchSuggestionsProps) => {
+const SearchSuggestions = ({ filteredPatients, handleSelect, input, focusedIndex, placement }: SearchSuggestionsProps) => {
     if (isEmptyInput(input)) return null;
     return (
-        <DropdownContainer>
+        <DropdownContainer placement={placement}>
             <DropdownHeader count={filteredPatients.length} />
             <PatientList
                 filteredPatients={filteredPatients}

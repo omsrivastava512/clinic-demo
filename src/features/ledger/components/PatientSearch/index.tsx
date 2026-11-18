@@ -6,7 +6,7 @@ import { useState } from "react"
 import type { Patient } from "@/types";
 import { isEmptyInput, isMinInputLength } from "./utils";
 
-const PatientSearch = () => {
+const PatientSearch = ({ placement = "below" }: { placement?: "above" | "below" }) => {
 
     const [input, setInput] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -101,12 +101,12 @@ const PatientSearch = () => {
 
 
     return (
-        <div className="relative dark:bg-black p-1 w-full mt-auto">
+        <div className={placement === "above" ? "relative w-full" : "relative dark:bg-black p-1 w-full mt-auto"}>
             {/* ACTIVE INPUT ROW */}
-            <SearchInput input={input} isFocused={focusedIndex === -1} handleInputChange={handleInputChange} handleKeyNavigation={handleKeyNavigation} />
+            <SearchInput input={input} isFocused={focusedIndex === -1} handleInputChange={handleInputChange} handleKeyNavigation={handleKeyNavigation} placement={placement} />
 
             {/* A. The Floating Typeahead List (Drop-up) */}
-            {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} focusedIndex={focusedIndex} />}
+            {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} focusedIndex={focusedIndex} placement={placement} />}
 
         </div>
     )
