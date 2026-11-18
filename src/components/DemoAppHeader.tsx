@@ -1,4 +1,5 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { buttonVariants } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import TextExpander from './TextExpander';
 
@@ -9,6 +10,7 @@ export const DemoAppHeader = ({ formattedDate }: { formattedDate: string; }) => 
         <TextExpander collapseLabel='' className="text-zinc-600 dark:text-zinc-500 max-w-2xl mx-auto text-center p-2">
             This is not the final clinic application. It is a component catalogue and interaction prototype for a clinic management system. The goal is to validate each UI module individually before those components are integrated into a full backend-connected product. Check out the roadmap to understand the full scope of the project.
         </TextExpander>
+        <Link to="/clinic" className={buttonVariants({ variant: "outline", size: "lg", className: "my-2 p-4 font-bold tracking-wide" })}>Open clinic demo</Link>
 
         <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2 font-1mono">Last Updated: {formattedDate} </p>
         <p className="text-zinc-700 dark:text-zinc-400 text-md mt-2">

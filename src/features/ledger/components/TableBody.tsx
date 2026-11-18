@@ -5,7 +5,7 @@ import PatientSearch from "./PatientSearch"
 import { useRef, useEffect } from "react"
 
 
-const TableBody = () => {
+const TableBody = ({ showSearch = true }: { showSearch?: boolean }) => {
     const listContainerRef = useRef<HTMLDivElement>(null);
     const END_OF_LIST_HEIGHT = 49; // Height of the bottom marker for snap-back boundary checks
     const snapBackTimer = useRef<number | undefined>(undefined);
@@ -87,7 +87,7 @@ const TableBody = () => {
                 </div>
 
                 {/* Sticky search input docked cleanly outside the scrollable area */}
-                <PatientSearch />
+                {showSearch && <PatientSearch />}
             </div>
         </>
     )
