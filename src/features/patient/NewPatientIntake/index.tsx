@@ -26,6 +26,7 @@ const validateFormData = (data: FormData): string[] => {
 
 interface IntakeProps {
     initialName?: string;
+    initialPhone?: string;
     autoFocus?: boolean;
     onClose: () => void;
     onSubmit: (v: FormData) => void;
@@ -106,11 +107,15 @@ const initialFormData: FormData = {
     address: "",
 }
 
-export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', autoFocus = true, onClose, onSubmit }) => {
+export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', initialPhone = '', autoFocus = true, onClose, onSubmit }) => {
 
-    const initializeName = (f: FormData) => ({ ...f, name: validateAndCapitalizeName(initialName) })
+    const initializeForm = (f: FormData) => ({
+        ...f,
+        name: validateAndCapitalizeName(initialName),
+        phone: filterPhoneNumber(initialPhone)
+    })
 
-    const [formData, dispatch] = useReducer(formReducer, initialFormData, initializeName);
+    const [formData, dispatch] = useReducer(formReducer, initialFormData, initializeForm);
 
     const [showClinicalNotes, setShowClinicalNotes] = useState(false)
 
