@@ -60,8 +60,7 @@ export default TableRow
 
 const statusBadgeStyles = {
     'Paid': 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-500',
-    'In Therapy': 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400',
-    'Waiting': 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-500',
+    'Completed': 'bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300',
     'default': 'bg-zinc-100 text-zinc-500'
 } as const;
 

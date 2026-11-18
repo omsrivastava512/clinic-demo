@@ -12,6 +12,71 @@ import type {
   VisitRecord,
 } from '@/types';
 
+const busyDayPatientNames = [
+    ["Aditi Joshi", "female"],
+    ["Rohan Das", "male"],
+    ["Neha Pillai", "female"],
+    ["Amit Bhat", "male"],
+    ["Meera Iyer", "female"],
+    ["Kabir Rao", "male"],
+    ["Sana Qureshi", "female"],
+    ["Nitin Shah", "male"],
+    ["Ritu Jain", "female"],
+    ["Dev Patel", "male"],
+    ["Kiran Naik", "female"],
+    ["Ajay Yadav", "male"],
+    ["Pallavi Roy", "female"],
+    ["Naveen Nair", "male"],
+    ["Tanvi Bose", "female"],
+    ["Amar Kulkarni", "male"],
+    ["Isha Verma", "female"],
+    ["Harish Sethi", "male"],
+    ["Divya Rane", "female"],
+    ["Nikhil Sen", "male"],
+    ["Reema Kapoor", "female"],
+    ["Arun Sinha", "male"],
+    ["Lakshmi Nair", "female"],
+    ["Vivek Mehra", "male"],
+    ["Seema Jha", "female"],
+    ["Rajat Bansal", "male"],
+    ["Anita Dey", "female"],
+    ["Siddharth Shah", "male"],
+    ["Preeti Arora", "female"],
+    ["Manoj Gill", "male"],
+    ["Maya Rao", "female"],
+    ["Kunal Desai", "male"],
+    ["Fatima Khan", "female"],
+    ["Aakash Pawar", "male"],
+    ["Sunita Shetty", "female"],
+    ["Abhinav Sood", "male"],
+    ["Rashmi Kale", "female"],
+    ["Sameer Iqbal", "male"],
+    ["Leena Vyas", "female"],
+    ["Pankaj Soni", "male"],
+    ["Deepika Menon", "female"],
+    ["Sandeep Rawat", "male"],
+    ["Riya Thomas", "female"],
+    ["Varun Reddy", "male"],
+] as const;
+
+const busyDayPatients: Patient[] = busyDayPatientNames.map(([fullName, gender], index) => {
+    const number = index + 23;
+    return {
+        id: `uuid-p${number}`,
+        mrn: `MED-${String(number).padStart(3, '0')}`,
+        fullName,
+        dateOfBirth: `${1972 + (index % 27)}-01-15`,
+        lastVisitAt: "2026-11-18T09:30:00Z",
+        phone: `90000000${number}`,
+        address: "Mumbai",
+        gender,
+        referralMode: "WALKIN",
+        isActive: true,
+        createdAt: "2026-10-01T10:00:00Z",
+        updatedAt: "2026-11-18T10:00:00Z"
+    };
+});
+
 export const MOCK_PATIENTS: Patient[] = [
   // 1
   {
@@ -66,16 +131,16 @@ export const MOCK_PATIENTS: Patient[] = [
   {
     id: "uuid-p04",
     mrn: "MED-004",
-    fullName: "Suresh Menon",
-    dateOfBirth: "1978-07-18",
-    lastVisitAt: "2024-02-02T09:10:00Z",
+    fullName: "Aarav Mehta",
+    dateOfBirth: "1995-07-24",
+    lastVisitAt: "",
     phone: "9000000004",
-    address: "Villa 21, HSR Layout, Bangalore",
+    address: "Sector 15, Vashi, Navi Mumbai",
     gender: "male",
     referralMode: "WALKIN",
     isActive: true,
-    createdAt: "2024-06-01T10:00:00Z",
-    updatedAt: "2024-06-01T10:00:00Z"
+    createdAt: "2026-07-13T10:00:00Z",
+    updatedAt: "2026-07-13T10:00:00Z"
   },
 
   // 5
@@ -368,6 +433,21 @@ export const MOCK_PATIENTS: Patient[] = [
     isActive: true,
     createdAt: "2024-06-01T10:00:00Z",
     updatedAt: "2024-06-01T10:00:00Z"
+  },
+  ...busyDayPatients,
+  {
+    id: "uuid-p67",
+    mrn: "MED-067",
+    fullName: "Suresh Menon",
+    dateOfBirth: "1978-07-18",
+    lastVisitAt: "2024-02-02T09:10:00Z",
+    phone: "9000000067",
+    address: "Villa 21, HSR Layout, Bangalore",
+    gender: "male",
+    referralMode: "WALKIN",
+    isActive: true,
+    createdAt: "2024-06-01T10:00:00Z",
+    updatedAt: "2024-06-01T10:00:00Z"
   }
 ];
 
@@ -391,30 +471,82 @@ export const PHYSIO_PROCEDURES: Procedure[] = [
     { id: 'PROC_08', name: 'Kinesio Taping', code: 'KT001', cost: 150 },
 ];
 
-export const MOCK_LEDGER_ENTRIES: LedgerEntry[] = [
-    { id: 'LE02', time: '10:30 AM', patientName: 'Priya Kapoor', treatment: 'Ankle Sprain (Taping)', status: 'In Therapy', patientId: 'uuid-p01' },
-    { id: 'LE01', time: '10:15 AM', patientName: 'Vikram Singh', treatment: 'Frozen Shoulder (IFT + US)', status: 'Paid', patientId: 'uuid-p02' },
-    { id: 'LE04', time: '11:00 AM', patientName: 'Anjali Devi', treatment: 'Shoulder Impingement (US)', status: 'Paid', patientId: 'uuid-p03' },
-    { id: 'LE05', time: '11:15 AM', patientName: 'Suresh Menon', treatment: 'Cervical Spondylosis (TENS)', status: 'In Therapy', patientId: 'uuid-p04' },
-    { id: 'LE09', time: '12:15 PM', patientName: 'Vijay Kumar', treatment: 'Sciatica (SWD)', status: 'Paid', patientId: 'uuid-p05' },
-    { id: 'LE03', time: '10:45 AM', patientName: 'Rahul Sharma', treatment: 'Knee Pain (IFT)', status: 'Waiting', patientId: 'uuid-p06' },
-    { id: 'LE06', time: '11:30 AM', patientName: 'Meena Kumari', treatment: 'Back Strain (Manual Therapy)', status: 'Paid', patientId: 'uuid-p07' },
-    { id: 'LE07', time: '11:45 AM', patientName: 'Arjun Reddy', treatment: 'Tennis Elbow (US)', status: 'Waiting', patientId: 'uuid-p08' },
-    { id: 'LE08', time: '12:00 PM', patientName: 'Nisha Singh', treatment: 'Plantar Fasciitis (IFT)', status: 'In Therapy', patientId: 'uuid-p09' },
-    { id: 'LE10', time: '12:30 PM', patientName: 'Pooja Sharma', treatment: 'Frozen Shoulder (Cervical Traction)', status: 'Waiting', patientId: 'uuid-p10' },
-    { id: 'LE11', time: '01:00 PM', patientName: 'Ravi Verma', treatment: 'Post-Op Knee Rehab (Kinesio Taping)', status: 'In Therapy', patientId: 'uuid-p11' },
-    { id: 'LE16', time: '02:15 PM', patientName: 'Deepa Mehta', treatment: 'Rotator Cuff Injury (US)', status: 'Waiting', patientId: 'uuid-p12' },
-    { id: 'LE12', time: '01:15 PM', patientName: 'Geeta Devi', treatment: 'Wrist Sprain (US)', status: 'Paid', patientId: 'uuid-p13' },
-    { id: 'LE13', time: '01:30 PM', patientName: 'Mohan Lal', treatment: 'Neck Pain (TENS)', status: 'Waiting', patientId: 'uuid-p14' },
-    { id: 'LE14', time: '01:45 PM', patientName: 'Kavita Rao', treatment: 'Hip Bursitis (IFT)', status: 'In Therapy', patientId: 'uuid-p15' },
-    { id: 'LE17', time: '02:30 PM', patientName: 'Ashok Kumar', treatment: 'Lumbar Spondylosis (SWD)', status: 'In Therapy', patientId: 'uuid-p16' },
-    { id: 'LE19', time: '03:00 PM', patientName: 'Rajesh Khanna', treatment: 'Achilles Tendonitis (Kinesio Taping)', status: 'Waiting', patientId: 'uuid-p17' },
-    { id: 'LE18', time: '02:45 PM', patientName: 'Shalini Gupta', treatment: 'Migraine (Cervical Traction)', status: 'Paid', patientId: 'uuid-p18' },
-    { id: 'LE21', time: '03:30 PM', patientName: 'Gaurav Singh', treatment: 'Groin Strain (IFT)', status: 'Paid', patientId: 'uuid-p19' },
-    { id: 'LE15', time: '02:00 PM', patientName: 'Sanjay Dutt', treatment: 'Ankle Fracture Rehab (Manual Therapy)', status: 'Paid', patientId: 'uuid-p20' },
-    { id: 'LE20', time: '03:15 PM', patientName: 'Smita Patil', treatment: 'Carpal Tunnel Syndrome (US)', status: 'In Therapy', patientId: 'uuid-p21' },
-    { id: 'LE22', time: '03:45 PM', patientName: 'Priya Kapoor', treatment: 'Ankle Sprain (Taping)', status: 'In Therapy', patientId: 'uuid-p22' },
+const mockLedgerVisits: Omit<LedgerEntry, 'patientName'>[] = [
+    { id: 'LE02', time: '10:30 AM', treatment: 'Ankle Sprain (Lateral), Plantar Fasciitis', status: 'Completed', patientId: 'uuid-p01' },
+    { id: 'LE01', time: '10:15 AM', treatment: 'Frozen Shoulder (Adhesive Capsulitis), Osteoarthritis – Knee, Chronic Lower Back Pain', status: 'Paid', patientId: 'uuid-p02' },
+    { id: 'LE04', time: '11:00 AM', treatment: 'Shoulder Impingement Syndrome', status: 'Paid', patientId: 'uuid-p03' },
+    { id: 'LE05', time: '11:15 AM', treatment: 'Cervical Spondylosis', status: 'Completed', patientId: 'uuid-p67' },
+    { id: 'LE09', time: '12:15 PM', treatment: 'Sciatica, Lumbar Disc Herniation (L4–L5)', status: 'Paid', patientId: 'uuid-p05' },
+    { id: 'LE03', time: '10:45 AM', treatment: 'Patellofemoral Pain Syndrome', status: 'Completed', patientId: 'uuid-p06' },
+    { id: 'LE06', time: '11:30 AM', treatment: 'Chronic Lower Back Pain', status: 'Paid', patientId: 'uuid-p07' },
+    { id: 'LE07', time: '11:45 AM', treatment: 'Tennis Elbow (Lateral Epicondylitis)', status: 'Completed', patientId: 'uuid-p08' },
+    { id: 'LE08', time: '12:00 PM', treatment: 'Plantar Fasciitis', status: 'Completed', patientId: 'uuid-p09' },
+    { id: 'LE10', time: '12:30 PM', treatment: 'Frozen Shoulder (Adhesive Capsulitis), Cervical Spondylosis', status: 'Completed', patientId: 'uuid-p10' },
+    { id: 'LE11', time: '01:00 PM', treatment: 'Post-Op ACL Reconstruction Rehab', status: 'Completed', patientId: 'uuid-p11' },
+    { id: 'LE16', time: '02:15 PM', treatment: 'Rotator Cuff Tear, Shoulder Impingement Syndrome, Biceps Tendinopathy', status: 'Completed', patientId: 'uuid-p12' },
+    { id: 'LE12', time: '01:15 PM', treatment: 'Wrist Sprain', status: 'Paid', patientId: 'uuid-p13' },
+    { id: 'LE13', time: '01:30 PM', treatment: 'Cervical Spondylosis', status: 'Completed', patientId: 'uuid-p14' },
+    { id: 'LE14', time: '01:45 PM', treatment: 'Hip Bursitis (Trochanteric)', status: 'Completed', patientId: 'uuid-p15' },
+    { id: 'LE17', time: '02:30 PM', treatment: 'Lumbar Spondylosis, Sciatica', status: 'Completed', patientId: 'uuid-p16' },
+    { id: 'LE19', time: '03:00 PM', treatment: 'Achilles Tendinopathy', status: 'Completed', patientId: 'uuid-p17' },
+    { id: 'LE18', time: '02:45 PM', treatment: 'Migraine (Cervicogenic)', status: 'Paid', patientId: 'uuid-p18' },
+    { id: 'LE21', time: '03:30 PM', treatment: 'Groin Strain, Hip Labral Tear', status: 'Paid', patientId: 'uuid-p19' },
+    { id: 'LE15', time: '02:00 PM', treatment: 'Post-Op Ankle Fracture Rehab', status: 'Paid', patientId: 'uuid-p20' },
+    { id: 'LE20', time: '03:15 PM', treatment: 'Carpal Tunnel Syndrome', status: 'Completed', patientId: 'uuid-p21' },
+    { id: 'LE22', time: '03:45 PM', treatment: 'Ankle Sprain (Lateral), Achilles Tendinopathy, Patellofemoral Pain Syndrome', status: 'Completed', patientId: 'uuid-p22' },
+    { id: 'LE23', time: '10:05 AM', treatment: 'Hip Osteoarthritis, Lumbar Spondylosis, Groin Strain', status: 'Completed', patientId: 'uuid-p23' },
+    { id: 'LE24', time: '10:21 AM', treatment: 'Carpal Tunnel Syndrome', status: 'Paid', patientId: 'uuid-p24' },
+    { id: 'LE25', time: '10:38 AM', treatment: 'Plantar Fasciitis', status: 'Completed', patientId: 'uuid-p25' },
+    { id: 'LE26', time: '10:54 AM', treatment: 'Cervical Spondylosis, Achilles Tendinopathy', status: 'Completed', patientId: 'uuid-p26' },
+    { id: 'LE27', time: '11:04 AM', treatment: 'Biceps Tendinopathy', status: 'Paid', patientId: 'uuid-p27' },
+    { id: 'LE28', time: '11:13 AM', treatment: 'Lumbar Spondylosis', status: 'Completed', patientId: 'uuid-p28' },
+    { id: 'LE29', time: '11:24 AM', treatment: 'Patellofemoral Pain Syndrome, Chronic Lower Back Pain, Hip Bursitis (Trochanteric)', status: 'Completed', patientId: 'uuid-p29' },
+    { id: 'LE30', time: '11:39 AM', treatment: 'Wrist Sprain', status: 'Paid', patientId: 'uuid-p30' },
+    { id: 'LE31', time: '11:56 AM', treatment: 'Achilles Tendinopathy', status: 'Completed', patientId: 'uuid-p31' },
+    { id: 'LE32', time: '12:06 PM', treatment: 'Groin Strain, Osteoarthritis – Knee', status: 'Completed', patientId: 'uuid-p32' },
+    { id: 'LE33', time: '12:14 PM', treatment: 'Sciatica', status: 'Paid', patientId: 'uuid-p33' },
+    { id: 'LE34', time: '12:23 PM', treatment: 'Chronic Lower Back Pain', status: 'Completed', patientId: 'uuid-p34' },
+    { id: 'LE35', time: '12:36 PM', treatment: 'AC Joint Sprain, Carpal Tunnel Syndrome, Lumbar Spondylosis', status: 'Completed', patientId: 'uuid-p35' },
+    { id: 'LE36', time: '12:47 PM', treatment: 'Patellar Tendinopathy', status: 'Paid', patientId: 'uuid-p36' },
+    { id: 'LE37', time: '12:56 PM', treatment: 'Osteoarthritis – Knee', status: 'Completed', patientId: 'uuid-p37' },
+    { id: 'LE38', time: '01:07 PM', treatment: 'Hip Bursitis (Trochanteric), Biceps Tendinopathy', status: 'Completed', patientId: 'uuid-p38' },
+    { id: 'LE39', time: '01:21 PM', treatment: 'Hip Osteoarthritis', status: 'Paid', patientId: 'uuid-p39' },
+    { id: 'LE40', time: '01:34 PM', treatment: 'Carpal Tunnel Syndrome', status: 'Completed', patientId: 'uuid-p40' },
+    { id: 'LE41', time: '01:49 PM', treatment: 'Plantar Fasciitis, Wrist Sprain, Chronic Lower Back Pain', status: 'Completed', patientId: 'uuid-p41' },
+    { id: 'LE42', time: '01:56 PM', treatment: 'Cervical Spondylosis', status: 'Paid', patientId: 'uuid-p42' },
+    { id: 'LE43', time: '02:03 PM', treatment: 'Biceps Tendinopathy', status: 'Completed', patientId: 'uuid-p43' },
+    { id: 'LE44', time: '02:07 PM', treatment: 'Lumbar Spondylosis, Sciatica', status: 'Completed', patientId: 'uuid-p44' },
+    { id: 'LE45', time: '02:11 PM', treatment: 'Patellofemoral Pain Syndrome', status: 'Paid', patientId: 'uuid-p45' },
+    { id: 'LE46', time: '02:18 PM', treatment: 'Wrist Sprain', status: 'Completed', patientId: 'uuid-p46' },
+    { id: 'LE47', time: '02:22 PM', treatment: 'Achilles Tendinopathy, Patellar Tendinopathy, Carpal Tunnel Syndrome', status: 'Completed', patientId: 'uuid-p47' },
+    { id: 'LE48', time: '02:26 PM', treatment: 'Groin Strain', status: 'Paid', patientId: 'uuid-p48' },
+    { id: 'LE49', time: '02:32 PM', treatment: 'Sciatica', status: 'Completed', patientId: 'uuid-p49' },
+    { id: 'LE50', time: '02:36 PM', treatment: 'Chronic Lower Back Pain, Hip Osteoarthritis', status: 'Completed', patientId: 'uuid-p50' },
+    { id: 'LE51', time: '02:40 PM', treatment: 'AC Joint Sprain', status: 'Paid', patientId: 'uuid-p51' },
+    { id: 'LE52', time: '02:43 PM', treatment: 'Patellar Tendinopathy', status: 'Completed', patientId: 'uuid-p52' },
+    { id: 'LE53', time: '02:48 PM', treatment: 'Osteoarthritis – Knee, Cervical Spondylosis, Wrist Sprain', status: 'Completed', patientId: 'uuid-p53' },
+    { id: 'LE54', time: '02:50 PM', treatment: 'Hip Bursitis (Trochanteric)', status: 'Paid', patientId: 'uuid-p54' },
+    { id: 'LE55', time: '02:53 PM', treatment: 'Hip Osteoarthritis', status: 'Completed', patientId: 'uuid-p55' },
+    { id: 'LE56', time: '02:56 PM', treatment: 'Carpal Tunnel Syndrome, Patellofemoral Pain Syndrome', status: 'Completed', patientId: 'uuid-p56' },
+    { id: 'LE57', time: '02:59 PM', treatment: 'Plantar Fasciitis', status: 'Paid', patientId: 'uuid-p57' },
+    { id: 'LE58', time: '03:04 PM', treatment: 'Cervical Spondylosis', status: 'Completed', patientId: 'uuid-p58' },
+    { id: 'LE59', time: '03:09 PM', treatment: 'Biceps Tendinopathy, Groin Strain, Patellar Tendinopathy', status: 'Completed', patientId: 'uuid-p59' },
+    { id: 'LE60', time: '03:19 PM', treatment: 'Lumbar Spondylosis', status: 'Paid', patientId: 'uuid-p60' },
+    { id: 'LE61', time: '03:24 PM', treatment: 'Patellofemoral Pain Syndrome', status: 'Completed', patientId: 'uuid-p61' },
+    { id: 'LE62', time: '03:36 PM', treatment: 'Wrist Sprain, AC Joint Sprain', status: 'Completed', patientId: 'uuid-p62' },
+    { id: 'LE63', time: '03:48 PM', treatment: 'Achilles Tendinopathy', status: 'Paid', patientId: 'uuid-p63' },
+    { id: 'LE64', time: '03:55 PM', treatment: 'Groin Strain', status: 'Completed', patientId: 'uuid-p64' },
+    { id: 'LE65', time: '04:06 PM', treatment: 'Sciatica, Hip Bursitis (Trochanteric), Cervical Spondylosis', status: 'Completed', patientId: 'uuid-p65' },
+    { id: 'LE66', time: '04:17 PM', treatment: 'Chronic Lower Back Pain', status: 'Paid', patientId: 'uuid-p66' },
 ];
+
+const mockPatientsById = new Map(MOCK_PATIENTS.map(patient => [patient.id, patient]));
+
+export const MOCK_LEDGER_ENTRIES: LedgerEntry[] = mockLedgerVisits.map(visit => {
+    const patient = mockPatientsById.get(visit.patientId);
+    if (!patient) throw new Error(`Missing mock patient for ledger entry ${visit.id}`);
+    return { ...visit, patientName: patient.fullName };
+});
 
 
 
@@ -423,7 +555,7 @@ export const MOCK_LEDGER_ENTRIES: LedgerEntry[] = [
 // PATIENT PASSPORT MOCK DATA
 // ==========================================
 
-export const MOCK_PATIENT_PROFILES: PatientProfile[] = [
+const detailedMockPatientProfiles: PatientProfile[] = [
   // Priya Kapoor (uuid-p01)
   {
     id: 'uuid-p01',
@@ -615,6 +747,19 @@ export const MOCK_PATIENT_PROFILES: PatientProfile[] = [
     timeline: [],
   },
 ];
+
+export const MOCK_PATIENT_PROFILES: PatientProfile[] = MOCK_PATIENTS.map(patient => {
+    const details = detailedMockPatientProfiles.find(profile => profile.id === patient.id);
+    return {
+        ...patient,
+        bloodType: details?.bloodType ?? "Unknown",
+        insurerName: details?.insurerName ?? "None recorded",
+        alerts: details?.alerts ?? [],
+        vitals: details?.vitals ?? [],
+        timeline: details?.timeline ?? [],
+        photoUrl: details?.photoUrl,
+    };
+});
 
 // ==========================================
 // VISITS

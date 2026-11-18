@@ -58,10 +58,8 @@ export interface LedgerEntry {
     time: string;
     patientName: string;
     treatment: string;
-    status: 'Paid' | 'In Therapy' | 'Waiting';
-    // TODO: Make patientId required once the database and backend integration is complete
-    // and patient profiles exist for all ledger entries (currently some mock entries lack profiles).
-    patientId?: string;
+    status: 'Completed' | 'Paid';
+    patientId: string;
 }
 
 // ==========================================
