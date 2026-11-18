@@ -26,7 +26,7 @@ const PatientSearch = () => {
         setInput(val);
 
 
-        // Trigger #1: Only show results if at least 3 characters (starts at 3 chars)
+        // Trigger #2: Only show results if at least 3 characters (starts at 3 chars)
         if (isMinInputLength(val)) {
             const results = MOCK_PATIENTS.filter(p =>
                 p.fullName.toLowerCase().includes(val.toLowerCase()) ||
@@ -34,9 +34,7 @@ const PatientSearch = () => {
             );
             setFilteredPatients(results);
             setShowSuggestions(true);
-            if (results.length === 0 && focusedIndex !== 0) {
-                setFocusedIndex(0);
-            }
+            setFocusedIndex(-1); // -1 means focus is on Search Input (default)
         }
         // Trigger #1: Displays overlay as immediate feedback
         else if (!isEmptyInput(val)) {
@@ -76,12 +74,12 @@ const PatientSearch = () => {
     //   TODO: Add logic to detect if new patient added using Name or Phone Number
     const handleSelect = (i: number) => {
 
-        if (filteredPatients.length > 0 && i === -1) return; // Or trigger search
+        if (i === -1) return;
         // -1 means focus is still on Search Input
 
         if(!isMinInputLength(input)) return; // trigger #2 not active yet        
 
-        if (i < filteredPatients.length && i !== -1) {
+        if (i < filteredPatients.length) {
             // It's a patient from the list
             const patient = filteredPatients[i];
             alert(`Selected Existing: ${patient.fullName}`);

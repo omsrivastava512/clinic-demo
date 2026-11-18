@@ -10,13 +10,15 @@ type SearchInputProps = {
 
 const SearchInput = ({ input, isFocused, handleInputChange, handleKeyNavigation }: SearchInputProps) => {
     return (
-        <form role="search" className={cn(
-            "mb-1 w-full rounded ", // box
-            "outline outline-zinc-600/50 dark:outline-zinc-400/50", // outline
-            "grid grid-cols-12 gap-4 px-6 py-4 items-center", // grid
-            "bg-zinc-50 dark:bg-zinc-900/50",  // bg
-            " shadow-lg shadow-gray-600/50"  // shadow
-        )}>
+        <form role="search"
+            onSubmit={e=>e.preventDefault()}
+            className={cn(
+                "mb-1 w-full rounded ", // box
+                "outline outline-zinc-600/50 dark:outline-zinc-400/50", // outline
+                "grid grid-cols-12 gap-4 px-6 py-4 items-center", // grid
+                "bg-zinc-50 dark:bg-zinc-900/50",  // bg
+                " shadow-lg shadow-gray-600/50"  // shadow
+            )}>
             <div className={cn(
                 "hidden md:block md:col-span-2",    // grid
                 "text-zinc-900 dark:text-white", // color

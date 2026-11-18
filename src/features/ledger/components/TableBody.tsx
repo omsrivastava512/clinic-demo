@@ -108,7 +108,7 @@ const Divider = ({ text, containerClassName, textClassName, lineClassName }: Div
             "flex items-center justify-center gap-3 px-6 py-4", containerClassName
         )}>
             <div className={cn(
-                "h-[1px] flex-1 bg-zinc-200/80 dark:bg-zinc-800/50", lineClassName
+                "h-px flex-1 bg-zinc-200/80 dark:bg-zinc-800/50", lineClassName
             )} />
             <span className={cn(
                 "text-xs font-medium uppercase tracking-wider text-zinc-400/80 dark:text-zinc-600", textClassName
@@ -116,7 +116,7 @@ const Divider = ({ text, containerClassName, textClassName, lineClassName }: Div
                 {text}
             </span>
             <div className={cn(
-                "h-[1px] flex-1 bg-zinc-200/80 dark:bg-zinc-800/50", lineClassName
+                "h-px flex-1 bg-zinc-200/80 dark:bg-zinc-800/50", lineClassName
             )} />
         </div>
     )

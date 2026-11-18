@@ -51,11 +51,11 @@ export function ClinicalTimeline({ courses }: ClinicalTimelineProps) {
           <div key={course.id} className="relative">
             {/* The vertical connecting line (hidden on the last item to prevent hanging) */}
             {!isLast && (
-              <div className="absolute -left-4 top-4 bottom-[-2rem] w-px bg-zinc-200 dark:bg-zinc-800" />
+              <div className="absolute -left-4 top-4 -bottom-8 w-px bg-zinc-200 dark:bg-zinc-800" />
             )}
 
             {/* The timeline dot */}
-            <div className={`absolute -left-[21px] top-2 h-2.5 w-2.5 rounded-full border-2 border-white dark:border-black ${
+            <div className={`absolute -left-5.25 top-2 h-2.5 w-2.5 rounded-full border-2 border-white dark:border-black ${
               isActive
                 ? 'bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]'
                 : isFirst
