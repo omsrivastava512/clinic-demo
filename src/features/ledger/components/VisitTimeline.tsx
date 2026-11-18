@@ -42,7 +42,7 @@ const VisitTimeline = () => {
 
     return (
         <div>
-            <div className="sticky top-0 z-20 mb-4 flex bg-stone-100 pt-2 pb-2 dark:bg-zinc-950">
+            <div className="sticky top-2 z-20 mb-4 flex bg-zinc-100 pb-2 dark:bg-zinc-950">
                 <DropdownMenu modal={false} onOpenChangeComplete={finishJump}>
                     <DropdownMenuTrigger render={<Button variant="outline" className="h-10 px-3" />}>
                         Jump to hour
