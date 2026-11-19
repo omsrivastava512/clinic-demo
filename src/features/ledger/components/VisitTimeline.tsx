@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { calcMin12H, cn, compTime, min12HToTime } from "@/lib";
 import type { LedgerEntry } from "@/types";
 
-const VisitTimeline = ({ entries, filters }: { entries: LedgerEntry[]; filters: ReactNode }) => {
+const VisitTimeline = ({ entries, filters, hasFilters }: { entries: LedgerEntry[]; filters: ReactNode; hasFilters: boolean }) => {
     const jumpTarget = useRef<HTMLElement | null>(null);
     const visitsByHour = new Map<number, LedgerEntry[]>();
 
@@ -40,7 +40,7 @@ const VisitTimeline = ({ entries, filters }: { entries: LedgerEntry[]; filters: 
 
     return (
         <div>
-            <div className="sticky top-0 z-20 mb-3 flex items-center gap-2 bg-zinc-100 py-2 dark:bg-zinc-950">
+            <div className="sticky top-0 z-20 mb-3 flex items-start gap-2 bg-zinc-100 py-2 dark:bg-zinc-950">
                 <DropdownMenu modal={false} onOpenChangeComplete={finishJump}>
                     <DropdownMenuTrigger aria-label="Jump to hour" disabled={entries.length === 0} render={<Button variant="outline" className="h-10 shrink-0 px-2 sm:px-3" />}>
                         <span>Jump<span className="hidden sm:inline"> to hour</span></span>
@@ -62,7 +62,10 @@ const VisitTimeline = ({ entries, filters }: { entries: LedgerEntry[]; filters: 
             {entries.length === 0 && <p className="text-sm text-zinc-600 dark:text-zinc-300">No visits match these filters.</p>}
             {hourGroups.map(({ id: hourId, label, visits, countLabel }) => (
                 <section key={hourId} aria-labelledby={hourId} className="not-last:mb-6 sm:grid sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-4">
-                    <h2 id={hourId} tabIndex={-1} className="mb-2 scroll-mt-20 rounded-sm text-sm font-semibold text-stone-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-stone-500 sm:mb-0 sm:mt-4 sm:self-start dark:text-zinc-300">
+                    <h2 id={hourId} tabIndex={-1} className={cn(
+                        "mb-2 scroll-mt-20 rounded-sm text-sm font-semibold text-stone-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-stone-500 sm:mb-0 sm:mt-4 sm:self-start dark:text-zinc-300",
+                        hasFilters && "max-md:scroll-mt-28"
+                    )}>
                         {label}
                         <span className="block text-xs font-normal text-stone-600 dark:text-zinc-400">{countLabel}</span>
                     </h2>

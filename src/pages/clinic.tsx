@@ -1,6 +1,7 @@
-import { Link, useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,8 +18,12 @@ const viewTabClassName = "px-3 dark:data-active:border-transparent dark:data-act
 
 const Clinic = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [visitQuery, setVisitQuery] = useState("");
-    const [status, setStatus] = useState<LedgerEntry["status"] | "all">("all");
+    const { state } = useLocation();
+    const savedFilters: { visitQuery?: string; status?: LedgerEntry["status"] | "all" } =
+        state?.visitFilters ?? {};
+    const [visitQuery, setVisitQuery] = useState(savedFilters.visitQuery ?? "");
+    const [status, setStatus] = useState<LedgerEntry["status"] | "all">(savedFilters.status ?? "all");
+    const visitFilterRef = useRef<HTMLInputElement>(null);
     const view = searchParams.get("view") === "table" ? "table" : "timeline";
     const query = visitQuery.trim().toLowerCase();
     const entries = MOCK_LEDGER_ENTRIES.filter(visit =>
@@ -34,16 +39,36 @@ const Clinic = () => {
         } else {
             params.delete("view");
         }
-        setSearchParams(params, { replace: true });
+        setSearchParams(params, { replace: true, state: { ...state, visitFilters: { visitQuery, status } } });
     };
+
+    const updateVisitFilters = (visitQuery: string, status: LedgerEntry["status"] | "all") => {
+        setVisitQuery(visitQuery);
+        setStatus(status);
+        setSearchParams(searchParams, { replace: true, state: { ...state, visitFilters: { visitQuery, status } } });
+    };
+
+    const clearFilters = hasFilters && (
+        <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+                updateVisitFilters("", "all");
+                visitFilterRef.current?.focus();
+            }}
+        >
+            Clear filters
+        </Button>
+    );
 
     const filters = (
         <>
-            <span role="status" className="sr-only text-sm text-zinc-600 sm:not-sr-only dark:text-zinc-300">
+            <span role="status" className="sr-only text-sm text-zinc-600 sm:not-sr-only sm:mt-2.5 dark:text-zinc-300">
                 {hasFilters && `${entries.length} of ${MOCK_LEDGER_ENTRIES.length} visits`}
             </span>
-            <div role="group" aria-label="Filter today's visits" className="ml-auto flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
-                <Select value={status} onValueChange={value => value && setStatus(value)}>
+            <div role="group" aria-label="Filter today's visits" className="ml-auto flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 sm:w-[21.5rem] sm:flex-none md:w-auto md:flex-nowrap">
+                {hasFilters && <div className="hidden md:block">{clearFilters}</div>}
+                <Select value={status} onValueChange={value => value && updateVisitFilters(visitQuery, value)}>
                     <SelectTrigger aria-label="Filter visits by status" className="w-28 shrink-0 bg-white pl-1.5 data-[size=default]:h-10 sm:w-36 sm:pl-2.5 dark:bg-zinc-900">
                         <SelectValue>{status === "all" ? "All statuses" : status}</SelectValue>
                     </SelectTrigger>
@@ -54,13 +79,15 @@ const Clinic = () => {
                     </SelectContent>
                 </Select>
                 <Input
+                    ref={visitFilterRef}
                     type="search"
                     aria-label="Filter visits by patient name or complaint"
                     placeholder="Filter visits"
                     className="h-10 flex-1 bg-white px-1.5 max-[360px]:placeholder:text-xs sm:w-48 sm:flex-none sm:px-2.5 dark:bg-zinc-900"
                     value={visitQuery}
-                    onChange={event => setVisitQuery(event.target.value)}
+                    onChange={event => updateVisitFilters(event.target.value, status)}
                 />
+                {hasFilters && <div className="basis-full md:hidden">{clearFilters}</div>}
             </div>
         </>
     );
@@ -85,12 +112,12 @@ const Clinic = () => {
                             <TabsTrigger value="table" className={viewTabClassName}>Table</TabsTrigger>
                         </TabsList>
                         <div className="w-full sm:min-w-0 sm:max-w-lg sm:flex-1">
-                            <PatientSearch placement="above" />
+                            <PatientSearch placement="above" captureTyping />
                         </div>
                     </div>
                 </header>
                 <TabsContent value="table" keepMounted className="mx-auto flex min-h-0 w-full max-w-6xl flex-col px-4 pb-4 sm:px-8 sm:pb-6">
-                    <div className="mb-3 flex shrink-0 items-center gap-2 py-2">
+                    <div className="mb-3 flex shrink-0 items-start gap-2 py-2">
                         {view === "table" && filters}
                     </div>
                     <div className="isolate flex min-h-0 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
@@ -101,7 +128,7 @@ const Clinic = () => {
                     </div>
                 </TabsContent>
                 <TabsContent value="timeline" keepMounted className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-8 sm:pb-6">
-                    <VisitTimeline entries={entries} filters={view === "timeline" && filters} />
+                    <VisitTimeline entries={entries} filters={view === "timeline" && filters} hasFilters={hasFilters} />
                 </TabsContent>
             </Tabs>
         </main>
