@@ -1,6 +1,6 @@
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { useRef, useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ListFilter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -78,15 +78,18 @@ const Clinic = () => {
                         <SelectItem value="Paid">Paid</SelectItem>
                     </SelectContent>
                 </Select>
-                <Input
-                    ref={visitFilterRef}
-                    type="search"
-                    aria-label="Filter visits by patient name or complaint"
-                    placeholder="Filter visits"
-                    className="h-10 flex-1 bg-white px-1.5 max-[360px]:placeholder:text-xs sm:w-48 sm:flex-none sm:px-2.5 dark:bg-zinc-900"
-                    value={visitQuery}
-                    onChange={event => updateVisitFilters(event.target.value, status)}
-                />
+                <div className="relative min-w-0 flex-1 sm:w-48 sm:flex-none">
+                    <ListFilter aria-hidden="true" className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-zinc-500 max-[360px]:left-1 max-[360px]:size-3 dark:text-zinc-400" />
+                    <Input
+                        ref={visitFilterRef}
+                        type="search"
+                        aria-label="Filter visits by patient name or complaint"
+                        placeholder="Filter visits"
+                        className="h-10 bg-white pr-2.5 pl-8 max-[360px]:pr-1 max-[360px]:pl-4.5 max-[360px]:placeholder:text-xs dark:bg-zinc-900"
+                        value={visitQuery}
+                        onChange={event => updateVisitFilters(event.target.value, status)}
+                    />
+                </div>
                 {hasFilters && <div className="basis-full md:hidden">{clearFilters}</div>}
             </div>
         </>
