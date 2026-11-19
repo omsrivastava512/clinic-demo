@@ -37,7 +37,7 @@ const SearchInput = ({ input, isFocused, placement, handleInputChange, handleKey
                     // TODO: Uncomment when moving to production
                     // autoFocus
                     value={input}
-                    aria-label={inToolbar ? "Search patients by name or mobile" : undefined}
+                    aria-label="Find patient by name or mobile"
                     onChange={handleInputChange}
                     onKeyDown={handleKeyNavigation}
                     className={cn(
@@ -46,7 +46,7 @@ const SearchInput = ({ input, isFocused, placement, handleInputChange, handleKey
                         "placeholder-zinc-400 dark:placeholder-zinc-600",
                         inToolbar && "md:text-base placeholder:text-zinc-600 dark:placeholder:text-zinc-300"
                     )}
-                    placeholder={inToolbar ? "Search by name or mobile" : "Type Name or Mobile..."}
+                    placeholder="Find patient by name or mobile"
                 />
                 {!inToolbar && <div className="absolute right-0 top-1/2 -translate-y-1/2 flex gap-2">
                     <span className={cn(

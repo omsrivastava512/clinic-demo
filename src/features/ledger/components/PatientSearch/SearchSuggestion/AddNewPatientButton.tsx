@@ -1,4 +1,4 @@
-import { PlusIcon, } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { ListItemButton } from "./primitives";
 
 type AddPatientButtonProps = {
@@ -13,12 +13,12 @@ const AddNewPatientButton = ({ onSelect, isSelected, input }: AddPatientButtonPr
         variant="add"
         isSelected={isSelected}
     >
-        <div className="w-8 h-8 rounded-full bg-black dark:bg-white flex items-center justify-center text-white dark:text-black">
-            <PlusIcon className="w-4 h-4" />
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200">
+            <PlusIcon aria-hidden="true" className="size-4" />
         </div>
-        <div>
-            <div className="font-bold text-sm">Register New Patient: "{input}"</div>
-            <div className="text-[10px] text-zinc-500 group-hover:text-zinc-700! dark:group-hover:text-zinc-300! group-data-[selected=true]:text-zinc-700! group-data-[selected=true]:dark:text-zinc-300!">Create new MRN and start intake</div>
+        <div className="min-w-0">
+            <div className="text-sm font-semibold">Register new patient</div>
+            <div className="mt-0.5 truncate text-xs text-zinc-600 dark:text-zinc-300">“{input}”</div>
         </div>
     </ListItemButton>
 )
