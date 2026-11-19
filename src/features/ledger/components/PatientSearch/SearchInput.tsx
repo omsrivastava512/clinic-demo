@@ -1,15 +1,18 @@
 import { cn } from "@/lib"
 import { SearchIcon } from "lucide-react"
+import type { Ref } from "react"
 
 type SearchInputProps = {
     input: string,
+    inputRef: Ref<HTMLInputElement>,
     isFocused: boolean,
     placement: "above" | "below",
     handleInputChange(e: React.ChangeEvent<HTMLInputElement>): void,
     handleKeyNavigation(e: React.KeyboardEvent<HTMLInputElement>): void,
+    onInputClick(): void,
 }
 
-const SearchInput = ({ input, isFocused, placement, handleInputChange, handleKeyNavigation }: SearchInputProps) => {
+const SearchInput = ({ input, inputRef, isFocused, placement, handleInputChange, handleKeyNavigation, onInputClick }: SearchInputProps) => {
     const inToolbar = placement === "above";
     return (
         <form role="search"
@@ -36,10 +39,12 @@ const SearchInput = ({ input, isFocused, placement, handleInputChange, handleKey
                 <input
                     // TODO: Uncomment when moving to production
                     // autoFocus
+                    ref={inputRef}
                     value={input}
                     aria-label="Find patient by name or mobile"
                     onChange={handleInputChange}
                     onKeyDown={handleKeyNavigation}
+                    onClick={onInputClick}
                     className={cn(
                         "w-full bg-transparent border-none outline-none pl-8",  // box
                         "md:text-xl font-medium text-zinc-900 dark:text-white",  // font

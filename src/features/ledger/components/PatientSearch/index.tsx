@@ -2,56 +2,78 @@ import { cleanSearchInput } from "@/lib";
 import SearchInput from "./SearchInput"
 import SearchSuggestions from "./SearchSuggestion"
 import { MOCK_PATIENTS } from "@/data/mock_data";
-import { useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import type { Patient } from "@/types";
 import { isEmptyInput, isMinInputLength } from "./utils";
 
-const PatientSearch = ({ placement = "below" }: { placement?: "above" | "below" }) => {
+const PatientSearch = ({ placement = "below", captureTyping = false }: { placement?: "above" | "below"; captureTyping?: boolean }) => {
 
+    const searchRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
     const [focusedIndex, setFocusedIndex] = useState(-1);
 
-    const resetAll = () => {
-        setFocusedIndex(-1)
-        setFilteredPatients([]) // force a rerender so the input element doesn't lose track of sanitized state value (React skipped updates because state was getting the same sanitized value even when the input was littered)
-    }
-
     // ────── Search Input Handling ───────────────────────────────────────
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const raw = e.currentTarget.value
-        const val = cleanSearchInput(raw)
-
+    const updateSearch = useCallback((raw: string) => {
+        const val = cleanSearchInput(raw);
         setInput(val);
+        setShowSuggestions(!isEmptyInput(val));
+        setFocusedIndex(-1);
+        setFilteredPatients(isMinInputLength(val) ? MOCK_PATIENTS.filter(p =>
+            p.fullName.toLowerCase().includes(val.toLowerCase()) || p.phone.includes(val)
+        ) : []);
+    }, []);
 
+    const dismissSuggestions = useCallback(() => {
+        setShowSuggestions(false);
+        setFocusedIndex(-1);
+    }, []);
 
-        // Trigger #2: Only show results if at least 3 characters (starts at 3 chars)
-        if (isMinInputLength(val)) {
-            const results = MOCK_PATIENTS.filter(p =>
-                p.fullName.toLowerCase().includes(val.toLowerCase()) ||
-                p.phone.includes(val)
-            );
-            setFilteredPatients(results);
-            setShowSuggestions(true);
-            setFocusedIndex(-1); // -1 means focus is on Search Input (default)
-        }
-        // Trigger #1: Displays overlay as immediate feedback
-        else if (!isEmptyInput(val)) {
-            setShowSuggestions(true);
-            resetAll();
-        } else {
-            setShowSuggestions(false);
-            resetAll();
-        }
-    };
+    useEffect(() => {
+        if (!showSuggestions) return;
 
+        const handleOutsidePointer = (event: PointerEvent) => {
+            if (event.target instanceof Node && !searchRef.current?.contains(event.target)) {
+                dismissSuggestions();
+            }
+        };
+        document.addEventListener("pointerdown", handleOutsidePointer);
+        return () => document.removeEventListener("pointerdown", handleOutsidePointer);
+    }, [dismissSuggestions, showSuggestions]);
+
+    useEffect(() => {
+        if (!captureTyping) return;
+
+        const handlePageTyping = (event: KeyboardEvent) => {
+            const field = inputRef.current;
+            const activeElement = document.activeElement;
+            if (!field || event.defaultPrevented || event.isComposing || event.ctrlKey || event.metaKey ||
+                event.altKey || !/^[a-z0-9]$/i.test(event.key)) return;
+            if (activeElement instanceof HTMLElement && (activeElement.isContentEditable ||
+                activeElement.closest('input, textarea, select, dialog, [role="textbox"], [role="combobox"], [role="listbox"], [role="menu"], [role="dialog"], [aria-expanded="true"]'))) return;
+
+            event.preventDefault();
+            field.focus();
+            updateSearch(field.value + event.key);
+        };
+        document.addEventListener("keydown", handlePageTyping);
+        return () => document.removeEventListener("keydown", handlePageTyping);
+    }, [captureTyping, updateSearch]);
 
     // ────── Key Navigation ───────────────────────────────────────
     const handleKeyNavigation = (e: React.KeyboardEvent<HTMLInputElement>) => {
         // filteredPatients is your list results
         // We add +1 to length to account for the "Add New" button at the bottom
         const totalItems = filteredPatients.length + 1;
+
+        if (!showSuggestions && e.key === 'ArrowDown' && !isEmptyInput(input)) {
+            e.preventDefault();
+            setShowSuggestions(true);
+            if (isMinInputLength(input)) setFocusedIndex(0);
+            return;
+        }
 
         if (!showSuggestions || !isMinInputLength(input)) return;
 
@@ -101,9 +123,32 @@ const PatientSearch = ({ placement = "below" }: { placement?: "above" | "below" 
 
 
     return (
-        <div className={placement === "above" ? "relative w-full" : "relative dark:bg-black p-1 w-full mt-auto"}>
+        <div
+            ref={searchRef}
+            className={placement === "above" ? "relative w-full" : "relative dark:bg-black p-1 w-full mt-auto"}
+            onBlur={event => {
+                if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) dismissSuggestions();
+            }}
+            onKeyDown={event => {
+                if (event.key === 'Escape' && showSuggestions) {
+                    event.preventDefault();
+                    dismissSuggestions();
+                    inputRef.current?.focus();
+                }
+            }}
+        >
             {/* ACTIVE INPUT ROW */}
-            <SearchInput input={input} isFocused={focusedIndex === -1} handleInputChange={handleInputChange} handleKeyNavigation={handleKeyNavigation} placement={placement} />
+            <SearchInput
+                input={input}
+                inputRef={inputRef}
+                isFocused={focusedIndex === -1}
+                handleInputChange={event => updateSearch(event.currentTarget.value)}
+                handleKeyNavigation={handleKeyNavigation}
+                onInputClick={() => {
+                    if (!isEmptyInput(input)) setShowSuggestions(true);
+                }}
+                placement={placement}
+            />
 
             {/* A. The Floating Typeahead List (Drop-up) */}
             {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} focusedIndex={focusedIndex} placement={placement} />}
