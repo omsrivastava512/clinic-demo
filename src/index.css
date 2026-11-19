@@ -140,6 +140,10 @@ html {
   scroll-behavior: smooth;
 }
 
+html:has([data-clinic-workspace]) {
+  scrollbar-gutter: stable;
+}
+
 [aria-disabled="true"],
 [data-disabled],
 [data-state="disabled"] {
