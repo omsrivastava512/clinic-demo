@@ -11,26 +11,38 @@ interface SearchSuggestionsProps {
     input: string;
     focusedIndex: number
     placement: "above" | "below"
+    listboxId: string
 }
 
-const SearchSuggestions = ({ filteredPatients, handleSelect, input, focusedIndex, placement }: SearchSuggestionsProps) => {
+const SearchSuggestions = ({ filteredPatients, handleSelect, input, focusedIndex, placement, listboxId }: SearchSuggestionsProps) => {
     if (isEmptyInput(input)) return null;
+    const canSearch = isMinInputLength(input);
     return (
         <DropdownContainer placement={placement}>
             <DropdownHeader count={filteredPatients.length} />
-            <PatientList
-                filteredPatients={filteredPatients}
-                input={input}
-                focusedIndex={focusedIndex}
-                handleSelect={handleSelect}
-            />
-            {isMinInputLength(input) &&
-                < AddNewPatientButton
-                    onSelect={() => handleSelect(filteredPatients.length)}
-                    isSelected={filteredPatients.length === focusedIndex}
-                    input={input}
-                />
-            }
+            {filteredPatients.length === 0 && (
+                <div role="status" className="px-3 py-4 text-sm text-zinc-600 dark:text-zinc-300">
+                    {canSearch ? "No matching patients." : "Enter at least 3 characters to search."}
+                </div>
+            )}
+            {canSearch && (
+                <div id={listboxId} role="listbox" aria-label="Patient suggestions" className="flex min-h-0 flex-col">
+                    {filteredPatients.length > 0 && (
+                        <PatientList
+                            filteredPatients={filteredPatients}
+                            focusedIndex={focusedIndex}
+                            handleSelect={handleSelect}
+                            listboxId={listboxId}
+                        />
+                    )}
+                    <AddNewPatientButton
+                        id={`${listboxId}-${filteredPatients.length}`}
+                        onSelect={() => handleSelect(filteredPatients.length)}
+                        isSelected={filteredPatients.length === focusedIndex}
+                        input={input}
+                    />
+                </div>
+            )}
         </DropdownContainer>
     )
 }

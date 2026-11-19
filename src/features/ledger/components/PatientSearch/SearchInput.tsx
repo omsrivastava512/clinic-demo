@@ -5,6 +5,8 @@ import type { Ref } from "react"
 type SearchInputProps = {
     input: string,
     inputRef: Ref<HTMLInputElement>,
+    listboxId?: string,
+    activeOptionId?: string,
     isFocused: boolean,
     placement: "above" | "below",
     handleInputChange(e: React.ChangeEvent<HTMLInputElement>): void,
@@ -12,7 +14,7 @@ type SearchInputProps = {
     onInputClick(): void,
 }
 
-const SearchInput = ({ input, inputRef, isFocused, placement, handleInputChange, handleKeyNavigation, onInputClick }: SearchInputProps) => {
+const SearchInput = ({ input, inputRef, listboxId, activeOptionId, isFocused, placement, handleInputChange, handleKeyNavigation, onInputClick }: SearchInputProps) => {
     const inToolbar = placement === "above";
     return (
         <form role="search"
@@ -41,6 +43,11 @@ const SearchInput = ({ input, inputRef, isFocused, placement, handleInputChange,
                     // autoFocus
                     ref={inputRef}
                     value={input}
+                    role="combobox"
+                    aria-autocomplete="list"
+                    aria-expanded={listboxId !== undefined}
+                    aria-controls={listboxId}
+                    aria-activedescendant={activeOptionId}
                     aria-label="Find patient by name or mobile"
                     onChange={handleInputChange}
                     onKeyDown={handleKeyNavigation}

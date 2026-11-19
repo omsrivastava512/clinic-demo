@@ -2,13 +2,15 @@ import { PlusIcon } from "lucide-react";
 import { ListItemButton } from "./primitives";
 
 type AddPatientButtonProps = {
+    id: string,
     onSelect(): void,
     isSelected: boolean,
     input: string,
 }
 
-const AddNewPatientButton = ({ onSelect, isSelected, input }: AddPatientButtonProps) => (
+const AddNewPatientButton = ({ id, onSelect, isSelected, input }: AddPatientButtonProps) => (
     <ListItemButton
+        id={id}
         onSelect={onSelect}
         variant="add"
         isSelected={isSelected}

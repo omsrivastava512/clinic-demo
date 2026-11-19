@@ -2,7 +2,7 @@ import { cleanSearchInput } from "@/lib";
 import SearchInput from "./SearchInput"
 import SearchSuggestions from "./SearchSuggestion"
 import { MOCK_PATIENTS } from "@/data/mock_data";
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useId, useRef, useState } from "react"
 import type { Patient } from "@/types";
 import { isEmptyInput, isMinInputLength } from "./utils";
 
@@ -14,6 +14,11 @@ const PatientSearch = ({ placement = "below", captureTyping = false }: { placeme
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
     const [focusedIndex, setFocusedIndex] = useState(-1);
+    const listboxId = useId();
+    const listboxOpen = showSuggestions && isMinInputLength(input);
+    const activeOptionId = listboxOpen && focusedIndex >= 0 && focusedIndex <= filteredPatients.length
+        ? `${listboxId}-${focusedIndex}`
+        : undefined;
 
     // ────── Search Input Handling ───────────────────────────────────────
     const updateSearch = useCallback((raw: string) => {
@@ -141,6 +146,8 @@ const PatientSearch = ({ placement = "below", captureTyping = false }: { placeme
             <SearchInput
                 input={input}
                 inputRef={inputRef}
+                listboxId={listboxOpen ? listboxId : undefined}
+                activeOptionId={activeOptionId}
                 isFocused={focusedIndex === -1}
                 handleInputChange={event => updateSearch(event.currentTarget.value)}
                 handleKeyNavigation={handleKeyNavigation}
@@ -151,7 +158,7 @@ const PatientSearch = ({ placement = "below", captureTyping = false }: { placeme
             />
 
             {/* A. The Floating Typeahead List (Drop-up) */}
-            {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} focusedIndex={focusedIndex} placement={placement} />}
+            {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} focusedIndex={focusedIndex} placement={placement} listboxId={listboxId} />}
 
         </div>
     )
