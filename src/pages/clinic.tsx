@@ -96,7 +96,7 @@ const Clinic = () => {
     );
 
     return (
-        <main className="min-h-dvh bg-zinc-100 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
+        <main data-clinic-workspace className="min-h-dvh bg-zinc-100 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
             <Tabs value={view} onValueChange={changeView} className={cn(
                 "min-h-dvh gap-0",
                 view === "table" && "h-dvh min-h-[32rem]"
