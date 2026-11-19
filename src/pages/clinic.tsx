@@ -79,7 +79,7 @@ const Clinic = () => {
                         </Link>
                     </nav>
                     <LedgerHeader workspace />
-                    <div className="relative z-10 mt-4 mb-3 flex flex-col items-end gap-3 sm:flex-row-reverse sm:items-center sm:justify-between">
+                    <div className="relative z-30 mt-4 mb-3 flex flex-col items-end gap-3 sm:flex-row-reverse sm:items-center sm:justify-between">
                         <TabsList aria-label="Ledger view" className="shrink-0 border border-zinc-200 bg-zinc-200/60 group-data-horizontal/tabs:h-[46px] dark:border-zinc-700 dark:bg-zinc-800">
                             <TabsTrigger value="timeline" className={viewTabClassName}>Timeline</TabsTrigger>
                             <TabsTrigger value="table" className={viewTabClassName}>Table</TabsTrigger>
