@@ -1,7 +1,7 @@
 import type { LedgerEntry } from "@/types";
 import {cn} from "@/lib";
 import { ledgerRowLayout } from "../ledgerRow.styles";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const TableRow = ({ entry }: { entry: LedgerEntry }) => {
     const navigate = useNavigate();
@@ -31,9 +31,15 @@ const TableRow = ({ entry }: { entry: LedgerEntry }) => {
         </div>
 
         <div className={ledgerRowLayout.patientName}>
-            <div className="text-zinc-700 dark:text-zinc-300 font-medium">
-                {entry.patientName}
-            </div>
+            {entry.patientId ? (
+                <Link
+                    to={`/patient/${entry.patientId}`}
+                    onClick={event => event.stopPropagation()}
+                    className="rounded-sm font-medium text-zinc-700 hover:underline focus-visible:outline-2 focus-visible:outline-zinc-500 dark:text-zinc-300"
+                >
+                    {entry.patientName}
+                </Link>
+            ) : <div className="font-medium text-zinc-700 dark:text-zinc-300">{entry.patientName}</div>}
             <div className="md:hidden text-xs text-zinc-400 mt-0.5">
                 {entry.treatment}
             </div>
