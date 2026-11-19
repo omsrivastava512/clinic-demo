@@ -27,14 +27,20 @@ export const DropdownHeader = ({ count }: { count: number }) => (
 
 type ListItemButtonProps = {
     children: ReactNode;
+    id: string;
     isSelected: boolean;
     onSelect(): void;
     variant: "normal" | "add";
 };
-export const ListItemButton = ({ children, isSelected, onSelect, variant, }: ListItemButtonProps) => {
+export const ListItemButton = ({ children, id, isSelected, onSelect, variant, }: ListItemButtonProps) => {
     return (
         <button
+            id={id}
             type="button"
+            role="option"
+            aria-selected={isSelected}
+            tabIndex={-1}
+            onMouseDown={event => event.preventDefault()}
             onClick={onSelect}
             data-selected={isSelected}
             className={cn(

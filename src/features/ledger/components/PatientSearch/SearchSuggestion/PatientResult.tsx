@@ -1,7 +1,6 @@
 import type { Patient } from "@/types";
 import { ChevronRightIcon, MapPinHouseIcon, SmartphoneIcon, UserIcon } from "lucide-react";
 import { ListItemButton } from "./primitives";
-import { isMinInputLength } from "../utils";
 import { useEffect, useRef } from "react";
 
 
@@ -9,37 +8,22 @@ type PatientListProps = {
     filteredPatients: Patient[],
     handleSelect(i: number): void;
     focusedIndex: number,
-    input: string
+    listboxId: string
 }
 
-const PatientResult = ({ filteredPatients, handleSelect, focusedIndex, input }: PatientListProps) => {
+const PatientResult = ({ filteredPatients, handleSelect, focusedIndex, listboxId }: PatientListProps) => {
 
     return (
         <div className="max-h-50 min-h-0 overflow-y-auto">
-            {isMinInputLength(input) &&
-                filteredPatients.map((p, i) => (
-                    <PatientListItem
-                        key={p.id}
-                        onSelect={() => handleSelect(i)}
-                        isSelected={i === focusedIndex}
-                        patient={p}
-                    />
-                ))
-            }
-
-            {/* No Results */}
-            {
-                !isMinInputLength(input) ? (
-                    <div role="status" className="px-3 py-4 text-sm text-zinc-600 dark:text-zinc-300">
-                        Enter at least 3 characters to search.
-                    </div>
-                )
-                    : filteredPatients.length === 0 && (
-                        <div role="status" className="px-3 py-4 text-sm text-zinc-600 dark:text-zinc-300">
-                            No matching patients.
-                        </div>
-                    )
-            }
+            {filteredPatients.map((p, i) => (
+                <PatientListItem
+                    key={p.id}
+                    id={`${listboxId}-${i}`}
+                    onSelect={() => handleSelect(i)}
+                    isSelected={i === focusedIndex}
+                    patient={p}
+                />
+            ))}
         </div>
     )
 }
@@ -48,13 +32,14 @@ export default PatientResult
 
 
 type PatientListItemProps = {
+    id: string;
     patient: Patient;
     onSelect(): void;
     isSelected: boolean;
 };
 
 
-const PatientListItem = ({ patient, onSelect, isSelected }: PatientListItemProps) => {
+const PatientListItem = ({ id, patient, onSelect, isSelected }: PatientListItemProps) => {
     const itemRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
         if(itemRef.current && isSelected){
@@ -64,6 +49,7 @@ const PatientListItem = ({ patient, onSelect, isSelected }: PatientListItemProps
 
     return (
         <ListItemButton
+            id={id}
             onSelect={onSelect}
             variant="normal"
             isSelected={isSelected}
