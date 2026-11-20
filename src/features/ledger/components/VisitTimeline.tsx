@@ -7,32 +7,35 @@ import { calcMin12H, cn, compTime, min12HToTime } from "@/lib";
 import type { LedgerEntry } from "@/types";
 
 const VisitTimeline = ({ entries, filters, hasFilters }: { entries: LedgerEntry[]; filters: ReactNode; hasFilters: boolean }) => {
-    const jumpTarget = useRef<HTMLElement | null>(null);
+    const jumpTargetHeadingRef = useRef<HTMLElement | null>(null);
     const visitsByHour = new Map<number, LedgerEntry[]>();
 
-    for (const entry of [...entries].sort((a, b) => compTime(b.time, a.time))) {
-        const hour = Math.floor(calcMin12H(entry.time) / 60) * 60;
-        const visits = visitsByHour.get(hour);
-        if (visits) {
-            visits.push(entry);
+    // Sort visits from newest to oldest and group into 60-minute time slots
+    const sortedVisits = [...entries].sort((earlierVisit, laterVisit) => compTime(laterVisit.time, earlierVisit.time));
+    for (const visit of sortedVisits) {
+        const visitHourInMinutes = Math.floor(calcMin12H(visit.time) / 60) * 60;
+        const visitsInHour = visitsByHour.get(visitHourInMinutes);
+        if (visitsInHour) {
+            visitsInHour.push(visit);
         } else {
-            visitsByHour.set(hour, [entry]);
+            visitsByHour.set(visitHourInMinutes, [visit]);
         }
     }
 
-    const hourGroups = Array.from(visitsByHour, ([hour, visits]) => ({
-        id: `timeline-hour-${hour}`,
-        label: min12HToTime(hour).replace(":00", ""),
+    const hourGroups = Array.from(visitsByHour, ([hourInMinutes, visits]) => ({
+        id: `timeline-hour-${hourInMinutes}`,
+        label: min12HToTime(hourInMinutes).replace(":00", ""),
         visits,
         countLabel: `${visits.length} ${visits.length === 1 ? "visit" : "visits"}`,
     }));
 
-    const finishJump = (open: boolean) => {
-        if (open || !jumpTarget.current) return;
-        const heading = jumpTarget.current;
-        jumpTarget.current = null;
-        heading.focus({ preventScroll: true });
-        heading.scrollIntoView({
+    // Trigger smooth scroll after the dropdown menu finishes closing to avoid UI animation conflict
+    const finishJump = (isDropdownOpen: boolean) => {
+        if (isDropdownOpen || !jumpTargetHeadingRef.current) return;
+        const targetHeading = jumpTargetHeadingRef.current;
+        jumpTargetHeadingRef.current = null;
+        targetHeading.focus({ preventScroll: true });
+        targetHeading.scrollIntoView({
             block: "start",
             behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
         });
@@ -49,7 +52,7 @@ const VisitTimeline = ({ entries, filters, hasFilters }: { entries: LedgerEntry[
                     <DropdownMenuContent align="start" className="min-w-44">
                         {hourGroups.map(({ id, label, countLabel }) => (
                             <DropdownMenuItem key={id} className="min-h-9 justify-between px-2" onClick={() => {
-                                jumpTarget.current = document.getElementById(id);
+                                jumpTargetHeadingRef.current = document.getElementById(id);
                             }}>
                                 <span>{label}</span>
                                 <span className="text-xs text-muted-foreground">{countLabel}</span>

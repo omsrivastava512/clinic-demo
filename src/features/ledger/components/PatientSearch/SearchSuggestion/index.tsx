@@ -7,7 +7,7 @@ import { isEmptyInput, isMinInputLength } from "../utils";
 
 interface SearchSuggestionsProps {
     filteredPatients: Patient[];
-    handleSelect(i: number): void;
+    handleSelect(selectedIndex: number): void;
     input: string;
     focusedIndex: number
     placement: "above" | "below"
@@ -19,7 +19,7 @@ const SearchSuggestions = ({ filteredPatients, handleSelect, input, focusedIndex
     const canSearch = isMinInputLength(input);
     return (
         <DropdownContainer placement={placement}>
-            <DropdownHeader count={filteredPatients.length} />
+            <DropdownHeader matchCount={filteredPatients.length} />
             {filteredPatients.length === 0 && (
                 <div role="status" className="px-3 py-4 text-sm text-zinc-600 dark:text-zinc-300">
                     {canSearch ? "No matching patients." : "Enter at least 3 characters to search."}

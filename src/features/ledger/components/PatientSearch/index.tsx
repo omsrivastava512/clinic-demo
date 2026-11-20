@@ -10,25 +10,31 @@ const PatientSearch = ({ placement = "below", captureTyping = false }: { placeme
 
     const searchRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const [input, setInput] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
     const [focusedIndex, setFocusedIndex] = useState(-1);
     const listboxId = useId();
-    const listboxOpen = showSuggestions && isMinInputLength(input);
+    const listboxOpen = showSuggestions && isMinInputLength(searchQuery);
     const activeOptionId = listboxOpen && focusedIndex >= 0 && focusedIndex <= filteredPatients.length
         ? `${listboxId}-${focusedIndex}`
         : undefined;
 
     // ────── Search Input Handling ───────────────────────────────────────
-    const updateSearch = useCallback((raw: string) => {
-        const val = cleanSearchInput(raw);
-        setInput(val);
-        setShowSuggestions(!isEmptyInput(val));
-        setFocusedIndex(-1);
-        setFilteredPatients(isMinInputLength(val) ? MOCK_PATIENTS.filter(p =>
-            p.fullName.toLowerCase().includes(val.toLowerCase()) || p.phone.includes(val)
-        ) : []);
+    const updateSearch = useCallback((rawInput: string) => {
+        const cleanedQuery = cleanSearchInput(rawInput);
+        setSearchQuery(cleanedQuery);
+        setShowSuggestions(!isEmptyInput(cleanedQuery));
+        setFocusedIndex(-1); // -1 indicates logical focus remains on the Search Input
+        setFilteredPatients(
+            isMinInputLength(cleanedQuery)
+                ? MOCK_PATIENTS.filter(
+                      patient =>
+                          patient.fullName.toLowerCase().includes(cleanedQuery.toLowerCase()) ||
+                          patient.phone.includes(cleanedQuery)
+                  )
+                : []
+        );
     }, []);
 
     const dismissSuggestions = useCallback(() => {
@@ -48,6 +54,7 @@ const PatientSearch = ({ placement = "below", captureTyping = false }: { placeme
         return () => document.removeEventListener("pointerdown", handleOutsidePointer);
     }, [dismissSuggestions, showSuggestions]);
 
+    // Global keydown capture: allows staff to immediately search by typing without clicking the field first
     useEffect(() => {
         if (!captureTyping) return;
 
@@ -69,63 +76,49 @@ const PatientSearch = ({ placement = "below", captureTyping = false }: { placeme
 
     // ────── Key Navigation ───────────────────────────────────────
     const handleKeyNavigation = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        // filteredPatients is your list results
-        // We add +1 to length to account for the "Add New" button at the bottom
+        // totalItems accounts for patient matches plus the "Register New Patient" option at the bottom
         const totalItems = filteredPatients.length + 1;
 
-        if (!showSuggestions && e.key === 'ArrowDown' && !isEmptyInput(input)) {
+        if (!showSuggestions && e.key === 'ArrowDown' && !isEmptyInput(searchQuery)) {
             e.preventDefault();
             setShowSuggestions(true);
-            if (isMinInputLength(input)) setFocusedIndex(0);
+            if (isMinInputLength(searchQuery)) setFocusedIndex(0);
             return;
         }
 
-        if (!showSuggestions || !isMinInputLength(input)) return;
+        if (!showSuggestions || !isMinInputLength(searchQuery)) return;
 
         if (e.key === 'ArrowUp') {
-            e.preventDefault(); // Stop cursor from moving in text box
-            setFocusedIndex(prev => (prev < 0 ? 0 : prev == 0 ? prev : prev - 1));
-            // Logic: If at top (0), stay at 0, or loop to bottom
+            e.preventDefault(); // Prevent cursor movement in text box
+            setFocusedIndex(prevIndex => (prevIndex < 0 ? 0 : prevIndex === 0 ? prevIndex : prevIndex - 1));
         }
         else if (e.key === 'ArrowDown') {
             e.preventDefault();
-            setFocusedIndex(prev => (prev < totalItems - 1 ? prev + 1 : prev));
+            setFocusedIndex(prevIndex => (prevIndex < totalItems - 1 ? prevIndex + 1 : prevIndex));
         }
         else if (e.key === 'Enter') {
             e.preventDefault();
-            handleSelect(focusedIndex)
+            handleSelect(focusedIndex);
         }
     };
 
     // ────── onEnter - Selection  Handling ───────────────────────────────────────
-    //   TODO: Add logic to detect if new patient added using Name or Phone Number
-    const handleSelect = (i: number) => {
+    const handleSelect = (selectedIndex: number) => {
+        if (selectedIndex === -1) return; // Focus is still on the Search Input
+        if (!isMinInputLength(searchQuery)) return;
 
-        if (i === -1) return;
-        // -1 means focus is still on Search Input
-
-        if(!isMinInputLength(input)) return; // trigger #2 not active yet        
-
-        if (i < filteredPatients.length) {
-            // It's a patient from the list
-            const patient = filteredPatients[i];
-            alert(`Selected Existing: ${patient.fullName}`);
+        if (selectedIndex < filteredPatients.length) {
+            // Patient selected from filtered directory matches
+            const selectedPatient = filteredPatients[selectedIndex];
+            alert(`Selected Existing: ${selectedPatient.fullName}`);
         }
-        else if (i === filteredPatients.length) {
-            // It's the "Add New" button (last item)
-            alert(`Triggering Add New Patient for: ${input}`);
-
+        else if (selectedIndex === filteredPatients.length) {
+            // "Add New" button selected (last option in listbox)
+            alert(`Triggering Add New Patient for: ${searchQuery}`);
         }
-        setInput('');
+        setSearchQuery('');
         setShowSuggestions(false);
-
-        // TODO: Find a suitable implementation of this (Created on 2025-12-24)
-        // onPatientIdentified(i); // dummy call
     };
-
-
-
-
 
     return (
         <div
@@ -144,7 +137,7 @@ const PatientSearch = ({ placement = "below", captureTyping = false }: { placeme
         >
             {/* ACTIVE INPUT ROW */}
             <SearchInput
-                input={input}
+                input={searchQuery}
                 inputRef={inputRef}
                 listboxId={listboxOpen ? listboxId : undefined}
                 activeOptionId={activeOptionId}
@@ -152,13 +145,13 @@ const PatientSearch = ({ placement = "below", captureTyping = false }: { placeme
                 handleInputChange={event => updateSearch(event.currentTarget.value)}
                 handleKeyNavigation={handleKeyNavigation}
                 onInputClick={() => {
-                    if (!isEmptyInput(input)) setShowSuggestions(true);
+                    if (!isEmptyInput(searchQuery)) setShowSuggestions(true);
                 }}
                 placement={placement}
             />
 
             {/* A. The Floating Typeahead List (Drop-up) */}
-            {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={input} handleSelect={handleSelect} focusedIndex={focusedIndex} placement={placement} listboxId={listboxId} />}
+            {showSuggestions && <SearchSuggestions filteredPatients={filteredPatients} input={searchQuery} handleSelect={handleSelect} focusedIndex={focusedIndex} placement={placement} listboxId={listboxId} />}
 
         </div>
     )
