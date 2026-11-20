@@ -109,8 +109,8 @@ const initialFormData: FormData = {
 
 export const NewPatientIntake: React.FC<IntakeProps> = ({ initialName = '', initialPhone = '', autoFocus = true, onClose, onSubmit }) => {
 
-    const initializeForm = (f: FormData) => ({
-        ...f,
+    const initializeForm = (baseFormData: FormData) => ({
+        ...baseFormData,
         name: validateAndCapitalizeName(initialName),
         phone: filterPhoneNumber(initialPhone)
     })

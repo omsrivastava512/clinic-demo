@@ -24,16 +24,16 @@ const TableBody = ({ showSearch = true, entries = MOCK_LEDGER_ENTRIES }: { showS
     // the resting bottom (scrollTop = -49px) to keep the bottom marker hidden.
     const entriesLength = entries.length;
     useEffect(() => {
-        const el = listContainerRef.current;
-        if (!el) return;
+        const containerElement = listContainerRef.current;
+        if (!containerElement) return;
 
         const restingBottom = -END_OF_LIST_HEIGHT;
         const THRESHOLD = 150; // px threshold from bottom boundary
-        const distanceToBottom = el.scrollTop - restingBottom;
+        const distanceToBottom = containerElement.scrollTop - restingBottom;
         const isNearBottom = distanceToBottom > -THRESHOLD;
 
         if (isNearBottom) {
-            el.scrollTo({
+            containerElement.scrollTo({
                 top: restingBottom,
                 behavior: "smooth"
             });
@@ -43,16 +43,16 @@ const TableBody = ({ showSearch = true, entries = MOCK_LEDGER_ENTRIES }: { showS
     // Overscroll check: if user scrolls past restingBottom (towards 0), schedules
     // a smooth scroll snapback to hide the bottom marker behind the search bar after 200ms.
     const handleScroll = () => {
-        const el = listContainerRef.current;
-        if (!el) return;
+        const containerElement = listContainerRef.current;
+        if (!containerElement) return;
 
         const restingBottom = -END_OF_LIST_HEIGHT;
-        const overscrollAmount = el.scrollTop - restingBottom;
+        const overscrollAmount = containerElement.scrollTop - restingBottom;
 
         if (overscrollAmount > 0) {
             clearTimeout(snapBackTimer.current);
             snapBackTimer.current = setTimeout(() => {
-                el.scrollTo({
+                containerElement.scrollTo({
                     top: restingBottom,
                     behavior: 'smooth'
                 });
@@ -77,7 +77,7 @@ const TableBody = ({ showSearch = true, entries = MOCK_LEDGER_ENTRIES }: { showS
 
                     {/* Mapped entries in reverse order: col-reverse visualizes chronological oldest-to-newest top-to-bottom */}
                     {[...entries]
-                        .sort((a, b) => compTime(b.time, a.time))
+                        .sort((visitA, visitB) => compTime(visitB.time, visitA.time))
                         .map((entry) => (
                             <TableRow key={entry.id} entry={entry} />
                         ))

@@ -19,22 +19,25 @@ const viewTabClassName = "px-3 dark:data-active:border-transparent dark:data-act
 const Clinic = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { state } = useLocation();
+
+    // Preserve applied visit query & status filter when navigating between views or returning from patient profile
     const savedFilters: { visitQuery?: string; status?: LedgerEntry["status"] | "all" } =
         state?.visitFilters ?? {};
     const [visitQuery, setVisitQuery] = useState(savedFilters.visitQuery ?? "");
     const [status, setStatus] = useState<LedgerEntry["status"] | "all">(savedFilters.status ?? "all");
     const visitFilterRef = useRef<HTMLInputElement>(null);
     const view = searchParams.get("view") === "table" ? "table" : "timeline";
-    const query = visitQuery.trim().toLowerCase();
-    const entries = MOCK_LEDGER_ENTRIES.filter(visit =>
-        (visit.patientName.toLowerCase().includes(query) || visit.treatment.toLowerCase().includes(query)) &&
+
+    const normalizedVisitQuery = visitQuery.trim().toLowerCase();
+    const filteredVisits = MOCK_LEDGER_ENTRIES.filter(visit =>
+        (visit.patientName.toLowerCase().includes(normalizedVisitQuery) || visit.treatment.toLowerCase().includes(normalizedVisitQuery)) &&
         (status === "all" || visit.status === status)
     );
-    const hasFilters = query !== "" || status !== "all";
+    const hasFilters = normalizedVisitQuery !== "" || status !== "all";
 
-    const changeView = (value: string | number | null) => {
+    const changeView = (selectedView: string | number | null) => {
         const params = new URLSearchParams(searchParams);
-        if (value === "table") {
+        if (selectedView === "table") {
             params.set("view", "table");
         } else {
             params.delete("view");
@@ -42,13 +45,13 @@ const Clinic = () => {
         setSearchParams(params, { replace: true, state: { ...state, visitFilters: { visitQuery, status } } });
     };
 
-    const updateVisitFilters = (visitQuery: string, status: LedgerEntry["status"] | "all") => {
-        setVisitQuery(visitQuery);
-        setStatus(status);
-        setSearchParams(searchParams, { replace: true, state: { ...state, visitFilters: { visitQuery, status } } });
+    const updateVisitFilters = (nextVisitQuery: string, nextStatus: LedgerEntry["status"] | "all") => {
+        setVisitQuery(nextVisitQuery);
+        setStatus(nextStatus);
+        setSearchParams(searchParams, { replace: true, state: { ...state, visitFilters: { visitQuery: nextVisitQuery, status: nextStatus } } });
     };
 
-    const clearFilters = hasFilters && (
+    const clearFiltersButton = hasFilters && (
         <Button
             type="button"
             variant="ghost"
@@ -61,13 +64,13 @@ const Clinic = () => {
         </Button>
     );
 
-    const filters = (
+    const visitFilterControls = (
         <>
             <span role="status" className="sr-only text-sm text-zinc-600 sm:not-sr-only sm:mt-2.5 dark:text-zinc-300">
-                {hasFilters && `${entries.length} of ${MOCK_LEDGER_ENTRIES.length} visits`}
+                {hasFilters && `${filteredVisits.length} of ${MOCK_LEDGER_ENTRIES.length} visits`}
             </span>
             <div role="group" aria-label="Filter today's visits" className="ml-auto flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1 sm:w-[21.5rem] sm:flex-none md:w-auto md:flex-nowrap">
-                {hasFilters && <div className="hidden md:block">{clearFilters}</div>}
+                {hasFilters && <div className="hidden md:block">{clearFiltersButton}</div>}
                 <Select value={status} onValueChange={value => value && updateVisitFilters(visitQuery, value)}>
                     <SelectTrigger aria-label="Filter visits by status" className="w-28 shrink-0 bg-white pl-1.5 data-[size=default]:h-10 sm:w-36 sm:pl-2.5 dark:bg-zinc-900">
                         <SelectValue>{status === "all" ? "All statuses" : status}</SelectValue>
@@ -90,7 +93,7 @@ const Clinic = () => {
                         onChange={event => updateVisitFilters(event.target.value, status)}
                     />
                 </div>
-                {hasFilters && <div className="basis-full md:hidden">{clearFilters}</div>}
+                {hasFilters && <div className="basis-full md:hidden">{clearFiltersButton}</div>}
             </div>
         </>
     );
@@ -121,17 +124,17 @@ const Clinic = () => {
                 </header>
                 <TabsContent value="table" keepMounted className="mx-auto flex min-h-0 w-full max-w-6xl flex-col px-4 pb-4 sm:px-8 sm:pb-6">
                     <div className="mb-3 flex shrink-0 items-start gap-2 py-2">
-                        {view === "table" && filters}
+                        {view === "table" && visitFilterControls}
                     </div>
                     <div className="isolate flex min-h-0 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
                         <TableHeader className="text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200" />
-                        {entries.length > 0
-                            ? <TableBody showSearch={false} entries={entries} />
+                        {filteredVisits.length > 0
+                            ? <TableBody showSearch={false} entries={filteredVisits} />
                             : <p className="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-300">No visits match these filters.</p>}
                     </div>
                 </TabsContent>
                 <TabsContent value="timeline" keepMounted className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-8 sm:pb-6">
-                    <VisitTimeline entries={entries} filters={view === "timeline" && filters} hasFilters={hasFilters} />
+                    <VisitTimeline entries={filteredVisits} filters={view === "timeline" && visitFilterControls} hasFilters={hasFilters} />
                 </TabsContent>
             </Tabs>
         </main>

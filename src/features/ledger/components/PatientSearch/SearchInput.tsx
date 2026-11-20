@@ -15,10 +15,11 @@ type SearchInputProps = {
 }
 
 const SearchInput = ({ input, inputRef, listboxId, activeOptionId, isFocused, placement, handleInputChange, handleKeyNavigation, onInputClick }: SearchInputProps) => {
+    // Toolbar placement renders at the top of the clinic workspace; non-toolbar ("below") renders docked inside the bottom of the table for the demo catalogue
     const inToolbar = placement === "above";
     return (
         <form role="search"
-            onSubmit={e=>e.preventDefault()}
+            onSubmit={e => e.preventDefault()} // Prevent browser form submission on Enter
             className={inToolbar ? "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 focus-within:ring-2 focus-within:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900" : cn(
                 "mb-1 w-full rounded ", // box
                 "outline outline-zinc-600/50 dark:outline-zinc-400/50", // outline

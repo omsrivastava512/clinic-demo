@@ -12,12 +12,12 @@ export const DropdownContainer = ({ children, placement }: { children: ReactNode
 );
 
 
-export const DropdownHeader = ({ count }: { count: number }) => (
+export const DropdownHeader = ({ matchCount }: { matchCount: number }) => (
     <div className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-200 bg-zinc-50 px-3 py-2 dark:border-zinc-800 dark:bg-zinc-800/60">
         <span className="text-xs font-medium text-zinc-700 dark:text-zinc-200">Patient directory</span>
-        {count > 0 && (
+        {matchCount > 0 && (
             <span role="status" className="text-xs text-zinc-600 tabular-nums dark:text-zinc-400">
-                {count} {count === 1 ? "match" : "matches"}
+                {matchCount} {matchCount === 1 ? "match" : "matches"}
             </span>
         )}
     </div>

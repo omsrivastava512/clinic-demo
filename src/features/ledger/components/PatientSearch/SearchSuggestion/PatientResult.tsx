@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 
 type PatientListProps = {
     filteredPatients: Patient[],
-    handleSelect(i: number): void;
+    handleSelect(selectedIndex: number): void;
     focusedIndex: number,
     listboxId: string
 }
@@ -40,10 +40,12 @@ type PatientListItemProps = {
 
 
 const PatientListItem = ({ id, patient, onSelect, isSelected }: PatientListItemProps) => {
-    const itemRef = useRef<HTMLDivElement>(null)
+    const selectedItemRef = useRef<HTMLDivElement>(null)
+
+    // Smoothly scroll keyboard-selected patient into view within the scrollable dropdown container
     useEffect(() => {
-        if(itemRef.current && isSelected){
-            itemRef.current.scrollIntoView({ behavior: "smooth", block: "nearest"})
+        if (selectedItemRef.current && isSelected) {
+            selectedItemRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" })
         }
     }, [isSelected])
 
@@ -54,7 +56,7 @@ const PatientListItem = ({ id, patient, onSelect, isSelected }: PatientListItemP
             variant="normal"
             isSelected={isSelected}
         >
-            <div className="flex min-w-0 items-center gap-3" ref={itemRef}>
+            <div className="flex min-w-0 items-center gap-3" ref={selectedItemRef}>
                 <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
                     <UserIcon aria-hidden="true" className="size-4" />
                 </div>
