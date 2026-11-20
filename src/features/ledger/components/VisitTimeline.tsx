@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { calcMin12H, cn, compTime, min12HToTime } from "@/lib";
 import type { LedgerEntry } from "@/types";
 
-const VisitTimeline = ({ entries, filters, hasFilters }: { entries: LedgerEntry[]; filters: ReactNode; hasFilters: boolean }) => {
+const VisitTimeline = ({ entries, children, hasFilters }: { entries: LedgerEntry[]; children?: ReactNode; hasFilters: boolean }) => {
     const jumpTargetHeadingRef = useRef<HTMLElement | null>(null);
     const visitsByHour = new Map<number, LedgerEntry[]>();
 
@@ -60,7 +60,7 @@ const VisitTimeline = ({ entries, filters, hasFilters }: { entries: LedgerEntry[
                         ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
-                {filters}
+                {children}
             </div>
             {entries.length === 0 && <p className="text-sm text-zinc-600 dark:text-zinc-300">No visits match these filters.</p>}
             {hourGroups.map(({ id: hourId, label, visits, countLabel }) => (
